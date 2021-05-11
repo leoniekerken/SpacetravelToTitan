@@ -10,8 +10,14 @@ public class Population {
     Individual[] individuals;
     int populationSize;
 
-    static final boolean DEBUG = true;
+    static final boolean DEBUG = false;
+    static final boolean sexySon = false;
 
+    /**
+     * initialize a population with random individuals
+     * @param populationSize
+     * @param init
+     */
     public Population(int populationSize, boolean init){
 
         this.populationSize = populationSize;
@@ -19,20 +25,48 @@ public class Population {
 
         for(int i = 0; i < populationSize; i++){
             Individual individual = new Individual();
-            if(i == populationSize-1){
+            individuals[i] = individual.generateIndividual();
+            if(sexySon && i == populationSize-1){
                 individuals[i] = individual.generateSexySon();
             }
-            individuals[i] = individual.generateIndividual();
         }
     }
 
+    /**
+     * creates new empty population
+     * @param populationSize
+     */
     public Population(int populationSize){
         this.individuals = new Individual[populationSize];
         this.populationSize = populationSize;
     }
 
+    /**
+     * adding individual to population at position i
+     * @param i
+     * @param individual
+     */
     public void addIndividual(int i, Individual individual){
         individuals[i] = individual;
+    }
+
+    /**
+     * overwrite individuals of a population to next generation
+     * @param nextGeneration
+     */
+    public void takeOver(Population nextGeneration){
+        for(int i = 0; i < populationSize; i++){
+            this.individuals[i] = nextGeneration.individuals[i];
+        }
+    }
+
+    /**
+     * resets population
+     */
+    public void resetEmpty(){
+        for(int i = 0; i < populationSize; i++){
+            this.individuals[i] = null;
+        }
     }
 
     public Individual getFittest(){
@@ -47,6 +81,12 @@ public class Population {
 
     public Individual getIndividual(int i){
         return individuals[i];
+    }
+
+    public void print(){
+        for(int i = 0; i < populationSize; i++){
+            System.out.println("INDIVIDUAL: " + individuals[i].velVector + ", fitness " + individuals[i].fitness + ", distance: " + individuals[i].distanceVector + ", position: " + individuals[i].position);
+        }
     }
 
 }

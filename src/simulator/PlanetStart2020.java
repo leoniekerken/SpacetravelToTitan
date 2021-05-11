@@ -7,11 +7,11 @@ package simulator;
  * @author Oscar
  */
 
-public class PlanetStart {
+public class PlanetStart2020 {
 
     public Planet[] planets;
 
-    public PlanetStart() {
+    public PlanetStart2020() {
 
         //array of all objects
         planets = new Planet[12];
@@ -65,7 +65,7 @@ public class PlanetStart {
         earth.gravity = 9.807;
         earth.positionX = -1.471922101663588e+11;
         earth.positionY = -2.860995816266412e+10;
-        earth.positionZ = 8.278183193596080e+06;
+        earth.positionZ = 8.278183193596080e+06; //check that again
         earth.velocityX = 5.427193405797901e+03;
         earth.velocityY = -2.931056622265021e+04;
         earth.velocityZ = 6.575428158157592e-01;
@@ -119,12 +119,12 @@ public class PlanetStart {
         saturn.mass = 5.6834e+26;
         saturn.radius = 8232e+03;
         saturn.gravity = 10.44;
-        saturn.velocityX  = 8.220842186554890e+03;
-        saturn.velocityY = 4.052137378979608e+03;
-        saturn.velocityZ = -3.976224719266916e+02;
         saturn.positionX = 6.328646641500651e+11;
         saturn.positionY = -1.358172804527507e+12;
         saturn.positionZ = -1.578520137930810e+09;
+        saturn.velocityX  = 8.220842186554890e+03;
+        saturn.velocityY = 4.052137378979608e+03;
+        saturn.velocityZ = -3.976224719266916e+02;
         saturn.vectors();
         planets[7] = saturn;
 
@@ -133,12 +133,12 @@ public class PlanetStart {
         titan.mass = 1.34553e+23;
         titan.radius = 2575000.5;
         titan.gravity = 1.352;
-        titan.velocityX = 3.056877965721629e+03;
-        titan.velocityY = 6.125612956428791e+03;
-        titan.velocityZ = -9.523587380845593e+02;
         titan.positionX = 6.332873118527889e+11;
         titan.positionY = -1.357175556995868e+12;
         titan.positionZ = -2.134637041453660e+09;
+        titan.velocityX = 3.056877965721629e+03;
+        titan.velocityY = 6.125612956428791e+03;
+        titan.velocityZ = -9.523587380845593e+02;
         titan.vectors();
         planets[8] = titan;
 
@@ -147,12 +147,12 @@ public class PlanetStart {
         uranus.mass = 8.6813e+25;
         uranus.radius = 25362e+03;
         uranus.gravity = 8.87;
-        uranus.velocityX  = -4.059468635313243e+03;
-        uranus.velocityY = 5.187467354884825e+03;
-        uranus.velocityZ = 7.182516236837899e+01;
         uranus.positionX = 2.395195786685187e+12;
         uranus.positionY = 1.744450959214586e+12;
         uranus.positionZ = -2.455116324031639e+10;
+        uranus.velocityX  = -4.059468635313243e+03;
+        uranus.velocityY = 5.187467354884825e+03;
+        uranus.velocityZ = 7.182516236837899e+01;
         uranus.vectors();
         planets[9] = uranus;
 
@@ -161,27 +161,21 @@ public class PlanetStart {
         neptune.mass = 1.02413e+26;
         neptune.radius = 24.622e+03;
         neptune.gravity = 11.15;
-        neptune.velocityX  = 1.068410720964204e+03;
-        neptune.velocityY = 5.354959501569486e+03;
-        neptune.velocityZ = -1.343918199987533e+02;
         neptune.positionX = 4.382692942729203e+12;
         neptune.positionY = -9.093501655486243e+11;
         neptune.positionZ = -8.227728929479486e+10;
+        neptune.velocityX  = 1.068410720964204e+03;
+        neptune.velocityY = 5.354959501569486e+03;
+        neptune.velocityZ = -1.343918199987533e+02;
         neptune.vectors();
         planets[10] = neptune;
 
         //spacecraft
-        Planet spaceCraft = new Planet ("SpaceCraft");
+        Planet spaceCraft = new Planet ("SpaceProbe");
         // Adding the Earths radius somewhere = 6371e+3;
         spaceCraft.mass = 15000;
         spaceCraft.radius = 10;
         spaceCraft.gravity = 1e-10;
-//        spaceCraft.positionX = (6371e+3 + -1.471922101663588e+11);
-//        spaceCraft.positionY = (6371e+3 + -2.860995816266412e+10);
-//        spaceCraft.positionZ = (6371e+3 + 8.278183193596080e+06);
-//        spaceCraft.velocityX = 5.427193405797901e+03;
-//        spaceCraft.velocityY = -2.931056622265021e+04;
-//        spaceCraft.velocityZ = 6.575428158157592e-01;
         spaceCraft.positionX = 0;
         spaceCraft.positionY = 0;
         spaceCraft.positionZ = 0;

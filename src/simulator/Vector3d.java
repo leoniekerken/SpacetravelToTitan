@@ -106,4 +106,16 @@ public class Vector3d implements titan.Vector3dInterface {
     {
         return "(" + x + ", " + y + ", " + z + ") ";
     }
+
+    /**
+     * checks if two Vector3d are equal
+     * @param other
+     * @return true if equal
+     */
+    public boolean equals(Vector3d other){
+        if(this.x == other.x && this.y == other.y && this.z == other.z){
+            return true;
+        }
+        return false;
+    }
 }

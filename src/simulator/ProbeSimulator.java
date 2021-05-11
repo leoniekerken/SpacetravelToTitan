@@ -15,9 +15,12 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
 
     public State y0;
     public Vector3d[] trajectory;
+    public Vector3d[] earthPos;
+    public Vector3d[] titanPos;
     public State[] states;
 
     public ODESolver solver;
+    public ODEFunction f;
 
     /**
      * calculate trajectory of a probe
@@ -34,30 +37,32 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
         Planet.planets[11].posVector = p0;
         Planet.planets[11].velVector = v0;
 
-        if(DEBUG){
-            System.out.println("probeSimulator - probe at 0 " + Planet.planets[11].posVector);
-        }
-
         //initial state of the system
         y0 = new State();
         y0.initializeState();
 
-        if(DEBUG){
-            for(int i = 0; i < Planet.planets.length; i++) {
-                System.out.println("probeSimulator " + Planet.planets[i].name + " " + y0.getPos(i));
-            }
-        }
-
         //start solver
         solver = new ODESolver();
-        states = (State[]) solver.solve(new ODEFunction(), y0, ts);
+        f = new ODEFunction();
+        states = (State[]) solver.solve(f, y0, ts);
 
         //extract information
+        earthPos = solver.earthPos;
+        titanPos = solver.titanPos;
         trajectory = new Vector3d[ts.length];
 
         for(int i = 0; i < trajectory.length; i++){
-            trajectory[i] = (Vector3d) states[i].getPos(10);
+            trajectory[i] = (Vector3d) states[i].getPos(11);
         }
+
+        if(DEBUG){
+            System.out.println("ProbeSimulator - titanPos at 0 " + titanPos[0]);
+        }
+
+        //make sure to set ODESolver and State to null to allow garbage collection and clear memory
+        solver = null;
+        states = null;
+        System.gc();
 
         return trajectory;
     }
@@ -78,34 +83,33 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
         Planet.planets[11].posVector = p0;
         Planet.planets[11].velVector = v0;
 
-        if(DEBUG){
-            System.out.println("probeSimulator - position probe at 0 " + Planet.planets[11].posVector);
-            System.out.println("probeSimulator - velocity probe at 0 " + Planet.planets[11].velVector);
-        }
-
         //initial state of the system
         y0 = new State();
-        y0.initializeState(); // can solve this better?
-
-        if(DEBUG){
-            for(int i = 0; i < Planet.planets.length; i++) {
-                System.out.println("probeSimulator " + Planet.planets[i].name + " " + y0.getPos(i));
-            }
-        }
+        y0.initializeState();
 
         //start solver
         solver = new ODESolver();
-        states = (State []) solver.solve(new ODEFunction(), y0, tf, h);
+        f = new ODEFunction();
+        states = (State[]) solver.solve(f, y0, tf, h);
 
         //extract information
+        earthPos = solver.earthPos;
+        titanPos = solver.titanPos;
         trajectory = new Vector3d[(int) (Math.round(tf/h)+1)];
 
         for(int i = 0; i < trajectory.length; i++){
             trajectory[i] = (Vector3d) states[i].getPos(11);
-            if(DEBUG){
-                System.out.println("probeSimulator - trajectory " + trajectory[i].toString());
-            }
         }
+
+        //make sure to set ODESolver and State to null to allow garbage collection and clear memory
+        solver = null;
+        states = null;
+        System.gc();
+
+        if(DEBUG){
+            System.out.println("ProbeSimulator - titanPos at 0 " + titanPos[0]);
+        }
+
 
         return trajectory;
     }

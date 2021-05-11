@@ -16,7 +16,6 @@ public class State implements StateInterface{
     public Vector3dInterface[][] state; //2x12 array (11 planets (11 with probe), 2 properties - vel, pos)
     public int size;
 
-    //constructor
     public State() {
         //initialize empty array
         state = new Vector3d[Planet.planets.length][2];

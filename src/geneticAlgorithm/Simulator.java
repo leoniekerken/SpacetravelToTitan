@@ -10,15 +10,13 @@ import titan.Vector3dInterface;
  */
 public class Simulator {
 
-    static final boolean DEBUG = true;
+    static final boolean DEBUG = false;
 
-    public static final double tf = 31536000;
-    public static final double h = 20;
+    public double tf = Evolution.tf;
+    public double h = Evolution.h;
 
     public ODEFunction f = new ODEFunction();
     public ODESolver solver = new ODESolver();
-
-    public static Vector3d[] titanPos = ODESolver.titanPos;
 
     public int populationSize;
     public Individual[] individuals;
@@ -42,7 +40,7 @@ public class Simulator {
         for(int i = 0; i < individuals.length; i++){
             ProbeSimulator probeSimulator = new ProbeSimulator();
             trajectory = probeSimulator.trajectory(individuals[i].posVector, individuals[i].velVector, tf, h);
-            individuals[i].setFitness(getBestPos(trajectory));
+            getBestPos(trajectory, individuals[i]);
             probeSimulator = null;
             System.gc();
         }
@@ -51,18 +49,23 @@ public class Simulator {
 
     /**
      * finds the best position (closest to titan) of a probe during one year flight
-     * @return double[][] bestPos - bestPosition (euclidean distance to titan) and associated time point
+     * sets: fitness, best position, distance vector of individual
      */
-    public double getBestPos(Vector3dInterface[] trajectory) {
+    public void getBestPos(Vector3dInterface[] trajectory, Individual individual) {
 
-        double distance = trajectory[0].dist(titanPos[0]);
-        int bestPos = 0;
-        for (int i = 0; i < trajectory.length; i++){
-            if (trajectory[i].dist(titanPos[i]) < distance) {
-                distance = trajectory[i].dist(titanPos[i]);
-                bestPos = i;
+        //find best position
+        double distance = trajectory[trajectory.length-1].dist(Evolution.titanPos[Evolution.titanPos.length-1]);
+        int position = trajectory.length - 1;
+        Vector3d distanceVector = (Vector3d) trajectory[trajectory.length-1].sub(Evolution.titanPos[Evolution.titanPos.length-1]);
+        for (int i = trajectory.length-1; i >= 0; i--){
+            if (trajectory[i].dist(Evolution.titanPos[i]) < distance) {
+                distance = trajectory[i].dist(Evolution.titanPos[i]);
+                position = i;
+                distanceVector = (Vector3d) trajectory[i].sub(Evolution.titanPos[i]);
             }
         }
-        return distance;
+        individual.setFitness(distance);
+        individual.setPosition(position);
+        individual.setDistanceVector(distanceVector);
     }
 }
