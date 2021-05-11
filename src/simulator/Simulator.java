@@ -1,11 +1,13 @@
 package simulator;
 
 import titan.Vector3dInterface;
+import visualization.StartVisualization;
 
 public class Simulator {
 
     static boolean PRINT = true;
     static boolean DETAIL = false;
+    static boolean VISUALIZATION = true;
 
     //initial parameters to start the mission - 20 seems to be the limit for h
     static double tf = 31536000; //final time point of the mission ins seconds (31636000s = one year)
@@ -50,6 +52,8 @@ public class Simulator {
             System.out.println();
             System.out.println();
             System.out.println("probe launched at: \nposition: " + takeOffPoint.startPos.toString() + "\nvelocity: " + initVel + ", " + takeOffPoint.startVel.toString());
+            System.out.println("distance probe to earth: " + takeOffPoint.startPos.sub(Planet.planets[3].posVector) + ", euclidean: " + takeOffPoint.startPos.dist(Planet.planets[3].posVector));
+            System.out.println("radius earth: " + Planet.planets[3].radius);
             System.out.println();
             System.out.println();
             System.out.println("probe at start: " + trajectory[0].toString());
@@ -79,6 +83,10 @@ public class Simulator {
                     }
                 }
             }
+        }
+
+        if(VISUALIZATION){
+            StartVisualization.start();
         }
     }
 }

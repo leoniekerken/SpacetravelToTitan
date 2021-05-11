@@ -89,6 +89,13 @@ public class Planet
     }
 
     /**
+     * add position to orbit
+     */
+    public void addOrbit(Vector3dInterface position){
+        this.orbit.add(position);
+    }
+
+    /**
      * @return array holding x-coordinates over time (in AU, important for visualization!)
      */
     public double[] getOrbitX(){

@@ -41,6 +41,11 @@ public class ODESolver implements ODESolverInterface {
         for(int i = 1; i < states.length; i++){
             states[i] = (State) step(f, ts[i], states[i-1], (ts[i]-ts[i-1]));
             titanPos[i] = (Vector3d) states[i].getPos(8); //add current position of titan to static storage
+            //add current position of object to short version of orbit (for visualization)
+            if(i % 100 == 0)
+            for(int j = 0; j < Planet.planets.length; j++){
+                Planet.planets[j].addOrbit(states[i].getPos(j));
+            }
         }
 
         return states;
@@ -82,6 +87,11 @@ public class ODESolver implements ODESolverInterface {
         for(int i = 1; i < states.length; i++){
             states[i] = (State) step(f, ts[i], states[i-1], (ts[i]-ts[i-1]));
             titanPos[i] = (Vector3d) states[i].getPos(8); //add current position of titan to extra storage
+            //add current position of object to short version of orbit (for visualization)
+            if(i % 100 == 0)
+                for(int j = 0; j < Planet.planets.length; j++){
+                    Planet.planets[j].addOrbit(states[i].getPos(j));
+                }
         }
 
         return states;
