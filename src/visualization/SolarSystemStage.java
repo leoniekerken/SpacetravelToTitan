@@ -3,7 +3,6 @@ package visualization;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.scene.layout.Pane;
 import javafx.scene.input.ScrollEvent;
