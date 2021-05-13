@@ -7,23 +7,30 @@ import javafx.scene.shape.*;
 import javafx.util.Duration;
 
 /**
- * called to start movement of the planets
+ * display movement of objects in the solar system
+ *
+ * @author Leo
  */
 public class MovingPlanets {
 
+    final double duration = 10; //this essentially determines speed at which movement is shown
+
     Planet[] planets = Planet.planets;
     ZoomablePane zoomablePane;
-    final double duration = 100;
-
-    Circle[] planetObj;
+    Circle[] circles;
 
     public MovingPlanets(ZoomablePane zoomablePane) {
 
         this.zoomablePane = zoomablePane;
-        planetObj = zoomablePane.circles;
+        this.circles = zoomablePane.circles;
 
     }
 
+    /**
+     * starts movement of objects by
+     * getting positions of the orbits at timestamps at a regular interval and
+     * adding change to new positions to sequential transition to display movement
+     */
     public void move(){
 
         //get length for orbit array
@@ -39,7 +46,7 @@ public class MovingPlanets {
             t.setDuration(Duration.millis(duration));
             t.setToX(Math.round(zoomablePane.xCenter + zoomablePane.unitSize * planets[0].getOrbitX()[i]) - sunX);
             t.setToY((Math.round(zoomablePane.yCenter + zoomablePane.unitSize * planets[0].getOrbitY()[i]) - sunY));
-            t.setNode(planetObj[0]);
+            t.setNode(circles[0]);
             movementSun.getChildren().add(t);
         }
 
@@ -54,7 +61,7 @@ public class MovingPlanets {
             t.setDuration(Duration.millis(duration));
             t.setToX(Math.round(zoomablePane.xCenter + zoomablePane.unitSize * planets[1].getOrbitX()[i]) - mercuryX);
             t.setToY((Math.round(zoomablePane.yCenter + zoomablePane.unitSize * planets[1].getOrbitY()[i]) - mercuryY));
-            t.setNode(planetObj[1]);
+            t.setNode(circles[1]);
             orbitMercury.getChildren().add(t);
         }
 
@@ -68,7 +75,7 @@ public class MovingPlanets {
             t.setDuration(Duration.millis(duration));
             t.setToX(Math.round(zoomablePane.xCenter + zoomablePane.unitSize * planets[2].getOrbitX()[i]) - venusX);
             t.setToY((Math.round(zoomablePane.yCenter + zoomablePane.unitSize * planets[2].getOrbitY()[i]) - venusY));
-            t.setNode(planetObj[2]);
+            t.setNode(circles[2]);
             orbitVenus.getChildren().add(t);
         }
 
@@ -82,7 +89,7 @@ public class MovingPlanets {
             t.setDuration(Duration.millis(duration));
             t.setToX(Math.round(zoomablePane.xCenter + zoomablePane.unitSize * planets[3].getOrbitX()[i]) - earthX);
             t.setToY((Math.round(zoomablePane.yCenter + zoomablePane.unitSize * planets[3].getOrbitY()[i]) - earthY));
-            t.setNode(planetObj[3]);
+            t.setNode(circles[3]);
             orbitEarth.getChildren().add(t);
         }
 
@@ -96,7 +103,7 @@ public class MovingPlanets {
             t.setDuration(Duration.millis(duration));
             t.setToX(Math.round(zoomablePane.xCenter + zoomablePane.unitSize * planets[4].getOrbitX()[i]) - moonX);
             t.setToY((Math.round(zoomablePane.yCenter + zoomablePane.unitSize * planets[4].getOrbitY()[i]) - moonY));
-            t.setNode(planetObj[4]);
+            t.setNode(circles[4]);
             orbitMoon.getChildren().add(t);
         }
 
@@ -110,7 +117,7 @@ public class MovingPlanets {
             t.setDuration(Duration.millis(duration));
             t.setToX(Math.round(zoomablePane.xCenter + zoomablePane.unitSize * planets[5].getOrbitX()[i]) - marsX);
             t.setToY((Math.round(zoomablePane.yCenter + zoomablePane.unitSize * planets[5].getOrbitY()[i]) - marsY));
-            t.setNode(planetObj[5]);
+            t.setNode(circles[5]);
             orbitMars.getChildren().add(t);
         }
 
@@ -124,7 +131,7 @@ public class MovingPlanets {
             t.setDuration(Duration.millis(duration));
             t.setToX(Math.round(zoomablePane.xCenter + zoomablePane.unitSize * planets[6].getOrbitX()[i]) - jupiterX);
             t.setToY((Math.round(zoomablePane.yCenter + zoomablePane.unitSize * planets[6].getOrbitY()[i]) - jupiterY));
-            t.setNode(planetObj[6]);
+            t.setNode(circles[6]);
             orbitJupiter.getChildren().add(t);
         }
 
@@ -138,7 +145,7 @@ public class MovingPlanets {
             t.setDuration(Duration.millis(duration));
             t.setToX(Math.round(zoomablePane.xCenter + zoomablePane.unitSize * planets[7].getOrbitX()[i]) - saturnX);
             t.setToY((Math.round(zoomablePane.yCenter + zoomablePane.unitSize * planets[7].getOrbitY()[i]) - saturnY));
-            t.setNode(planetObj[7]);
+            t.setNode(circles[7]);
             orbitSaturn.getChildren().add(t);
         }
 
@@ -153,7 +160,7 @@ public class MovingPlanets {
             t.setDuration(Duration.millis(duration));
             t.setToX(Math.round(zoomablePane.xCenter + zoomablePane.unitSize * planets[8].getOrbitX()[i]) - titanX);
             t.setToY((Math.round(zoomablePane.yCenter + zoomablePane.unitSize * planets[8].getOrbitY()[i]) - titanY));
-            t.setNode(planetObj[8]);
+            t.setNode(circles[8]);
             orbitTitan.getChildren().add(t);
         }
 

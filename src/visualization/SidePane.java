@@ -9,7 +9,9 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.control.Label;
 
 /**
- * Side pane where data is shown
+ * side pane where informative data is shown
+ *
+ * @author Chiara
  */
 public class SidePane
 {
@@ -19,16 +21,11 @@ public class SidePane
     int height;
     int width;
 
-    /**
-     * Constructor
-     */
-    public SidePane()
-    {
-        sidePaneGroup = new Group();
+    public SidePane() {
 
         width = 300;
         height = 10000;
-
+        sidePaneGroup = new Group();
         background = new Pane();
         background.setStyle("-fx-background-color: gray;");
         background.setPrefSize(width, height);
@@ -42,8 +39,8 @@ public class SidePane
      * @param y y-coordinate of the label
      * @param c colour of the text of the label
      */
-    public void addLabel(String s, double x, double y, Color c)
-    {
+    public void addLabel(String s, double x, double y, Color c) {
+
         Label label = new Label(s);
 
         //Set font of the text
@@ -61,9 +58,7 @@ public class SidePane
     /**
      * Add labels and buttons to the side pane
      */
-    //Make the data change while the program is running
-    public Group getPane()
-    {
+    public Group getPane() {
         addLabel("Start Date: ", 40, 100, Color.BLUE);
         addLabel("01-04-2020", 40, 125, Color.BLACK);
         addLabel("End Date: ", 40, 200, Color.BLUE);

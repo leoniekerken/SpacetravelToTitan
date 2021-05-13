@@ -7,6 +7,11 @@ import javafx.stage.Stage;
 import javafx.scene.layout.Pane;
 import javafx.scene.input.ScrollEvent;
 
+/**
+ * set the stage for the visualization
+ *
+ * @author Chiara & Leo
+ */
 public class SolarSystemStage extends Application {
 
     static boolean DEBUG = true;
@@ -19,7 +24,7 @@ public class SolarSystemStage extends Application {
         BorderPane root = new BorderPane();
 
         Pane center = new Pane();
-        center.setStyle("-fx-background-color:white");
+        center.setStyle("-fx-background-color:black");
 
         Pane right = new Pane();
 
@@ -34,32 +39,17 @@ public class SolarSystemStage extends Application {
 
         Scene scene = new Scene(root);
 
-        if(DEBUG){
-            System.out.println();
-            System.out.println();
-            System.out.println("SolarSystemStage DEBUG");
-            System.out.println();
-            System.out.println("scene size: w " + scene.getWidth() + " h " + scene.getHeight());
-            System.out.println();
-            System.out.println("center size: w " + center.getPrefWidth() + " h " + center.getPrefHeight());
-            System.out.println();
-            System.out.println("zoomablePane size: w " + zoomablePane.getPrefWidth() + " h " + zoomablePane.getPrefHeight());
-            System.out.println();
-            System.out.println();
-
-
-        }
-
         //Control mouse movements on pane
         SceneGestures sceneGestures = new SceneGestures(zoomablePane);
         center.addEventFilter(ScrollEvent.ANY, sceneGestures.getOnScrollEventHandler());
         center.setOnMousePressed(sceneGestures.getOnEnteredEventHandler());
         center.setOnMouseDragged(sceneGestures.getOnDragEventHandler());
 
+        //start movements of objects in solarSystem
         zoomablePane.movingPlanets.move();
 
         stage.setScene(scene);
-        //stage.setFullScreen(true);
+        stage.setFullScreen(true);
         stage.show();
     }
 }

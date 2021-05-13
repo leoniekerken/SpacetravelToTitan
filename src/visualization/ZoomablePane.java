@@ -20,6 +20,11 @@ import javafx.scene.text.FontPosture;
 import javafx.scene.transform.Translate;
 import simulator.Planet;
 
+/**
+ * zoomable and draggable pane that displays all objects of the solar system
+ *
+ * @author Chiara & Leo
+ */
 class ZoomablePane extends Pane {
 
     static boolean DEBUG = true;
@@ -37,14 +42,18 @@ class ZoomablePane extends Pane {
     Circle[] circles;
     Planet[] planets;
     MovingPlanets movingPlanets;
-
     Rectangle spacecraft;
 
 
     public ZoomablePane() {
 
         this.setPrefSize(width, height);
-        this.setStyle("-fx-background-color:red;");
+        this.setStyle("-fx-background-color:black;");
+
+        //Coordinates of the center
+        xCenter = this.getPrefWidth()/2;   //xCenter = 575.0
+        yCenter = this.getPrefHeight()/2;  //yCenter = 500.0
+
 
         //Add scale transform
         scaleXProperty().bind(myScale);
@@ -52,15 +61,8 @@ class ZoomablePane extends Pane {
 
         solarSystem = new Group();
         this.getChildren().add(solarSystem);
-
-        //Coordinates of the center
-        xCenter = this.getPrefWidth()/2;   //xCenter = 575.0
-        yCenter = this.getPrefHeight()/2;  //yCenter = 500.0
-
         circles = new Circle[9];
-
         planets = Planet.planets;
-
         movingPlanets = new MovingPlanets(this);
     }
 
@@ -262,6 +264,10 @@ class ZoomablePane extends Pane {
 
     }
 
+    /**
+     * puts together all elements of the solarSystem
+     * @return
+     */
     public ZoomablePane getPane() {
         addGrid();
         addSun(0, 0);
