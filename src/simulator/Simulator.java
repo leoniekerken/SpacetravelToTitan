@@ -7,7 +7,7 @@ public class Simulator {
 
     static boolean PRINT = true;
     static boolean DETAIL = false;
-    static boolean VISUALIZATION = true;
+    static boolean VISUALIZATION = false;
 
     //initial parameters to start the mission - 20 seems to be the limit for h
     static double tf = 31536000; //final time point of the mission ins seconds (31636000s = one year)

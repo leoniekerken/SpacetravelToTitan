@@ -12,7 +12,7 @@ import titan.StateInterface;
 public class ODESolver implements ODESolverInterface {
 
     static boolean DEBUG = false;
-    static boolean VISUALIZATION = Simulator.VISUALIZATION;
+    public static boolean VISUALIZATION = Simulator.VISUALIZATION;
     static int visualizationTimeStamps = 50;
 
     public State[] states;

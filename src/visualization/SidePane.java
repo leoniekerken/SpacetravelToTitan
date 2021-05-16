@@ -13,8 +13,7 @@ import javafx.scene.control.Label;
  *
  * @author Chiara
  */
-public class SidePane
-{
+public class SidePane {
 
     Group sidePaneGroup;
     Pane background;
