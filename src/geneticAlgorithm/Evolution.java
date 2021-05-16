@@ -37,7 +37,7 @@ public class Evolution {
     static final double randomness = 0.4;
 
     static final double tf = 31536000;
-    static final double h = 50;
+    static final double h = 30;
 
     public static Vector3d[] genePool;
     public static Vector3d[] titanPos;

@@ -64,7 +64,7 @@ public class Planet
         accVector = new Vector3d(0,0,0);
 
         //adds initial position to orbit
-        orbit.add(posVector);
+        //orbit.add(posVector);
     }
 
     /**
