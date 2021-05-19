@@ -57,7 +57,7 @@ public class Evolution {
         if(RUN){
 
             //set visualization in simulator.ODESolver to false
-            ODESolver.VISUALIZATION = false;
+            EulerSolver.VISUALIZATION = false;
 
             //initialize positions of all objects in solarSystem (in 2019!!)
             PlanetStart2019 planetStart2019 = new PlanetStart2019();
