@@ -17,9 +17,13 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
     public Vector3d[] trajectory;
     public Vector3d[] earthPos;
     public Vector3d[] titanPos;
-    public State[] states;
+    public Vector3dInterface[] verletEarthPos;
+    public Vector3dInterface[] verletTitanPos;
+    public State[] eulerStates;
+    public State[] verletStates;
 
-    public ODESolver solver;
+    public ODESolver eulerSolver;
+    public VerletSolver verletSolver;
     public ODEFunction f;
 
     /**
@@ -42,17 +46,21 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
         y0.initializeState();
 
         //start solver
-        solver = new ODESolver();
+        eulerSolver = new ODESolver();
+        verletSolver = new VerletSolver();
         f = new ODEFunction();
-        states = (State[]) solver.solve(f, y0, ts);
+        eulerStates = (State[]) eulerSolver.solve(f, y0, ts);
+        verletStates = (State[]) verletSolver.solve(f, y0, ts);
 
         //extract information
-        earthPos = solver.earthPos;
-        titanPos = solver.titanPos;
+        earthPos = eulerSolver.earthPos;
+        titanPos = eulerSolver.titanPos;
+        verletEarthPos = verletSolver.getEarthPos();
+        verletTitanPos = verletSolver.getTitanPos();
         trajectory = new Vector3d[ts.length];
 
         for(int i = 0; i < trajectory.length; i++){
-            trajectory[i] = (Vector3d) states[i].getPos(11);
+            trajectory[i] = (Vector3d) eulerStates[i].getPos(11);
         }
 
         if(DEBUG){
@@ -60,8 +68,8 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
         }
 
         //make sure to set ODESolver and State to null to allow garbage collection and clear memory
-        solver = null;
-        states = null;
+        eulerSolver = null;
+        eulerStates = null;
         System.gc();
 
         return trajectory;
@@ -88,28 +96,28 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
         y0.initializeState();
 
         //start solver
-        solver = new ODESolver();
+        eulerSolver = new ODESolver();
+        verletSolver = new VerletSolver();
         f = new ODEFunction();
-        states = (State[]) solver.solve(f, y0, tf, h);
+        eulerStates = (State[]) eulerSolver.solve(f, y0, tf, h);
 
         //extract information
-        earthPos = solver.earthPos;
-        titanPos = solver.titanPos;
+        earthPos = eulerSolver.earthPos;
+        titanPos = eulerSolver.titanPos;
         trajectory = new Vector3d[(int) (Math.round(tf/h)+1)];
 
         for(int i = 0; i < trajectory.length; i++){
-            trajectory[i] = (Vector3d) states[i].getPos(11);
+            trajectory[i] = (Vector3d) eulerStates[i].getPos(11);
         }
 
         //make sure to set ODESolver and State to null to allow garbage collection and clear memory
-        solver = null;
-        states = null;
+        eulerSolver = null;
+        eulerStates = null;
         System.gc();
 
         if(DEBUG){
             System.out.println("ProbeSimulator - titanPos at 0 " + titanPos[0]);
         }
-
 
         return trajectory;
     }
