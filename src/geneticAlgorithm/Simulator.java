@@ -16,7 +16,7 @@ public class Simulator {
     public double h = Evolution.h;
 
     public ODEFunction f = new ODEFunction();
-    public ODESolver solver = new ODESolver();
+    public EulerSolver solver = new EulerSolver();
 
     public int populationSize;
     public Individual[] individuals;

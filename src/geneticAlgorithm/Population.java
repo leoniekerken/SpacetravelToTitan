@@ -85,7 +85,7 @@ public class Population {
 
     public void print(){
         for(int i = 0; i < populationSize; i++){
-            System.out.println("INDIVIDUAL: " + individuals[i].velVector + ", fitness " + individuals[i].fitness + ", distance: " + individuals[i].distanceVector + ", position: " + individuals[i].position);
+            System.out.println("INDIVIDUAL: " + individuals[i].velVector + ", initVel: " + individuals[i].initVel + ", fitness " + individuals[i].fitness + ", distance: " + individuals[i].distanceVector + ", position: " + individuals[i].position);
         }
     }
 

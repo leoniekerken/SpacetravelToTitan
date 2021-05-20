@@ -67,7 +67,10 @@ public class Individual {
         //this.initVel = 50000 + (Math.random() * 10000);
 
         //have a constant initial velocity
-        this.initVel = 60000;
+        //this.initVel = 60000;
+
+        //generate random initVel between 60000 and 80000
+        this.initVel = 60000 + (Math.random() * 20000);
 
         //calculate velocity vector
         this.velVector = (Vector3d) unitVector.mul(initVel);

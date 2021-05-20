@@ -9,9 +9,11 @@ import titan.StateInterface;
  *
  * @author Leo
  */
-public class ODESolver implements ODESolverInterface {
+public class EulerSolver implements ODESolverInterface {
 
-    public static boolean DEBUG = false;
+    static boolean DEBUG = false;
+    public  static boolean VISUALIZATION = Simulator.VISUALIZATION;
+    static int visualizationTimeStamps = 50;
 
     public State[] states;
 
@@ -41,6 +43,11 @@ public class ODESolver implements ODESolverInterface {
         for(int i = 1; i < states.length; i++){
             states[i] = (State) step(f, ts[i], states[i-1], (ts[i]-ts[i-1]));
             titanPos[i] = (Vector3d) states[i].getPos(8); //add current position of titan to static storage
+            //add current position of object to short version of orbit (for visualization)
+            if(VISUALIZATION && i % visualizationTimeStamps == 0)
+            for(int j = 0; j < Planet.planets.length; j++){
+                Planet.planets[j].addOrbit(states[i].getPos(j));
+            }
         }
 
         return states;
@@ -81,7 +88,15 @@ public class ODESolver implements ODESolverInterface {
         //updating positions for one step
         for(int i = 1; i < states.length; i++){
             states[i] = (State) step(f, ts[i], states[i-1], (ts[i]-ts[i-1]));
+            if(DEBUG){
+                System.out.println("STATE AT " + i + ": " + states[i]);
+            }
             titanPos[i] = (Vector3d) states[i].getPos(8); //add current position of titan to extra storage
+            //add current position of object to short version of orbit (for visualization)
+            if(VISUALIZATION && i % visualizationTimeStamps == 0)
+                for(int j = 0; j < Planet.planets.length; j++){
+                    Planet.planets[j].addOrbit(states[i].getPos(j));
+                }
         }
 
         return states;
@@ -99,7 +114,7 @@ public class ODESolver implements ODESolverInterface {
     @Override
     public StateInterface step(ODEFunctionInterface f, double t, StateInterface y, double h) {
 
-        State newState = (State) y.addMul(h, f.call(h, y));
+        State newState = (State) y.addMul(h, f.call(t, y));
 
         return newState;
     }

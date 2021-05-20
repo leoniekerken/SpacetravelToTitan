@@ -64,7 +64,7 @@ public class Planet
         accVector = new Vector3d(0,0,0);
 
         //adds initial position to orbit
-        orbit.add(posVector);
+        //orbit.add(posVector);
     }
 
     /**
@@ -86,6 +86,13 @@ public class Planet
     public double fromMToAU(double m) {
         double AU = m * 6.6846e-12;
         return AU;
+    }
+
+    /**
+     * add position to orbit
+     */
+    public void addOrbit(Vector3dInterface position){
+        this.orbit.add(position);
     }
 
     /**
