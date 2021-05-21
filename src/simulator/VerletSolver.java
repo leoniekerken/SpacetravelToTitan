@@ -14,8 +14,8 @@ public class VerletSolver implements ODESolverInterface {
     Vector3dInterface[] prevPositions;
     Vector3dInterface[] velocities;
     Vector3dInterface[] acceleration;
-    Vector3dInterface[] earthPos;
-    Vector3dInterface[] titanPos;
+    Vector3d[] earthPos;
+    Vector3d[] titanPos;
     int index = 0;
     double[] masses;
 
@@ -37,8 +37,8 @@ public class VerletSolver implements ODESolverInterface {
             prevPositions[i] = p.planets[i].posVector;
         }
 
-        earthPos[index] = positions[4];
-        titanPos[index] = positions[8];
+        earthPos[index] = (Vector3d) positions[4];
+        titanPos[index] = (Vector3d) positions[8];
         index++;
 
         //Initialize array with initial masses of all planets
@@ -55,7 +55,7 @@ public class VerletSolver implements ODESolverInterface {
         acceleration = new Vector3dInterface[positions.length];
 
         //Update accelerations
-        //updateAcceleration();           //fix method
+        updateAcceleration();
     }
 
     @Override
@@ -120,12 +120,12 @@ public class VerletSolver implements ODESolverInterface {
             vs[2] = acc;
 
             prevPositions[i] = positions[i];             //ArrayList of previous positions becomes equal to the current positions
-            positions[i] = sumAll(vs);                  //ArrayList of current positions is updated with updated positions
+            positions[i] = VectorOperations.sumAll(vs);                  //ArrayList of current positions is updated with updated positions
         }
-        earthPos[index] = positions[4];
-        titanPos[index] = positions[8];
+        earthPos[index] = (Vector3d) positions[4];
+        titanPos[index] = (Vector3d) positions[8];
         index++;
-        //updateAcceleration();             //fix method
+        updateAcceleration();
     }
 
     /**
@@ -150,20 +150,17 @@ public class VerletSolver implements ODESolverInterface {
             vs[1] = (vel);
             vs[2] = (acc);
 
-            positions[i] = sumAll(vs);
+            positions[i] = VectorOperations.sumAll(vs);
         }
-        earthPos[index] = positions[4];
-        titanPos[index] = positions[8];
+        earthPos[index] = (Vector3d) positions[4];
+        titanPos[index] = (Vector3d) positions[8];
         index++;
-        //updateAcceleration();         //fix method
+        updateAcceleration();
     }
-
-    /*
-     *   Fix the gravitationalForce method to fix this for loop
 
     /**
      * The acceleration is updated
-     +
+     */
     public void updateAcceleration() {
 
         for (int i = 0; i < positions.length; i++) {
@@ -177,36 +174,17 @@ public class VerletSolver implements ODESolverInterface {
                 if (j != i) {
                     Vector3dInterface body2 = positions[j];
                     double mass2 = masses[j];
-                    //forces.add(gravitationalForce(mass1, mass2, body1, body2));
+                    forces[j] = gravitationalForce(mass1, mass2, body1, body2);
                 }
             }
-            acceleration[i] = sumAll(forces).mul(1/mass1);
+            acceleration[i] = VectorOperations.sumAll(forces).mul(1/mass1);
         }
     }
-    */
 
-    /**
-     * Sum all Vector3d objects of an ArrayList together
-     *
-     * @return the sum of all vectors as another vector3dInterface
-     */
-    public static Vector3dInterface sumAll(Vector3dInterface[] vectors) {
-        Vector3dInterface sum = vectors[0];
+    public Vector3d[] getEarthPos() { return earthPos; }
 
-        for (int i = 1; i < vectors.length; i++) {
-            sum = sum.add(vectors[i]);
-        }
-        return sum;
-    }
+    public Vector3d[] getTitanPos() { return titanPos; }
 
-    public Vector3dInterface[] getEarthPos() { return earthPos; }
-
-    public Vector3dInterface[] getTitanPos() { return titanPos; }
-
-    /*
-     * REMOVED FOR NOW!
-     * Add back to get a better approximation of the vector according to the gravitational force
-     *
     /**
      * Evaluate the change in the direction of the objects due to the forces that act on them
      *
@@ -219,12 +197,11 @@ public class VerletSolver implements ODESolverInterface {
      * @param v1 is the direction represented by the vector with the position of the first object
      * @param v2 is the direction represented by the vector with the positions of the second object
      * @return positions after all the forces influenced it
-
+     */
     private Vector3dInterface gravitationalForce(double m1, double m2, Vector3dInterface v1, Vector3dInterface v2) {
         double distance = v2.dist(v1);
         Vector3dInterface forceDirection = VectorOperations.approximateDirection(v1, v2);       //Direction of force resulting from the two vectors
         double force = grav * m1 * m2 / Math.pow(distance, 2);                                  //Actual force resulting from the two vectors
         return forceDirection.mul(force);
     }
-    */
 }
