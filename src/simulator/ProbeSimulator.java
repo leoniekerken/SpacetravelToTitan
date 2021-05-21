@@ -21,6 +21,7 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
 
     public int ODESolverChoice;
     public EulerSolver eulerSolver;
+    public VerletSolver verletSolver;
     public RungeKuttaSolver rungeKuttaSolver;
     public ODEFunction f = new ODEFunction();
 
@@ -53,6 +54,14 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
             titanPos = eulerSolver.titanPos;
         }
         else if(ODESolverChoice == 2){
+            //start solver
+            verletSolver = new VerletSolver();
+            states = (State[]) verletSolver.solve(f, y0, ts);
+            //extract information
+            earthPos = verletSolver.earthPos;
+            titanPos = verletSolver.titanPos;
+        }
+        else if(ODESolverChoice == 3){
             //start solver
             rungeKuttaSolver = new RungeKuttaSolver();
             states = (State[]) rungeKuttaSolver.solve(f, y0, ts);

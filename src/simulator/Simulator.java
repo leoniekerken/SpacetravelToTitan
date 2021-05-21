@@ -64,11 +64,11 @@ public class Simulator {
             if(probeSimulator.ODESolverChoice == 1){
                 System.out.println("EULER SOLVER");
             }
-            else if(probeSimulator.ODESolverChoice == 2){
-                System.out.println("RUNGE-KUTTA SOLVER");
-            }
-            else if(probeSimulator.ODESolverChoice == 3) {
+            else if(probeSimulator.ODESolverChoice == 2) {
                 System.out.println("VERLET SOLVER");
+            }
+            else if(probeSimulator.ODESolverChoice == 3){
+                System.out.println("RUNGE-KUTTA SOLVER");
             }
             System.out.println();
             System.out.println();
