@@ -96,8 +96,8 @@ public class Rate implements RateInterface {
 
     public String toString(){
         String str = "";
-        for(int i = 0; i < rate.length; i++){
-            str += i + " " + rate[i] + "\n";
+        for (int i = 0; i < rate.length; i++) {
+            str += i  + " vel: " + rate[i][0].toString() + " acc: " + rate[i][1].toString() + "\n";
         }
         return str;
     }

@@ -110,12 +110,21 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
         }
         else if(ODESolverChoice == 2){
             //start solver
+            VerletSolver verletSolver = new VerletSolver();
+            states = (State[]) verletSolver.solve(f, y0, tf, h);
+            //extract information
+            earthPos = verletSolver.earthPos;
+            titanPos = verletSolver.titanPos;
+        }
+        else if(ODESolverChoice == 3){
+            //start solver
             rungeKuttaSolver = new RungeKuttaSolver();
             states = (State[]) rungeKuttaSolver.solve(f, y0, tf, h);
             //extract information
             earthPos = rungeKuttaSolver.earthPos;
             titanPos = rungeKuttaSolver.titanPos;
         }
+
 
         trajectory = new Vector3d[(int) Math.round((tf/h) + 1)];
 
