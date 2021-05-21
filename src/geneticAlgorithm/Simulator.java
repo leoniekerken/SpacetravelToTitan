@@ -15,8 +15,7 @@ public class Simulator {
     public double tf = Evolution.tf;
     public double h = Evolution.h;
 
-    public ODEFunction f = new ODEFunction();
-    public EulerSolver solver = new EulerSolver();
+    public int ODESolverChoice = Evolution.ODESolverChoice;
 
     public int populationSize;
     public Individual[] individuals;
@@ -39,6 +38,7 @@ public class Simulator {
 
         for(int i = 0; i < individuals.length; i++){
             ProbeSimulator probeSimulator = new ProbeSimulator();
+            probeSimulator.ODESolverChoice = this.ODESolverChoice;
             trajectory = probeSimulator.trajectory(individuals[i].posVector, individuals[i].velVector, tf, h);
             getBestPos(trajectory, individuals[i]);
             probeSimulator = null;

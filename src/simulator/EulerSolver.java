@@ -30,6 +30,7 @@ public class EulerSolver implements ODESolverInterface {
      */
     @Override
     public StateInterface[] solve(ODEFunctionInterface f, StateInterface y0, double[] ts) {
+
         //create array storing states at different timestamps
         states = new State[ts.length];
         states[0] = (State) y0;
@@ -48,6 +49,7 @@ public class EulerSolver implements ODESolverInterface {
                 Planet.planets[j].addOrbit(states[i].getPos(j));
             }
         }
+
         return states;
     }
 
@@ -62,6 +64,7 @@ public class EulerSolver implements ODESolverInterface {
      */
     @Override
     public StateInterface[] solve(ODEFunctionInterface f, StateInterface y0, double tf, double h) {
+
         //get array storing separate timestamps
         double[] ts = new double[(int) (Math.round((tf/h)+1))];
         ts[0] = 0;
@@ -95,6 +98,7 @@ public class EulerSolver implements ODESolverInterface {
                     Planet.planets[j].addOrbit(states[i].getPos(j));
                 }
         }
+
         return states;
     }
 
@@ -109,7 +113,9 @@ public class EulerSolver implements ODESolverInterface {
      */
     @Override
     public StateInterface step(ODEFunctionInterface f, double t, StateInterface y, double h) {
+
         State newState = (State) y.addMul(h, f.call(t, y));
+
         return newState;
     }
 }

@@ -4,6 +4,7 @@ import titan.Vector3dInterface;
 
 /**
  * This class computes the MULTIVARIABLE NEWTON'S THEOREM
+ * V(k+1) = V(k) - inverse(D(g(V(k))) * g(V(k))
  *
  * @author chiara
  */
@@ -16,14 +17,15 @@ public class MultivariableNewton {
     }
 
     /**
-     *  Method that actually performs the Multivariable Newton method
-     *  V(k+1) = V(k) - D(g(V(k))inverse * g(V(k))
+     *  MULTIVARIABLE NEWTON THEOREM
+     *  Finds the updated velocity of the probe as it gets closer to Titan
+     *
      *  @param g = g(V(k))
      *  @param vK = current velocity
      *  @return updated velocity V(k+1)
      */
     public Vector3dInterface doMultivariableNewton(Vector3dInterface g, Vector3dInterface vK) {
-        Vector3dInterface product = VectorMatrixOperations.multiplyVectorMatrix(jacobianMatrix, g);
+        Vector3dInterface product = MatrixOperations.multiplyVectorMatrix(jacobianMatrix, g);
         return vK.sub(product);
     }
 
@@ -35,12 +37,10 @@ public class MultivariableNewton {
     }
 
     /**
-     * TO BE IMPLEMENTED!
      * @return the inverse of the jacobianMatrix
      */
     public double[][] inverse() {
-        double[][] inverse = new double[3][3];
-
+        double[][] inverse = MatrixOperations.inverse(jacobianMatrix);
         return inverse;
     }
 }

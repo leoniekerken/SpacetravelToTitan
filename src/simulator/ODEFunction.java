@@ -70,6 +70,7 @@ public class ODEFunction implements ODEFunctionInterface{
         if(DEBUG){
             System.out.println("\nsimulator.ODEFunction - rate after update\n" + rate.toString());
         }
+
         return rate;
     }
 }

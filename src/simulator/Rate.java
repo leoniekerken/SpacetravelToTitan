@@ -18,14 +18,14 @@ public class Rate implements RateInterface {
     //storing acc values for all objects
     public Vector3d[][] rate;
 
-    public Rate() {
+    public Rate(){
     }
 
     /**
      * initializes empty rate array with size
      * @param size
      */
-    public void initialize(int size) {
+    public void initialize(int size){
         rate = new Vector3d[size][size];
         for(int i = 0; i < size; i++){
             rate[i][0] = new Vector3d(0, 0, 0);
@@ -56,7 +56,8 @@ public class Rate implements RateInterface {
      * @param other
      * @return sum
      */
-    public Rate add(Rate other) {
+    public Rate add(Rate other){
+
         Rate newRate = new Rate();
         newRate.initialize(n);
 
@@ -81,6 +82,7 @@ public class Rate implements RateInterface {
             newRate.rate[i][0] = (Vector3d) this.rate[i][0].mul(h);
             newRate.rate[i][1] = (Vector3d) this.rate[i][1].mul(h);
         }
+
         return newRate;
     }
 
@@ -92,11 +94,12 @@ public class Rate implements RateInterface {
         return rate[i][1];
     }
 
-    public String toString() {
+    public String toString(){
         String str = "";
-        for(int i = 0; i < rate.length; i++){
-            str += i + " " + rate[i] + "\n";
+        for (int i = 0; i < rate.length; i++) {
+            str += i  + " vel: " + rate[i][0].toString() + " acc: " + rate[i][1].toString() + "\n";
         }
         return str;
     }
+
 }

@@ -21,8 +21,8 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
 
     public int ODESolverChoice;
     public EulerSolver eulerSolver;
-    public RungeKuttaSolver rungeKuttaSolver;
     public VerletSolver verletSolver;
+    public RungeKuttaSolver rungeKuttaSolver;
     public ODEFunction f = new ODEFunction();
 
     /**
@@ -54,6 +54,14 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
             titanPos = eulerSolver.titanPos;
         }
         else if(ODESolverChoice == 2){
+            //start solver
+            verletSolver = new VerletSolver();
+            states = (State[]) verletSolver.solve(f, y0, ts);
+            //extract information
+            earthPos = verletSolver.earthPos;
+            titanPos = verletSolver.titanPos;
+        }
+        else if(ODESolverChoice == 3){
             //start solver
             rungeKuttaSolver = new RungeKuttaSolver();
             states = (State[]) rungeKuttaSolver.solve(f, y0, ts);
@@ -108,23 +116,24 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
             //extract information
             earthPos = eulerSolver.earthPos;
             titanPos = eulerSolver.titanPos;
-
-        } else if(ODESolverChoice == 2){
+        }
+        else if(ODESolverChoice == 2){
+            //start solver
+            VerletSolver verletSolver = new VerletSolver();
+            states = (State[]) verletSolver.solve(f, y0, tf, h);
+            //extract information
+            earthPos = verletSolver.earthPos;
+            titanPos = verletSolver.titanPos;
+        }
+        else if(ODESolverChoice == 3){
             //start solver
             rungeKuttaSolver = new RungeKuttaSolver();
             states = (State[]) rungeKuttaSolver.solve(f, y0, tf, h);
             //extract information
             earthPos = rungeKuttaSolver.earthPos;
             titanPos = rungeKuttaSolver.titanPos;
-
-        } else if(ODESolverChoice == 3) {
-            //start solver
-            verletSolver = new VerletSolver();
-            states = (State[]) rungeKuttaSolver.solve(f, y0, tf, h);
-            //extract information
-            earthPos = verletSolver.earthPos;
-            titanPos = verletSolver.titanPos;
         }
+
 
         trajectory = new Vector3d[(int) Math.round((tf/h) + 1)];
 
@@ -141,6 +150,8 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
         if(DEBUG){
             System.out.println("ProbeSimulator - titanPos at 0 " + titanPos[0]);
         }
+
+
         return trajectory;
     }
 }
