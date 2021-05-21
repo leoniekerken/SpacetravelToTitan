@@ -39,6 +39,12 @@ public class State implements StateInterface{
         }
     }
 
+    /**
+     * update position and velocity
+     * @param step   The time-step of the update
+     * @param rate   The average rate-of-change over the time-step. Has dimensions of [state]/[time].
+     * @return
+     */
     public StateInterface addMul(double step, RateInterface rate) {
 
         //create new state
@@ -58,12 +64,58 @@ public class State implements StateInterface{
         return newState;
     }
 
+    /**
+     * update only position
+     * @param step
+     * @param rate
+     */
+    public State updatePosition(double step, RateInterface rate){
+
+        State newState = new State();
+
+        for(int i = 0; i < state.length; i++){
+            newState.addPos(i, state[i][0].addMul(step, ((Rate) rate).getVelocity(i)));
+            newState.addVel(i, new Vector3d(0,0,0));
+        }
+
+        return newState;
+    }
+
+    /**
+     * update only velocity
+     * @param step
+     * @param rate
+     */
+    public State updateVelocity(double step, RateInterface rate){
+
+        State newState = new State();
+
+        for(int i = 0; i < state.length; i++){
+            newState.addPos(i, new Vector3d(0,0,0));
+            newState.addVel(i, state[i][1].addMul(step, ((Rate) rate).getAcceleration(i)));
+        }
+
+        return newState;
+    }
+
     public void addPos(int i, Vector3dInterface pos){
         state[i][0] = pos;
     }
 
     public void addVel(int i, Vector3dInterface vel){
         state[i][1] = vel;
+    }
+
+    public void addAllPos(State other) {
+        for (int i = 0; i < state.length; i++) {
+            state[i][0] = other.getPos(i);
+        }
+    }
+
+    public void addAllVel(State other) {
+        for (int i = 0; i < state.length; i++) {
+            state[i][1] = other.getVel(i);
+        }
     }
 
     public Vector3dInterface getPos(int i){
