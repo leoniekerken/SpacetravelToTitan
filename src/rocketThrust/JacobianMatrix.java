@@ -4,7 +4,6 @@ public class JacobianMatrix extends Vector3d{
     /**
      * @author Laurence.
      * @param h represents the step size.
-     * @param 2 dimensional 3 by 3 matrix to calculate the partial derivatives of the 3 Dimensional vectors
      * @param x,y,z represents the coordinates in 3D.
      * @return 3 dimensional matrix with partial derivative values representing each vector in 3d.
      */
@@ -37,12 +36,14 @@ public class JacobianMatrix extends Vector3d{
                     A[i][0] = dvx;
                     A[i][1] = dvy;
                     A[i][2] = dvz;
-
+                    A[0][j] = gvx;
+                    A[1][j] = gvy;
+                    A[2][j] = gvz;
 
                 }
             }
         }
-        // once calculations are complete, return the newly formed matrix
+        //@return the newly formed matrix
         return A;
     }
     // What is the function g? because at the moment it looks like it's a vector.
