@@ -36,9 +36,9 @@ public class JacobianMatrix extends Vector3d{
                     A[i][0] = dvx;
                     A[i][1] = dvy;
                     A[i][2] = dvz;
-                    A[0][j] = gvx;
-                    A[1][j] = gvy;
-                    A[2][j] = gvz;
+                    A[0][j] = dgx;
+                    A[1][j] = dgy;
+                    A[2][j] = dgz;
 
                 }
             }
