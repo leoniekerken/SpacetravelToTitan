@@ -1,12 +1,14 @@
 package rocketThrust;
 
 public class JacobianMatrix extends Vector3d{
+    /*
+     * CURRENTLY NOT USED!
+    
     /**
      * @author Laurence.
      * @param h represents the step size.
      * @param x,y,z represents the coordinates in 3D.
      * @return 3 dimensional matrix with partial derivative values representing each vector in 3d.
-     */
 
     double[][] matrix = new double[3][3];
     //i represents the rows.
@@ -61,8 +63,5 @@ public class JacobianMatrix extends Vector3d{
         return dgx;
     }
 }
-
-
-
-
+*/
 }
