@@ -25,7 +25,7 @@ public class Individual {
     static boolean DEBUG = false;
     public boolean MUTATION = true;
 
-    static double mutationRate = 1 - Evolution.mutationRate;
+    static double mutationThreshold = 1 - Evolution.mutationRate;
 
     public Vector3d[] genePool = Evolution.genePool;
     static Vector3d posEarth = (Vector3d) Planet.planets[3].posVector;
@@ -52,10 +52,10 @@ public class Individual {
      * calculating velocity vector
      * @return new individual
      */
-    public Individual generateIndividualRandom(){
+    public Individual generateIndividual(){
 
         //generate random unitVector
-        this.targetPos = RandomPosition.generateRandomPosition();
+        this.targetPos = randomPosition.generateRandomPosition();
 
         //calculate unitVector
         this.unitVector = (Vector3d) targetPos.sub(posEarth).mul(1/targetPos.dist(posEarth));
@@ -67,10 +67,7 @@ public class Individual {
         //this.initVel = 50000 + (Math.random() * 10000);
 
         //have a constant initial velocity
-        //this.initVel = 60000;
-
-        //generate random initVel between 60000 and 80000
-        this.initVel = 60000 + (Math.random() * 20000);
+        this.initVel = 60000;
 
         //calculate velocity vector
         this.velVector = (Vector3d) unitVector.mul(initVel);
@@ -79,11 +76,13 @@ public class Individual {
     }
 
     /**
-     * generates individual based on random position of titan
-     * during one year orbit (genePool)
-     * @return individual
+     * picks a random position of titan during one year orbit
+     * calculates unitVector probe to titan
+     * generates a random initial velocity in m/s
+     * multiplies unitVector with initVel
+     * @return individual - randomly generated velocity vector
      */
-    public Individual generateIndividualFromGenePool(){
+    public Individual generateIndividualBasedOnTitanPos(){
 
         //generate random unitVector
         int i = ((int) Math.round(Math.random() * (genePool.length-1)));
@@ -143,7 +142,7 @@ public class Individual {
         child.setTargetPos((Vector3d) newPos.mul(0.5));
 
         //add mutation
-        if(MUTATION && Math.random() > mutationRate){
+        if(MUTATION && Math.random() > mutationThreshold){
             Vector3d mutation = Mutation.mutate();
             if(DEBUG){
                 System.out.println();

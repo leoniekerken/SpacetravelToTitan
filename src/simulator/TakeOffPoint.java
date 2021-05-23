@@ -56,7 +56,7 @@ public class TakeOffPoint {
      */
     public Vector3d unitVector(Vector3d posVectorTitan){
         //unitVector = (Vector3d) posVectorTitan.sub(Planet.planets[3].posVector).mul(1/posVectorTitan.dist(Planet.planets[3].posVector));
-        Vector3d velVector  = new Vector3d(23362.444117658797, -55262.85583123383, -461.48697222676947);
+        Vector3d velVector  = new Vector3d(23355.353441491174, -55266.284768020276, -406.48931488639954);
         unitVector = (Vector3d) velVector.mul((1.0/60000.0));
         return unitVector;
     }
