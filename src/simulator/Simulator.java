@@ -11,7 +11,7 @@ public class Simulator {
 
 
     //initial parameters to start the mission - 20 seems to be the limit for h
-    static double tf = 31536000; //final time point of the mission ins seconds (31636000s = one year)
+    static double tf = 31536000; //final time point of the mission ins seconds (31536000s = one year)
     static double h = 20;  //step size with which everything is updated (86400s = 1 day)
 
     static double initVel = 60000; //initial (undirected) velocity of the probe in m/s

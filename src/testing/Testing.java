@@ -24,7 +24,7 @@ public class Testing {
     static Vector3d titanPosNasa =  new Vector3d(8.789384100968744E+11, -1.204002291074617E+12,-1.435729928774685E+10);
     static Vector3d earthPosNasa = new Vector3d(-1.477129564888797E+11, -2.821064238692064E+10,2.033107664331608E+07);
 
-    static double tf = 31536000; //final time point of the mission ins seconds (31636000s = one year)
+    static double tf = 31536000; //final time point of the mission ins seconds (31536000s = one year; 315576000s = one julian astronomical year)
     static double[] stepSizes = {86400, 8640, 864, 86, 50, 30, 25, 20}; //step sizes that we want to test
     static double h;
 
