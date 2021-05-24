@@ -12,16 +12,19 @@ import titan.StateInterface;
 public class EulerSolver implements ODESolverInterface {
 
     static boolean DEBUG = false;
-    public  static boolean VISUALIZATION = Simulator.VISUALIZATION;
+    public static boolean TESTING = ProbeSimulator.TESTING;
+    public  static boolean VISUALIZATION = ProbeSimulator.VISUALIZATION;
     static int visualizationTimeStamps = 50;
 
     public State[] states;
 
     public Vector3d[] earthPos;
+    public Vector3d earthPosAfterOneYear;
     public Vector3d[] titanPos;
+    public Vector3d titanPosAfterOneYear;
 
     /**
-     * Euler solver
+     * solve ODE
      *
      * @param f simulator.ODEFunction implementing Newton's law
      * @param y0 initial state of the system
@@ -35,26 +38,36 @@ public class EulerSolver implements ODESolverInterface {
         states = new State[ts.length];
         states[0] = (State) y0;
 
-        //create array storing positions of titan
-        titanPos = new Vector3d[ts.length];
-        titanPos[0] = (Vector3d) states[0].getPos(8);
+        if(!TESTING){
+            //create array storing positions of titan
+            titanPos = new Vector3d[ts.length];
+            titanPos[0] = (Vector3d) states[0].getPos(8);
+            //create array storing positions of earth
+            earthPos = new Vector3d[ts.length];
+            earthPos[0] = (Vector3d) states[0].getPos(3);
+        }
 
         //updating positions for one step
         for(int i = 1; i < states.length; i++){
             states[i] = (State) step(f, ts[i], states[i-1], (ts[i]-ts[i-1]));
-            titanPos[i] = (Vector3d) states[i].getPos(8); //add current position of titan to static storage
+            if(!TESTING){
+                titanPos[i] = (Vector3d) states[i].getPos(8); //add current position of titan to static storage
+                earthPos[i] = (Vector3d) states[i].getPos(3); //add current position of earth to extra storage
+            }
             //add current position of object to short version of orbit (for visualization)
             if(VISUALIZATION && i % visualizationTimeStamps == 0)
             for(int j = 0; j < Planet.planets.length; j++){
                 Planet.planets[j].addOrbit(states[i].getPos(j));
             }
         }
+        earthPosAfterOneYear = (Vector3d) states[states.length - 1].getPos(3);
+        titanPosAfterOneYear = (Vector3d) states[states.length - 1].getPos(8);
 
         return states;
     }
 
     /**
-     * Euler solver
+     * solve ODE
      *
      * @param f simulator.ODEFunction implementing Newton's law
      * @param y0 initial state of the system
@@ -67,9 +80,22 @@ public class EulerSolver implements ODESolverInterface {
 
         //get array storing separate timestamps
         double[] ts = new double[(int) (Math.round((tf/h)+1))];
+        if(DEBUG){
+            System.out.println("ts array: " + ts.length);
+        }
         ts[0] = 0;
         for(int i = 1; i < ts.length; i++){
             ts[i] = ts[i-1] + h;
+            if(i == ts.length-1){
+                ts[i] = tf;
+                if(DEBUG){
+                    System.out.println();
+                    System.out.println();
+                    System.out.println("ts[last] = " + ts[i] + " at " + i);
+                    System.out.println();
+                    System.out.println();
+                }
+            }
         }
 
         //create array storing states at different timestamps
@@ -81,23 +107,34 @@ public class EulerSolver implements ODESolverInterface {
             System.out.println("simulator.ODESolver - state at 0\n" + y0.toString());
         }
 
-        //create array storing positions of titan
-        titanPos = new Vector3d[ts.length];
-        titanPos[0] = (Vector3d) states[0].getPos(8);
+        if(!TESTING){
+            //create array storing positions of titan
+            titanPos = new Vector3d[ts.length];
+            titanPos[0] = (Vector3d) states[0].getPos(8);
+            //create array storing positions of earth
+            earthPos = new Vector3d[ts.length];
+            earthPos[0] = (Vector3d) states[0].getPos(3);
+        }
 
         //updating positions for one step
         for(int i = 1; i < states.length; i++){
             states[i] = (State) step(f, ts[i], states[i-1], (ts[i]-ts[i-1]));
-            if(DEBUG){
-                System.out.println("STATE AT " + i + ": " + states[i]);
+            if(DEBUG && (i == 1 || i == states.length - 1)){
+                System.out.println("SOLVER DEBUG - STEPSIZE: " + (ts[i]-ts[i-1]));
+                System.out.println("SOLVER DEBUG - TIME: " + ts[i] + " at " + i);
             }
-            titanPos[i] = (Vector3d) states[i].getPos(8); //add current position of titan to extra storage
+            if(!TESTING){
+                titanPos[i] = (Vector3d) states[i].getPos(8); //add current position of titan to static storage
+                earthPos[i] = (Vector3d) states[i].getPos(3); //add current position of earth to extra storage
+            }
             //add current position of object to short version of orbit (for visualization)
             if(VISUALIZATION && i % visualizationTimeStamps == 0)
                 for(int j = 0; j < Planet.planets.length; j++){
                     Planet.planets[j].addOrbit(states[i].getPos(j));
                 }
         }
+        earthPosAfterOneYear = (Vector3d) states[states.length - 1].getPos(3);
+        titanPosAfterOneYear = (Vector3d) states[states.length - 1].getPos(8);
 
         return states;
     }
