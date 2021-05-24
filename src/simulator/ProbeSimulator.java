@@ -5,7 +5,7 @@ import titan.Vector3dInterface;
 
 /**
  * class to simulate trajectory of the probe
- * update
+ *
  *
  * @author Leo
  */
@@ -62,9 +62,9 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
             }
             solverName = "Euler";
             earthPos = eulerSolver.earthPos;
-            earthPosAfterOneYear = earthPos[earthPos.length-1];
+            earthPosAfterOneYear = eulerSolver.earthPosAfterOneYear;
             titanPos = eulerSolver.titanPos;
-            titanPosAfterOneYear = titanPos[titanPos.length -1];
+            titanPosAfterOneYear = eulerSolver.titanPosAfterOneYear;
         }
         else if(ODESolverChoice == 2){
             //start solver
@@ -73,9 +73,9 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
             //extract information
             solverName = "Verlet";
             earthPos = verletSolver.earthPos;
-            earthPosAfterOneYear = earthPos[earthPos.length-1];
+            earthPosAfterOneYear = verletSolver.earthPosAfterOneYear;
             titanPos = verletSolver.titanPos;
-            titanPosAfterOneYear = titanPos[titanPos.length -1];
+            titanPosAfterOneYear = verletSolver.titanPosAfterOneYear;
         }
         else if(ODESolverChoice == 3){
             //start solver
@@ -84,9 +84,9 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
             //extract information
             solverName = "RungeKutta";
             earthPos = rungeKuttaSolver.earthPos;
-            earthPosAfterOneYear = earthPos[earthPos.length-1];
+            earthPosAfterOneYear = rungeKuttaSolver.earthPosAfterOneYear;
             titanPos = rungeKuttaSolver.titanPos;
-            titanPosAfterOneYear = titanPos[titanPos.length -1];
+            titanPosAfterOneYear = rungeKuttaSolver.titanPosAfterOneYear;
         }
 
         trajectory = new Vector3d[ts.length];
