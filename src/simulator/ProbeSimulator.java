@@ -5,6 +5,7 @@ import titan.Vector3dInterface;
 
 /**
  * class to simulate trajectory of the probe
+ * update
  *
  * @author Leo
  */
