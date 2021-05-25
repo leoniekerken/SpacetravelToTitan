@@ -20,9 +20,10 @@ public class MassFlowRate {
 
 
     //At first had the params as Vector3d velocity values, but treating in scalar, so assumed that starting v is 0 and final v is 60kms for the moment.
-    public static double getAcceleration( Vector3dInterface initialVelocity, Vector3dInterface finalVelocity, double time_interval){
+    public static Vector3dInterface getAcceleration( Vector3dInterface initialVelocity, Vector3dInterface finalVelocity, double time_interval){
         acceleration =  (finalVelocity.sub(initialVelocity)).mul(1/time_interval);
-        return acceleration.norm();
+        // acceleration.mul(power);
+        return acceleration;
     }
 
 //    public static Vector3d getThrust(Vector3d velocity, double massFlowrate){
@@ -32,27 +33,24 @@ public class MassFlowRate {
 //        return velocity.mul(massFlowrate);
 //    }
 
-
-
     //These methods may possibly need to go to the simulation class instead.
 
-    public double calculateNetForce(Vector3dInterface finalVelocity){
-        double massVal= MASS_SPACECRAFT;// weight of the fuel
-        double accel= getAcceleration(Planet.planets[11].posVector, finalVelocity, Simulator.h);
-        this.mass=massVal;
+    public Vector3dInterface calculateNetForce(Vector3dInterface finalVelocity){
+        Vector3dInterface accel= getAcceleration(Planet.planets[11].posVector, finalVelocity, Simulator.h);
+        this.mass=MASS_SPACECRAFT + remainingFuel;
 
         this.acceleration= accel;
 
-        return massVal.mul(accel);
+        return accel.mul(mass);
 
 
     //removed the thrust parameter since it's not required here.
     /** @return rate of mass, calculated from F=ma and F_t= Ve * (dm/dt) --> make dm/dt the subject of the formula.*/
-    public double getMassFlowRate(Vector3dInterface finalVelocity, double force){
-        Vector3dInterface velocity = finalVelocity.mul(1/finalVelocity.norm());
-        force = calculateNetForce(velocity.mul(eV));
+    public double getMassFlowRate(Vector3dInterface finalVelocity){
+        Vector3dInterface unitFinal = finalVelocity.mul(1/finalVelocity.norm());
+        Vector3dInterface force = calculateNetForce(unitFinal.mul(eV));
 
-        return force/velocity;
+        return force.mul(1/unitFinal.norm());
     }
     //In simularion, need a method that returns the mass required for fuel. I think that we could multiply the mass flowrate
     // by the time interval of one year to solve this, but I don't know if this is correct.
