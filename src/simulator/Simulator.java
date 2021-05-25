@@ -6,15 +6,14 @@ import visualization.StartVisualization;
 
 public class Simulator {
 
-    static boolean PRINT = true;
+    static boolean PRINT = false;
     static boolean DETAIL = false;
     static boolean VISUALIZATION = false;
-    static boolean NEWTON = false;
-
+    static boolean NEWTON = true;
 
     //initial parameters to start the mission - 20 seems to be the limit for h
-    static double tf = 31536000; //final time point of the mission ins seconds (31636000s = one year)
-    static double h = 50;  //step size with which everything is updated (86400s = 1 day)
+    static double tf = 31536000; //final time point of the mission ins seconds (31536000s = one year)
+    static double h = 60;  //step size with which everything is updated (86400s = 1 day)
 
     static double initVel = 60000; //initial (undirected) velocity of the probe in m/s
 
@@ -22,6 +21,8 @@ public class Simulator {
 
         //initialize positions of all objects in solarSystem
         PlanetStart2020 planetStart2020 = new PlanetStart2020();
+
+        ProbeSimulator.VISUALIZATION = VISUALIZATION;
 
         //new probeSimulator
         ProbeSimulator probeSimulator = new ProbeSimulator();
@@ -31,11 +32,11 @@ public class Simulator {
         MultivariableNewton newton = new MultivariableNewton();
 
         //take off point of the probe
-        Vector3dInterface p0 = new Vector3d(-1.471868229554755E11, -2.8606557057938354E10, 8287486.0632270835);         //initial position here
-        Vector3dInterface v0 = new Vector3d(30503.316321875955, -62503.59520115846, -621.7444409637209);                //initial velocity here
+        Vector3dInterface p0 = new Vector3d(-1.471868229554755E11, -2.8606557057938354E10, 8287486.0632270835); //initial position here
+        Vector3dInterface v0 = new Vector3d(30503.316321875955, -62503.59520115846, -621.7444409637209); //initial velocity here
         Vector3dInterface pf = new Vector3d(6.332873118527889e+11,  -1.357175556995868e+12,  2.134637041453660e+09);    //final destination of the probe (should be 300km from titan)
 
-        //set solver choice: 1 = EulerSolver; 2 = RungeKuttaSolver; 3 = Verlet
+        //set solver choice: 1 = EulerSolver; 2 = VerletSolver; 3 = RungeKuttaSolver
         probeSimulator.ODESolverChoice = 1;
 
         //calculate trajectory of the probe
@@ -68,6 +69,18 @@ public class Simulator {
             System.out.println();
             System.out.println();
             System.out.println("START OF MISSION TO TITAN");
+            System.out.println();
+            System.out.println();
+            System.out.println("SOLVER USED:");
+            if(probeSimulator.ODESolverChoice == 1){
+                System.out.println("EULER SOLVER");
+            }
+            else if(probeSimulator.ODESolverChoice == 2) {
+                System.out.println("VERLET SOLVER");
+            }
+            else if(probeSimulator.ODESolverChoice == 3){
+                System.out.println("RUNGE-KUTTA SOLVER");
+            }
             System.out.println();
             System.out.println();
             System.out.println("tf = " + tf);
@@ -116,28 +129,28 @@ public class Simulator {
                     }
                 }
             }
+        }
 
-            if (NEWTON) {
-                System.out.println("ROCKET SIMULATION");
-                System.out.println();
-                System.out.println();
-                System.out.println("initial position of the probe: " + p0.toString());
-                System.out.println("initial velocity of the probe: " + v0.toString());
+        if (NEWTON) {
+            System.out.println("ROCKET SIMULATION");
+            System.out.println();
+            System.out.println();
+            System.out.println("initial position of the probe: " + p0.toString());
+            System.out.println("initial velocity of the probe: " + v0.toString());
+            System.out.println("final destination of the probe: " + pf.toString());
+            System.out.println("initial g(Vk): " + gValues[0].toString());
+            System.out.println();
+            System.out.println("first velocity update: " + velocities[0].toString());
+            System.out.println();
+            System.out.println();
+
+            for (int i = 0; i < positions.length; i++) {
+                System.out.println("current position of the probe: " + positions[i].toString());
                 System.out.println("final destination of the probe: " + pf.toString());
-                System.out.println("initial g(Vk): " + gValues[0].toString());
+                System.out.println("g(Vk): " + gValues[i].toString());
+                System.out.println("current velocity V(k+1): " + velocities[i].toString());
                 System.out.println();
-                System.out.println("first velocity update: " + velocities[0].toString());
                 System.out.println();
-                System.out.println();
-
-                for (int i = 0; i < positions.length; i++) {
-                    System.out.println("current position of the probe: " + positions[i].toString());
-                    System.out.println("final destination of the probe: " + pf.toString());
-                    System.out.println("g(Vk): " + gValues[i].toString());
-                    System.out.println("current velocity V(k+1): " + velocities[i].toString());
-                    System.out.println();
-                    System.out.println();
-                }
             }
         }
 

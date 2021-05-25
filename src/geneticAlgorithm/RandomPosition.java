@@ -3,7 +3,7 @@ package geneticAlgorithm;
 import simulator.Planet;
 import simulator.Vector3d;
 
-public class randomPosition {
+public class RandomPosition {
 
 
     final static double c = 1e11;

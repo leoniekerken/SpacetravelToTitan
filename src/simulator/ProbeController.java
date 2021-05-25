@@ -1,8 +1,5 @@
 package simulator;
 
-import simulator.PlanetStart2020;
-import simulator.ProbeSimulator;
-import simulator.Vector3d;
 import titan.Vector3dInterface;
 
 /**

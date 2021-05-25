@@ -1,7 +1,6 @@
 package geneticAlgorithm;
 
 import simulator.*;
-import titan.Vector3dInterface;
 
 /**
  * runs the genetic algorithm through several cycles or
@@ -14,6 +13,7 @@ public class Evolution {
     static final boolean PRINT = true;
     static final boolean RUN = true;
     static final boolean DEBUG = false;
+    static final boolean GENEPOOL = false;
 
     /**
      * play around with those parameters and look what happens
@@ -31,13 +31,15 @@ public class Evolution {
 
     static final int populationSize = 90;
     static final int tournamentSize = 3;
-    static final int evolutionCycles = 100;
+    static final int evolutionCycles = 1000;
     static final double mutationRate = 0.3;
     static final double mutationFactor = 1e11;
     static final double randomness = 0.4;
 
     static final double tf = 31536000;
-    static final double h = 50;
+    static final double h = 86400 / 10;
+
+    static int ODESolverChoice = 2;
 
     public static Vector3d[] genePool;
     public static Vector3d[] titanPos;
@@ -47,98 +49,38 @@ public class Evolution {
         if(DEBUG){
             PlanetStart2020 planetStart2020 = new PlanetStart2020();
             for(int i = 0; i < 100; i++){
-                Vector3d targetPos = randomPosition.generateRandomPosition();
+                Vector3d targetPos = RandomPosition.generateRandomPosition();
                 Vector3d unitVector = (Vector3d) targetPos.sub(Planet.planets[3].posVector).mul(1/targetPos.dist(Planet.planets[3].posVector));
                 Vector3d velVector = (Vector3d) unitVector.mul(60000);
                 System.out.println("RANDOM targetPos: " + targetPos + " unitVector: " + unitVector + " velVector: " + velVector);
             }
         }
 
+        if(GENEPOOL){
+            GenePool.genePool();
+        }
+
         if(RUN){
-            //initialize positions of all objects in solarSystem (in 2019!!)
-            PlanetStart2019 planetStart2019 = new PlanetStart2019();
-
-            //new probeSimulator
-            ProbeSimulator probeSimulator = new ProbeSimulator();
-
-            //run one initial simulation to get positions of titan in its one year orbit from April 1st, 2019 to April 1st, 2020
-
-            //calculate trajectory (without a probe)
-            probeSimulator.trajectory(new Vector3d(0, 0, 0), new Vector3d(0, 0, 0), tf, h);
-
-            //retrieve positions of titan of 2019 as genePool for evolution
-            genePool = probeSimulator.titanPos;
-
             if (PRINT) {
-                System.out.println("START");
-                System.out.println();
-                System.out.println("POSITION OF TITAN AT APRIL 1st 2019 " + genePool[0]);
                 System.out.println();
                 System.out.println();
-                System.out.println("POSITION OF TITAN AT APRIL 1st 2020 " + genePool[genePool.length - 1]);
+                System.out.println("RUNNING INITIAL SIMULATION");
                 System.out.println();
                 System.out.println();
-
             }
 
-            //make sure to set probeSimulator to null to allow gc
-            probeSimulator = null;
-            System.gc();
-
-            //run one initial simulation with the probe
-
-            //make sure to initialize solar system with values from April 1st 2020
+            //initialize positions of the planets
             PlanetStart2020 planetStart2020 = new PlanetStart2020();
 
-            probeSimulator = new ProbeSimulator();
+            ProbeSimulator probeSimulator = new ProbeSimulator();
 
-            double initVel = 60000;
-            Vector3d titanAtStart = (Vector3d) Planet.planets[8].posVector;
+            probeSimulator.ODESolverChoice = ODESolverChoice;
 
-            //initialize probe with starting values
-            TakeOffPoint takeOffPoint = new TakeOffPoint();
+            probeSimulator.trajectory(new Vector3d(0, 0, 0), new Vector3d(0, 0, 0), tf, h);
 
-            takeOffPoint.calculateTakeOffPoint(initVel, titanAtStart);
-            Vector3dInterface p0 = takeOffPoint.startPos; //initial position here
-            Vector3dInterface v0 = takeOffPoint.startVel; //initial velocity here
-
-            //calculate trajectory of the probe
-            Vector3dInterface[] trajectory = probeSimulator.trajectory(p0, v0, tf, h);
-
-            //retrieve positions of titan
             titanPos = probeSimulator.titanPos;
 
-
             if (PRINT) {
-                System.out.println();
-                System.out.println();
-                System.out.println("FIRST SIMULATION");
-                System.out.println();
-                System.out.println();
-                System.out.println("tf = " + tf);
-                System.out.println("step size = " + h);
-                System.out.println();
-                System.out.println();
-                System.out.println("position of earth at start: " + Planet.planets[3].posVector);
-                System.out.println("position of titan at start: " + titanPos[0]);
-                System.out.println();
-                System.out.println();
-                System.out.println("probe launched at: \nposition: " + takeOffPoint.startPos.toString() + "\nvelocity: " + initVel + ", " + takeOffPoint.startVel.toString());
-                System.out.println();
-                System.out.println();
-                System.out.println("probe at start: " + trajectory[0].toString());
-                System.out.println("titan at start: " + titanPos[0]);
-                System.out.println("euclidean distance probe to titan at start: " + trajectory[0].dist(titanPos[0]));
-                System.out.println("distance vector probe to titan at start: " + trajectory[0].sub(titanPos[0]));
-                System.out.println();
-                System.out.println();
-                System.out.println("probe at end: " + trajectory[trajectory.length - 1].toString());
-                System.out.println("titan at end: " + titanPos[titanPos.length - 1]);
-                System.out.println("euclidean distance probe to titan at end: " + trajectory[trajectory.length - 1].dist(titanPos[titanPos.length - 1]));
-                System.out.println("distance vector probe to titan at end: " + trajectory[trajectory.length - 1].sub(titanPos[titanPos.length - 1]));
-                System.out.println();
-                System.out.println();
-                System.out.println();
                 System.out.println();
                 System.out.println();
                 System.out.println("EVOLUTION STARTS HERE");
@@ -179,7 +121,7 @@ public class Evolution {
                     System.out.println();
                     population.print();
                     System.out.println();
-                    System.out.println("FITTEST PARENT POPULATION " + population.getFittest().velVector + ", fitness: " + population.getFittest().getFitness() + ", distance: " + population.getFittest().distanceVector + ", position: " + population.getFittest().position);
+                    System.out.println("FITTEST PARENT POPULATION " + population.getFittest().velVector + "; initVel: " + population.getFittest().initVel + ", fitness: " + population.getFittest().getFitness() + ", distance: " + population.getFittest().distanceVector + ", position: " + population.getFittest().position);
                 }
                 for (int j = 0; j < nextGeneration.populationSize; j++) {
 

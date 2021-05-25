@@ -12,7 +12,7 @@ import titan.Vector3dInterface;
 public class MultivariableNewton {
 
     double[][] jacobianMatrix;
-    double h = 0.5;     //Stepsize used to fill in the jacobian matrix
+    double h = 10;     //Stepsize used to fill in the jacobian matrix
 
     public MultivariableNewton() {
         jacobianMatrix = new double[3][3];

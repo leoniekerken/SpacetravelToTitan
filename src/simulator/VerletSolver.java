@@ -3,205 +3,159 @@ package simulator;
 import titan.ODEFunctionInterface;
 import titan.ODESolverInterface;
 import titan.StateInterface;
-import titan.Vector3dInterface;
+
+/**
+ * Verlet solver to solve equations of motion
+ *
+ * @author Chiara, Leo
+ */
 
 public class VerletSolver implements ODESolverInterface {
 
-    private final PlanetStart2019 p = new PlanetStart2019();
-    private final double grav = 6.674E-11;
-    StateInterface[] states;                    //Array of all the states to be returned
-    Vector3dInterface[] positions;
-    Vector3dInterface[] prevPositions;
-    Vector3dInterface[] velocities;
-    Vector3dInterface[] acceleration;
-    Vector3d[] earthPos;
-    Vector3d[] titanPos;
-    int index = 0;
-    double[] masses;
+    static boolean DEBUG = false;
+    public static boolean TESTING = ProbeSimulator.TESTING;
+    public  static boolean VISUALIZATION = ProbeSimulator.VISUALIZATION;
+    static int visualizationTimeStamps = 50;
+
+    public State[] states;
+    public Vector3d[] earthPos;
+    public Vector3d earthPosAfterOneYear;
+    public Vector3d[] titanPos;
+    public Vector3d titanPosAfterOneYear;
 
     /**
-     * CONSTRUCTOR
-     * Initialize all the arrays
+     * solve ODE
+     *
+     * @param f simulator.ODEFunction implementing Newton's law
+     * @param y0 initial state of the system
+     * @param ts time steps at which position is being updated
+     * @return state of the system at different time points
      */
-    public VerletSolver() {
-        positions = new Vector3d[p.planets.length];
-        prevPositions = new Vector3d[p.planets.length];
-        earthPos = new Vector3d[100000];
-        titanPos = new Vector3d[100000];
-        masses = new double[p.planets.length];
-        velocities = new Vector3d[p.planets.length];
-
-        //Initialize both positions and previousPositions arrays with the initial positions of all planets
-        for (int i = 0; i < p.planets.length; i++) {
-            positions[i] = p.planets[i].posVector;
-            prevPositions[i] = p.planets[i].posVector;
-        }
-
-        earthPos[index] = (Vector3d) positions[4];
-        titanPos[index] = (Vector3d) positions[8];
-        index++;
-
-        //Initialize array with initial masses of all planets
-        for (int i = 0; i < p.planets.length; i++) {
-            masses[i] = p.planets[i].mass;
-        }
-
-        //Initialize the velocity array with the initial velocity of all planets
-        for (int i = 0; i < p.planets.length; i++) {
-            velocities[i] = p.planets[i].velVector;
-        }
-
-        //Initialize acceleration vector
-        acceleration = new Vector3dInterface[positions.length];
-
-        //Update accelerations
-        updateAcceleration();
-    }
-
     @Override
     public StateInterface[] solve(ODEFunctionInterface f, StateInterface y0, double[] ts) {
-        states  = new StateInterface[ts.length];
-        states[0] = y0;
 
-        nextPosVelocityVerlet(ts[1]);                                                  //First update of the positions with Velocity Verlet
-        states[1] = step(f, ts[1], y0, ts.length/ts[ts.length-1]);                  //This is the first state to be added after the Velocity Verlet
+        //create array storing states at different timestamps
+        states = new State[ts.length];
+        states[0] = (State) y0;
 
-        for (int i = 2; i < states.length; i++) {
-            nextPosPositionVerlet(ts[i]);
-            states[i] = step(f, i * ts[i], states[i-1], ts.length/ts[ts.length-1]);
+        if(!TESTING){
+            //create array storing positions of titan
+            titanPos = new Vector3d[ts.length];
+            titanPos[0] = (Vector3d) states[0].getPos(8);
+            //create array storing positions of earth
+            earthPos = new Vector3d[ts.length];
+            earthPos[0] = (Vector3d) states[0].getPos(3);
         }
-        return this.states;
+
+        //updating positions for one step
+        for(int i = 1; i < states.length; i++){
+            states[i] = (State) step(f, ts[i], states[i-1], (ts[i]-ts[i-1]));
+            if(!TESTING){
+                titanPos[i] = (Vector3d) states[i].getPos(8); //add current position of titan to static storage
+                earthPos[i] = (Vector3d) states[i].getPos(3); //add current position of earth to extra storage
+            }
+            //add current position of object to short version of orbit (for visualization)
+            if(VISUALIZATION && i % visualizationTimeStamps == 0)
+                for(int j = 0; j < Planet.planets.length; j++){
+                    Planet.planets[j].addOrbit(states[i].getPos(j));
+                }
+        }
+        earthPosAfterOneYear = (Vector3d) states[states.length - 1].getPos(3);
+        titanPosAfterOneYear = (Vector3d) states[states.length - 1].getPos(8);
+
+        return states;
     }
 
+    /**
+     * solve ODE
+     *
+     * @param f simulator.ODEFunction implementing Newton's law
+     * @param y0 initial state of the system
+     * @param tf final time point
+     * @param h step size
+     * @return states of the planets over a given time period
+     */
     @Override
     public StateInterface[] solve(ODEFunctionInterface f, StateInterface y0, double tf, double h) {
-        states  = new StateInterface[(int) (Math.round(tf/h)+1)];
-        states[0] = y0; //here I add the initial state
 
-        nextPosVelocityVerlet(h);                          //First update of the positions with Velocity Verlet
-        states[1] = step(f, tf/h, y0, h);               //This is the first state to be added after the Velocity Verlet
-
-        int ts = (int) (tf/h);
-
-        for (int i = 2; i < ts; i++) {
-            nextPosPositionVerlet(h);
-            states[i] = step(f, i * h, states[i-1], h);
+        //get array storing separate timestamps
+        double[] ts = new double[(int) (Math.round((tf/h)+1))];
+        if(DEBUG){
+            System.out.println("ts array: " + ts.length);
         }
+        ts[0] = 0;
+        for(int i = 1; i < ts.length; i++){
+            ts[i] = ts[i-1] + h;
+            if(i == ts.length-1){
+                ts[i] = tf;
+                if(DEBUG){
+                    System.out.println();
+                    System.out.println();
+                    System.out.println("ts[last] = " + ts[i] + " at " + i);
+                    System.out.println();
+                    System.out.println();
+                }
+            }
+        }
+
+        //create array storing states at different timestamps
+        states = new State[(int) (Math.round(tf/h)+1)];
+        states[0] = (State) y0;
+
+        if(DEBUG){
+            System.out.println("simulator.ODESolver - states " + states.length);
+            System.out.println("simulator.ODESolver - state at 0\n" + y0.toString());
+        }
+
+        if(!TESTING){
+            //create array storing positions of titan
+            titanPos = new Vector3d[ts.length];
+            titanPos[0] = (Vector3d) states[0].getPos(8);
+            //create array storing positions of earth
+            earthPos = new Vector3d[ts.length];
+            earthPos[0] = (Vector3d) states[0].getPos(3);
+        }
+
+        //updating positions for one step
+        for(int i = 1; i < states.length; i++){
+            states[i] = (State) step(f, ts[i], states[i-1], (ts[i]-ts[i-1]));
+            if(DEBUG && (i == 1 || i == states.length - 1)){
+                System.out.println("SOLVER DEBUG - STEPSIZE: " + (ts[i]-ts[i-1]));
+                System.out.println("SOLVER DEBUG - TIME: " + ts[i] + " at " + i);
+            }
+            if(!TESTING){
+                titanPos[i] = (Vector3d) states[i].getPos(8); //add current position of titan to static storage
+                earthPos[i] = (Vector3d) states[i].getPos(3); //add current position of earth to extra storage
+            }
+            //add current position of object to short version of orbit (for visualization)
+            if(VISUALIZATION && i % visualizationTimeStamps == 0)
+                for(int j = 0; j < Planet.planets.length; j++){
+                    Planet.planets[j].addOrbit(states[i].getPos(j));
+                }
+        }
+        earthPosAfterOneYear = (Vector3d) states[states.length - 1].getPos(3);
+        titanPosAfterOneYear = (Vector3d) states[states.length - 1].getPos(8);
+
         return states;
     }
 
     @Override
     public StateInterface step(ODEFunctionInterface f, double t, StateInterface y, double h) {
+
+        //half-step velocity: v(t+h) = v(t) + 1/2 a(t) * h
+        State halfStepVel = ((State) y).updateVelocity((0.5*h), f.call(t, y));
+
+        //update position: x(t+h) = x(t) + halfStepVel
+        State updatePos = ((State) y).updatePosition(h, f.call(t + 0.5 * h, halfStepVel));
+
+        //update halfStepVel: v(t+h) = halfStepVel + 1/2 a(t+h) * h
+        State updateVel = halfStepVel.updateVelocity((0.5*h), f.call(t + h, updatePos));
+
+        //putting it together: newState with updatePos and updateVel
         State newState = new State();
-            for (int i = 0; i < positions.length; i++) {
-                newState.addPos(i, this.positions[i]);
-                newState.addVel(i, this.velocities[i]);
-            }
+        newState.addAllPos(updatePos);
+        newState.addAllVel(updateVel);
+
         return newState;
-    }
-
-    /**
-     *  SIMPLE POSITION VERLET
-     *
-     *  1. The current positions are stored in the ArrayList storing the previous positions
-     *  2. The current positions are updated
-     *  3. The acceleration is updated
-     */
-    public void nextPosPositionVerlet(double h) {
-        for (int i = 0; i < positions.length; i++) {
-
-            Vector3dInterface pos = positions[i].mul(2);
-            Vector3dInterface prevPos = prevPositions[i].mul(-1);
-            Vector3dInterface acc = acceleration[i].mul(h * h);
-
-            Vector3dInterface[] vs = new Vector3d[3];
-            vs[0] = pos;
-            vs[1] = prevPos;
-            vs[2] = acc;
-
-            prevPositions[i] = positions[i];             //ArrayList of previous positions becomes equal to the current positions
-            positions[i] = VectorOperations.sumAll(vs);                  //ArrayList of current positions is updated with updated positions
-        }
-        earthPos[index] = (Vector3d) positions[4];
-        titanPos[index] = (Vector3d) positions[8];
-        index++;
-        updateAcceleration();
-    }
-
-    /**
-     *  VELOCITY VERLET
-     *
-     *  1. The current positions are stored in the ArrayList storing the previous positions
-     *  2. The current positions are updated
-     *  3. The acceleration is updated
-     *
-     */
-    public void nextPosVelocityVerlet(double h) {
-
-        //Update position
-        for (int i = 0; i < positions.length; i++) {
-
-            Vector3dInterface pos = positions[i];
-            Vector3dInterface vel = velocities[i].mul(h);
-            Vector3dInterface acc = acceleration[i].mul(h * h * (0.5));
-
-            Vector3dInterface[] vs = new Vector3d[3];
-            vs[0] = (pos);
-            vs[1] = (vel);
-            vs[2] = (acc);
-
-            positions[i] = VectorOperations.sumAll(vs);
-        }
-        earthPos[index] = (Vector3d) positions[4];
-        titanPos[index] = (Vector3d) positions[8];
-        index++;
-        updateAcceleration();
-    }
-
-    /**
-     * The acceleration is updated
-     */
-    public void updateAcceleration() {
-
-        for (int i = 0; i < positions.length; i++) {
-
-            Vector3dInterface body1 = positions[i];
-            double mass1 = masses[i];                       //Copy array of masses
-
-            Vector3dInterface[] forces = new Vector3d[positions.length];
-
-            for (int j = 0; j < positions.length; j++) {
-                if (j != i) {
-                    Vector3dInterface body2 = positions[j];
-                    double mass2 = masses[j];
-                    forces[j] = gravitationalForce(mass1, mass2, body1, body2);
-                }
-            }
-            acceleration[i] = VectorOperations.sumAll(forces).mul(1/mass1);
-        }
-    }
-
-    public Vector3d[] getEarthPos() { return earthPos; }
-
-    public Vector3d[] getTitanPos() { return titanPos; }
-
-    /**
-     * Evaluate the change in the direction of the objects due to the forces that act on them
-     *
-     * Forces taken into account:
-     * - force that one object performs on the other (evaluated by the directionVector(p1, p2) method)
-     * - gravitational force
-     *
-     * @param m1 is the mass of the first object
-     * @param m2 is the mass of the second object
-     * @param v1 is the direction represented by the vector with the position of the first object
-     * @param v2 is the direction represented by the vector with the positions of the second object
-     * @return positions after all the forces influenced it
-     */
-    private Vector3dInterface gravitationalForce(double m1, double m2, Vector3dInterface v1, Vector3dInterface v2) {
-        double distance = v2.dist(v1);
-        Vector3dInterface forceDirection = VectorOperations.approximateDirection(v1, v2);       //Direction of force resulting from the two vectors
-        double force = grav * m1 * m2 / Math.pow(distance, 2);                                  //Actual force resulting from the two vectors
-        return forceDirection.mul(force);
     }
 }
