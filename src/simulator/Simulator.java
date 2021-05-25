@@ -26,9 +26,9 @@ public class Simulator {
 
         //take off point of the probe
         Vector3dInterface p0 = new Vector3d(-1.471868229554755E11, -2.8606557057938354E10, 8287486.0632270835); //initial position here
-        Vector3dInterface v0 = new Vector3d(30503.316321875955, -62503.59520115846, -621.7444409637209); //initial velocity here
+        Vector3dInterface v0 = new Vector3d(30503.316321875955, -62503.59520115846, -621.7444409637209);        //initial velocity here
 
-        //set solver choice: 1 = EulerSolver; 2 = VerletSolver; 3 = RungeKuttaSolver
+        //set solver choice: 1 = EulerSolver; 2 = RungeKuttaSolver; 3 = Verlet
         probeSimulator.ODESolverChoice = 2;
 
         //calculate trajectory of the probe
@@ -58,18 +58,6 @@ public class Simulator {
             System.out.println();
             System.out.println();
             System.out.println("START OF MISSION TO TITAN");
-            System.out.println();
-            System.out.println();
-            System.out.println("SOLVER USED:");
-            if(probeSimulator.ODESolverChoice == 1){
-                System.out.println("EULER SOLVER");
-            }
-            else if(probeSimulator.ODESolverChoice == 2) {
-                System.out.println("VERLET SOLVER");
-            }
-            else if(probeSimulator.ODESolverChoice == 3){
-                System.out.println("RUNGE-KUTTA SOLVER");
-            }
             System.out.println();
             System.out.println();
             System.out.println("tf = " + tf);
