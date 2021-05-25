@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ProbeSimulatorTest {
 
-    static final double ACCURACY = 2.5e13; // 1 meter (might need to tweak that)
+    static final double ACCURACY = 5e11; // 1 meter (might need to tweak that)
     // since intervals of a day are used we need such large accuracy numbers.
     static PlanetStart2020 planets2020 = new PlanetStart2020();
     @Test
@@ -22,7 +22,7 @@ class ProbeSimulatorTest {
 
         Vector3dInterface[] trajectory = simulateOneDay();
         double x1 = -1.4218092965609787E11; // reference implementation
-        assertEquals(x1, trajectory[1].getX(), ACCURACY); // delta +-ACCURACY
+        assertEquals(x1, trajectory[trajectory.length-1].getX(), ACCURACY); // delta +-ACCURACY
 
     }
 
@@ -30,7 +30,7 @@ class ProbeSimulatorTest {
 
         Vector3dInterface[] trajectory = simulateOneDay();
         double y1 = -3.3475191084301098E10; // reference implementation
-        assertEquals(y1, trajectory[1].getY(), ACCURACY); // delta +-ACCURACY
+        assertEquals(y1, trajectory[trajectory.length-1].getY(), ACCURACY); // delta +-ACCURACY
 
     }
 
@@ -42,16 +42,15 @@ class ProbeSimulatorTest {
         {
             System.out.println(trajectory[i].toString());
         }
-        assertEquals(z1, trajectory[1].getZ(), ACCURACY); // delta +-ACCURACY
+        assertEquals(z1, trajectory[trajectory.length-1].getZ(), ACCURACY); // delta +-ACCURACY
 
     }
 
     @Test void testTrajectoryOneYearX() {
 
         Vector3dInterface[] trajectory = simulateOneYear();
-        double x366 = -2.4951517995514418E13; // reference implementation
-        //double x366 = -1.1659551355644345E13; // reference implementation
-        assertEquals(x366, trajectory[366].getX(), ACCURACY); // delta +-ACCURACY
+        double x366 = -2.4951517995514418E12; // reference implementation
+        assertEquals(x366, trajectory[trajectory.length-1].getX(), ACCURACY); // delta +-ACCURACY
 
     }
 
@@ -59,7 +58,7 @@ class ProbeSimulatorTest {
 
         Vector3dInterface[] trajectory = simulateOneYear();
         double y366 = -1.794349344879982E12; // reference implementation
-        assertEquals(y366, trajectory[366].getY(), ACCURACY); // delta +-ACCURACY
+        assertEquals(y366, trajectory[trajectory.length-1].getY(), ACCURACY); // delta +-ACCURACY
 
     }
 
@@ -67,7 +66,7 @@ class ProbeSimulatorTest {
 
         Vector3dInterface[] trajectory = simulateOneYear();
         double z366 = 2.901591968932223E7; // reference implementation
-        assertEquals(z366, trajectory[366].getZ(), ACCURACY); // delta +-ACCURACY
+        assertEquals(z366, trajectory[trajectory.length-1].getZ(), ACCURACY); // delta +-ACCURACY
 
     }
 
@@ -99,7 +98,8 @@ class ProbeSimulatorTest {
         Vector3dInterface probe_relative_position = new Vector3d(6371e3,0,0);
         Vector3dInterface probeTotal = Planet.planets[3].posVector.add(probe_relative_position);
         Vector3dInterface probe_relative_velocity = new Vector3d(52500.0,-27000.0,0); // 12.0 months
-        Vector3dInterface probeVelocityTotal = Planet.planets[3].velVector.add(probe_relative_velocity);        double day = 24*60*60;
+        Vector3dInterface probeVelocityTotal = Planet.planets[3].velVector.add(probe_relative_velocity);
+        double day = 24*60*60;
         ProbeSimulator simulator = new ProbeSimulator();
         simulator.ODESolverChoice = 2;
         Vector3dInterface[] trajectory = simulator.trajectory(probeTotal, probeVelocityTotal, day, day);
