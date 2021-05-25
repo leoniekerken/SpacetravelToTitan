@@ -39,7 +39,7 @@ public class Evolution {
     static final double tf = 31536000;
     static final double h = 86400 / 10;
 
-    static int ODESolverChoice = 2;
+    static int ODESolverChoice = 3;
 
     public static Vector3d[] genePool;
     public static Vector3d[] titanPos;
@@ -121,7 +121,7 @@ public class Evolution {
                     System.out.println();
                     population.print();
                     System.out.println();
-                    System.out.println("FITTEST PARENT POPULATION " + population.getFittest().velVector + "; initVel: " + population.getFittest().initVel + ", fitness: " + population.getFittest().getFitness() + ", distance: " + population.getFittest().distanceVector + ", position: " + population.getFittest().position);
+                    System.out.println("FITTEST PARENT POPULATION " + population.getFittest().velVector + "; position: " + population.getFittest().posVector + "; initVel: " + population.getFittest().initVel + ", fitness: " + population.getFittest().getFitness() + ", distance: " + population.getFittest().distanceVector + ", position: " + population.getFittest().position);
                 }
                 for (int j = 0; j < nextGeneration.populationSize; j++) {
 

@@ -20,9 +20,6 @@ public class TakeOffPoint {
 
     public Vector3d targetPos;
 
-    public TakeOffPoint(){
-    }
-
     /**
      * calculates ideal take off point of the probe
      * @param initVel initial (undirected) velocity in m/s
@@ -44,7 +41,7 @@ public class TakeOffPoint {
      */
     public void posTitan(){
         titanAtStart = (Vector3d) Planet.planets[8].posVector;
-        titanAtEnd = new Vector3d(8.789395128516927E11, -1.2040036104665325E12, -1.435613681023351E10);
+        titanAtEnd = new Vector3d(8.789407152306692E11, -1.2040065147690242E12, -1.4354885833828156E10);
         titanAtHalf = new Vector3d(7.582476634152103E11, -1.2884184289416096E12, -7.369670796140033E9);
     }
 
@@ -55,9 +52,7 @@ public class TakeOffPoint {
      * @return the unitVector from earth to titan
      */
     public Vector3d unitVector(Vector3d posVectorTitan){
-        //unitVector = (Vector3d) posVectorTitan.sub(Planet.planets[3].posVector).mul(1/posVectorTitan.dist(Planet.planets[3].posVector));
-        Vector3d velVector  = new Vector3d(23362.444117658797, -55262.85583123383, -461.48697222676947);
-        unitVector = (Vector3d) velVector.mul((1.0/60000.0));
+        unitVector = (Vector3d) posVectorTitan.sub(Planet.planets[3].posVector).mul(1/posVectorTitan.dist(Planet.planets[3].posVector));
         return unitVector;
     }
     /**
