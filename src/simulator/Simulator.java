@@ -31,7 +31,7 @@ public class Simulator {
         Vector3dInterface v0 = new Vector3d(30503.316321875955, -62503.59520115846, -621.7444409637209); //initial velocity here
 
         //set solver choice: 1 = EulerSolver; 2 = VerletSolver; 3 = RungeKuttaSolver
-        probeSimulator.ODESolverChoice = 3;
+        probeSimulator.ODESolverChoice = 2;
 
         //calculate trajectory of the probe
         Vector3dInterface[] trajectory = probeSimulator.trajectory(p0, v0, tf, h);
