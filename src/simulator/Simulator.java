@@ -13,7 +13,7 @@ public class Simulator {
     //initial parameters to start the mission - 20 seems to be the limit for h
     static double tf = 31557600; //final time point of the mission ins seconds (31622400s = one year)
     // adding 1st April to be also a possibility.
-    static double h = 50;  //step size with which everything is updated (86400s = 1 day)
+    public static double h = 20;  //step size with which everything is updated (86400s = 1 day)
 
     static double initVel = 60000; //initial (undirected) velocity of the probe in m/s
 
@@ -21,6 +21,8 @@ public class Simulator {
 
         //initialize positions of all objects in solarSystem
         PlanetStart2020 planetStart2020 = new PlanetStart2020();
+
+        ProbeSimulator.VISUALIZATION = VISUALIZATION;
 
         //new probeSimulator
         ProbeSimulator probeSimulator = new ProbeSimulator();

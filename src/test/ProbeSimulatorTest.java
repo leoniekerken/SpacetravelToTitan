@@ -38,10 +38,6 @@ class ProbeSimulatorTest {
 
         Vector3dInterface[] trajectory = simulateOneDay();
         double z1 = 8334994.892882561; // reference implementation
-        for (int i = 0; i < trajectory.length; i++)
-        {
-            System.out.println(trajectory[i].toString());
-        }
         assertEquals(z1, trajectory[trajectory.length-1].getZ(), ACCURACY); // delta +-ACCURACY
 
     }
