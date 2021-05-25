@@ -172,7 +172,12 @@ public class PlanetStart2020 {
 
         //spacecraft
         Planet spaceCraft = new Planet ("SpaceProbe");
+<<<<<<< Updated upstream
         spaceCraft.mass = 15000;
+=======
+        // Adding the Earths radius somewhere = 6371e+3;
+        spaceCraft.mass = 78000;
+>>>>>>> Stashed changes
         spaceCraft.radius = 10;
         spaceCraft.gravity = 1e-10;
         spaceCraft.positionX = 0;
