@@ -50,16 +50,11 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
         y0 = new State();
         y0.initializeState();
 
-
         if(ODESolverChoice == 1){
             //start solver
             eulerSolver = new EulerSolver();
             states = (State[]) eulerSolver.solve(f, y0, ts);
             //extract information
-            if(DEBUG){
-                System.out.println("probeSimulator DEBUG");
-                System.out.println();
-            }
             solverName = "Euler";
             earthPos = eulerSolver.earthPos;
             earthPosAfterOneYear = eulerSolver.earthPosAfterOneYear;
