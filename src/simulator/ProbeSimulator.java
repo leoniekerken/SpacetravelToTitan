@@ -19,6 +19,10 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
     public Vector3d[] titanPos;
     public State[] states;
 
+    Vector3d[] positions;
+    Vector3d[] velocities;
+    Vector3d[] gValues;
+
     public int ODESolverChoice;
     public EulerSolver eulerSolver;
     public RungeKuttaSolver rungeKuttaSolver;
@@ -52,6 +56,9 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
             //extract information
             earthPos = eulerSolver.earthPos;
             titanPos = eulerSolver.titanPos;
+            positions = eulerSolver.positions;
+            velocities = eulerSolver.velocities;
+            gValues = eulerSolver.gValues;
         }
         else if(ODESolverChoice == 2){
             //start solver
@@ -108,6 +115,9 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
             //extract information
             earthPos = eulerSolver.earthPos;
             titanPos = eulerSolver.titanPos;
+            positions = eulerSolver.positions;
+            velocities = eulerSolver.velocities;
+            gValues = eulerSolver.gValues;
 
         } else if(ODESolverChoice == 2){
             //start solver

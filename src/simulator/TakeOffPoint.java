@@ -29,13 +29,11 @@ public class TakeOffPoint {
      * @param targetPos target position
      */
     public void calculateTakeOffPoint(double initVel, Vector3d targetPos){
-
         posTitan();
         unitVector(targetPos);
         startPos();
         startVel(initVel);
     }
-
 
     /**
      * initializing position of titan at three different time points

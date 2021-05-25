@@ -104,14 +104,13 @@ public class Vector3d implements titan.Vector3dInterface {
     }
 
     @Override
-    public String toString()
-    {
-        return "(" + x + ", " + y + ", " + z + ") ";
+    public String toString() {
+        return "(" + this.x + ", " + this.y + ", " + this.z + ") ";
     }
 
     /**
      * checks if two Vector3d are equal
-     * @param other
+     * @param other = other vector
      * @return true if equal
      */
     public boolean equals(Vector3d other){
