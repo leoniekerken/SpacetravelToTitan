@@ -47,7 +47,7 @@ class ProbeSimulatorTest {
     @Test void testTrajectoryOneYearX() {
 
         Vector3dInterface[] trajectory = simulateOneYear();
-        double x366 = -2.4951517995514418E12; // reference implementation
+        double x366 = -2.4951517995514418E13; // reference implementation
         assertEquals(x366, trajectory[trajectory.length-1].getX(), ACCURACY); // delta +-ACCURACY
 
 

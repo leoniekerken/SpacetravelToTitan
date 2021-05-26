@@ -3,16 +3,11 @@ package testing;
 import org.junit.jupiter.api.Test;
 
 import simulator.*;
-<<<<<<< HEAD
 import simulator.PlanetStart2020;
 import simulator.Planet;
 import simulator.Vector3d;
 import simulator.ProbeSimulator;
 import titan.Vector3dInterface;
-=======
-import simulator.ProbeSimulator;
-import titan.*;
->>>>>>> b80174a (intelliJ failed but all files runngin correct)
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.System;
@@ -21,11 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ProbeSimulatorTest {
-<<<<<<< HEAD
     //This Class works with different step sizes
-=======
-
->>>>>>> b80174a (intelliJ failed but all files runngin correct)
     static final double ACCURACY = 5e11; // 1 meter (might need to tweak that)
     // since intervals of a day are used we need such large accuracy numbers.
     static PlanetStart2020 planets2020 = new PlanetStart2020();
@@ -57,11 +48,7 @@ class ProbeSimulatorTest {
     @Test void testTrajectoryOneYearX() {
 
         Vector3dInterface[] trajectory = simulateOneYear();
-<<<<<<< HEAD
-        double x366 = -1.1651517995514418E13; // reference implementation
-=======
-        double x366 = -2.4951517995514418E12; // reference implementation
->>>>>>> b80174a (intelliJ failed but all files runngin correct)
+        double x366 = -1.1951517995514418E13; // reference implementation
         assertEquals(x366, trajectory[trajectory.length-1].getX(), ACCURACY); // delta +-ACCURACY
 
     }
@@ -128,11 +115,7 @@ class ProbeSimulatorTest {
         double day = 24*60*60;
         double year = 366.25*day;
         ProbeSimulator simulator = new ProbeSimulator();
-<<<<<<< HEAD
         simulator.ODESolverChoice = 2;
-=======
-        simulator.ODESolverChoice = 3;
->>>>>>> b80174a (intelliJ failed but all files runngin correct)
         Vector3dInterface[] trajectory = simulator.trajectory(probeTotal, probeVelocityTotal, year, day);
         return trajectory;
 

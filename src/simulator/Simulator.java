@@ -1,6 +1,6 @@
 package simulator;
 
-//import visualization.StartVisualization;
+import visualization.StartVisualization;
 
 
 public class Simulator {
@@ -126,8 +126,8 @@ public class Simulator {
             }
         }
 
-//        if(VISUALIZATION){
-//            StartVisualization.start();
-//        }
+        if(VISUALIZATION){
+            StartVisualization.start();
+        }
     }
 }
