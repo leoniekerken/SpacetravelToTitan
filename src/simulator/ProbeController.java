@@ -76,6 +76,8 @@ public class ProbeController {
         massFuel -= 5000 * h;
         acceleration = (Vector3d) diffVelocity.mul(1/h);
 
+        acceleration = (Vector3d) diffVelocity.mul(1/h);
+
         //maximal acceleration a = F/m
         double maxAcceleration = F/DRY_MASS;
 
