@@ -53,8 +53,10 @@ public class MassFlowRate {
         return force.mul(1/unitFinal.norm());
     }
         
-    public void setfuelMassLoss(double MassFlowrate, double time){
-        System.out.println(Massflowrate.mul(time));
+    public void setfuelMassLoss(double MassFlowrate, double time. double h){
+        for( int i=0; i<time; i+=h){
+            System.out.println(Massflowrate.mul(i));
+        }
     }
        
     //In simularion, need a method that returns the mass required for fuel. I think that we could multiply the mass flowrate
