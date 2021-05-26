@@ -17,8 +17,8 @@ import NewtonRaphson.MultivariableNewton;
 public class ProbeController {
 
     static boolean DEBUG = true;
-
-    public double m = 78000; //mass
+    public double massFuel; //mass of the fuel TODO: specify how much mass is required
+    public static final double DRY_MASS= 78000; //dry mass of spacerocket without fuel
     public double vE = 20000; //exhaust velocity (in m/s)
     public double F = 3e7; //maximum thrust
     public double massFlowRate = -(F/vE);
@@ -78,7 +78,7 @@ public class ProbeController {
         acceleration = (Vector3d) diffVelocity.mul(1/h);
 
         //maximal acceleration a = F/m
-        double maxAcceleration = F/m;
+        double maxAcceleration = F/getTotalMass();
 
         if(acceleration.norm() <= maxAcceleration){
 
@@ -191,5 +191,15 @@ public class ProbeController {
             check = false;
         }
         return check;
+    }
+
+    //TODO: find the mass of the fuel. If we can't find it by the end of today or tomorrow, worst case scenario is to just come up with a random mass fuel
+    //      and work out the mass fuel rate, by multiplying the rate of mass by the time taken over a time step. 
+    public double getMassFuel(){
+        return SOMETHING...
+    }
+
+    public double getTotalMass(){
+        return massFuel+DRY_MASS;
     }
 }
