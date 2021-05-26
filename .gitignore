@@ -43,4 +43,8 @@ hs_err_pid*
 titan_mission.iml
 SpacetravelToTitan.iml
 .DS_Store
+<<<<<<< HEAD
 trajectory.csv
+=======
+trajectory.csv
+>>>>>>> 741610e (KickOutActive)

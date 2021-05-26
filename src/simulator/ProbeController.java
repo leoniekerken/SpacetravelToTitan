@@ -19,10 +19,11 @@ public class ProbeController {
     static boolean DEBUG = true;
     public double massFuel  = 2e6; //mass of the fuel this gives us upto 200sec of thrust
     public static final double DRY_MASS= 78000; //dry mass of space rocket without fuel
-
     public double vE = 20000; //exhaust velocity (in m/s)
     public double F = 3e7; //maximum thrust
     public double massFlowRate = -(F/vE);
+
+
     public static Vector3d pF = new Vector3d(8.994491235691361E11, -1.246880800663044E12, 5.261491970119961E9); //target position
 
     public Vector3d p0; //initial position
@@ -77,14 +78,7 @@ public class ProbeController {
         massFuel -= 5000 * h;
         acceleration = (Vector3d) diffVelocity.mul(1/h);
 
-        acceleration = (Vector3d) diffVelocity.mul(1/h);
-
-        //maximal acceleration a = F/m
-<<<<<<< HEAD
         double maxAcceleration = F/DRY_MASS;
-=======
-        double maxAcceleration = F/getTotalMass();
->>>>>>> a704b14 (Upload files)
 
         if(acceleration.norm() <= maxAcceleration){
 
@@ -199,25 +193,14 @@ public class ProbeController {
         return check;
     }
 
-<<<<<<< HEAD
-=======
-    //TODO: find the mass of the fuel. If we can't find it by the end of today or tomorrow, worst case scenario is to just come up with a random mass fuel
-    //      and work out the mass fuel rate, by multiplying the rate of mass by the time taken over a time step. 
-    public double getMassFuel(){
-        return SOMETHING...
-    }
->>>>>>> a704b14 (Upload files)
 
     public double getTotalMass(){
         return massFuel+DRY_MASS;
     }
-<<<<<<< HEAD
 
     public void setfuelMassLoss(double massFlowrate, double time, double h){
         for( int i=0; i<time; i+=h){
             System.out.println(massFlowrate*i);
         }
     }
-=======
->>>>>>> a704b14 (Upload files)
 }

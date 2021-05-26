@@ -1,6 +1,6 @@
 package simulator;
 
-import titan.*;
+import titan.ProbeSimulatorInterface;
 
 /**
  * class to simulate trajectory of the probe
