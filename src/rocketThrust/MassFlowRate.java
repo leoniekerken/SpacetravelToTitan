@@ -53,7 +53,7 @@ public class MassFlowRate {
         return force.mul(1/unitFinal.norm());
     }
         
-    public void setfuelMassLoss(double MassFlowrate, double time. double h){
+    public void setfuelMassLoss(double MassFlowrate, double time, double h){
         for( int i=0; i<time; i+=h){
             System.out.println(Massflowrate.mul(i));
         }
