@@ -52,6 +52,11 @@ public class MassFlowRate {
 
         return force.mul(1/unitFinal.norm());
     }
+        
+    public void setfuelMassLoss(double MassFlowrate, double time){
+        System.out.println(Massflowrate.mul(time));
+    }
+       
     //In simularion, need a method that returns the mass required for fuel. I think that we could multiply the mass flowrate
     // by the time interval of one year to solve this, but I don't know if this is correct.
 
