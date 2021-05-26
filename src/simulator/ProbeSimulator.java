@@ -39,7 +39,7 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
      * @return positions of the probe over a given time period
      */
     @Override
-    public Vector3dInterface[] trajectory(Vector3dInterface p0, Vector3dInterface v0, double[] ts) {
+    public titan.Vector3dInterface[] trajectory(titan.Vector3dInterface p0, titan.Vector3dInterface v0, double[] ts) {
 
         //starting conditions of the spacecraft
         Planet.planets[11].posVector = p0;
@@ -110,7 +110,7 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
      * @return positions of the probe over a given time period
      */
     @Override
-    public Vector3dInterface[] trajectory(Vector3dInterface p0, Vector3dInterface v0, double tf, double h) {
+    public titan.Vector3dInterface[] trajectory(titan.Vector3dInterface p0, titan.Vector3dInterface v0, double tf, double h) {
 
         //starting conditions of the spacecraft
         Planet.planets[11].posVector = p0;

@@ -22,8 +22,6 @@ public class ProbeController {
     public double vE = 20000; //exhaust velocity (in m/s)
     public double F = 3e7; //maximum thrust
     public double massFlowRate = -(F/vE);
-
-
     public static Vector3d pF = new Vector3d(8.994491235691361E11, -1.246880800663044E12, 5.261491970119961E9); //target position
 
     public Vector3d p0; //initial position

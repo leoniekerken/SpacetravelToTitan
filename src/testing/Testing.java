@@ -3,7 +3,6 @@ package testing;
 import simulator.PlanetStart2020;
 import simulator.ProbeSimulator;
 import simulator.Vector3d;
-import titan.Vector3dInterface;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -18,8 +17,8 @@ public class Testing {
 
     static PlanetStart2020 planetStart2020 = new PlanetStart2020();
 
-    static Vector3dInterface p0 = new Vector3d(0,0,0); //initial position here
-    static Vector3dInterface v0 = new Vector3d(0,0,0); //initial velocity here
+    static titan.Vector3dInterface p0 = new Vector3d(0,0,0); //initial position here
+    static titan.Vector3dInterface v0 = new Vector3d(0,0,0); //initial velocity here
 
     static Vector3d titanPosNasa =  new Vector3d(8.789384100968744E+11, -1.204002291074617E+12,-1.435729928774685E+10);
     static Vector3d earthPosNasa = new Vector3d(-1.477129564888797E+11, -2.821064238692064E+10,2.033107664331608E+07);

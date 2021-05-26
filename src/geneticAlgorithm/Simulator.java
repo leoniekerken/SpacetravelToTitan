@@ -1,7 +1,6 @@
 package geneticAlgorithm;
 
 import simulator.*;
-import titan.Vector3dInterface;
 
 /**
  * runs the simulation to test different initial conditions of the probe
@@ -21,7 +20,7 @@ public class Simulator {
     public Individual[] individuals;
     public State y0;
 
-    public Vector3dInterface[] trajectory;
+    public titan.Vector3dInterface[] trajectory;
 
 
     public Simulator(){
@@ -51,7 +50,7 @@ public class Simulator {
      * finds the best position (closest to titan) of a probe during one year flight
      * sets: fitness, best position, distance vector of individual
      */
-    public void getBestPos(Vector3dInterface[] trajectory, Individual individual) {
+    public void getBestPos(titan.Vector3dInterface[] trajectory, Individual individual) {
 
         //find best position
         double distance = trajectory[trajectory.length-1].dist(Evolution.titanPos[Evolution.titanPos.length-1]);

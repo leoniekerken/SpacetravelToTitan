@@ -1,7 +1,5 @@
 package simulator;
 
-import titan.Vector3dInterface;
-
 import java.util.ArrayList;
 
 /**
@@ -29,12 +27,12 @@ public class Planet
     public double positionZ;
 
     //vectors
-    public Vector3dInterface posVector;
-    public Vector3dInterface velVector;
-    public Vector3dInterface accVector;
+    public titan.Vector3dInterface posVector;
+    public titan.Vector3dInterface velVector;
+    public titan.Vector3dInterface accVector;
 
     //arrayList to store positions over time (for visualization)
-    ArrayList<Vector3dInterface> orbit = new ArrayList<Vector3dInterface>();
+    ArrayList<titan.Vector3dInterface> orbit = new ArrayList<titan.Vector3dInterface>();
 
     //array to store x-Coordinates over time (for visualization)
     double[] orbitX;
@@ -91,7 +89,7 @@ public class Planet
     /**
      * add position to orbit
      */
-    public void addOrbit(Vector3dInterface position){
+    public void addOrbit(titan.Vector3dInterface position){
         this.orbit.add(position);
     }
 
