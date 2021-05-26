@@ -3,8 +3,11 @@ package testing;
 import org.junit.jupiter.api.Test;
 
 import simulator.*;
+import simulator.PlanetStart2020;
+import simulator.Planet;
+import simulator.Vector3d;
 import simulator.ProbeSimulator;
-import titan.*;
+import titan.Vector3dInterface;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.System;
