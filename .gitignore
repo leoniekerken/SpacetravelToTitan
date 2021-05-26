@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Compiled class file
 *.class
 
@@ -34,3 +35,12 @@ scrap/*
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+
+# Default ignored files
+/shelf/
+
+#own files
+titan_mission.iml
+SpacetravelToTitan.iml
+.DS_Store
+trajectory.csv
