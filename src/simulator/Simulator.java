@@ -1,6 +1,5 @@
 package simulator;
 
-import titan.*;
 //import visualization.StartVisualization;
 
 public class Simulator {
@@ -8,12 +7,11 @@ public class Simulator {
     static boolean PRINT = true;
     static boolean DETAIL = false;
     static boolean VISUALIZATION = false;
-
+    static boolean NEWTON = true;
 
     //initial parameters to start the mission - 20 seems to be the limit for h
-    static double tf = 31557600; //final time point of the mission ins seconds (31622400s = one year)
-    // adding 1st April to be also a possibility.
-    public static double h = 20;  //step size with which everything is updated (86400s = 1 day)
+    public static double tf = 31536000 * 2; //final time point of the mission ins seconds (31536000s = one year)
+    public static double h = 86400 / 10;  //step size with which everything is updated (86400s = 1 day)
 
     static double initVel = 60000; //initial (undirected) velocity of the probe in m/s
 
@@ -27,15 +25,19 @@ public class Simulator {
         //new probeSimulator
         ProbeSimulator probeSimulator = new ProbeSimulator();
 
+        TakeOffPoint takeOffPoint = new TakeOffPoint();
+
+        takeOffPoint.calculateTakeOffPoint(initVel, takeOffPoint.titanAtEnd);
+
         //take off point of the probe
-        Vector3dInterface p0 = new Vector3d(-1.471868229554755E11, -2.8606557057938354E10, 8287486.0632270835); //initial position here
-        Vector3dInterface v0 = new Vector3d(30503.316321875955, -62503.59520115846, -621.7444409637209); //initial velocity here
+        titan.Vector3dInterface p0 = new Vector3d(-1.471868229554755E11, -2.8606557057938354E10, 8287486.0632270835); //initial position here
+        titan.Vector3dInterface v0 = new Vector3d(0,0,0); //initial velocity here
 
         //set solver choice: 1 = EulerSolver; 2 = VerletSolver; 3 = RungeKuttaSolver
-        probeSimulator.ODESolverChoice = 2;
+        probeSimulator.ODESolverChoice = 3;
 
         //calculate trajectory of the probe
-        Vector3dInterface[] trajectory = probeSimulator.trajectory(p0, v0, tf, h);
+        titan.Vector3dInterface[] trajectory = probeSimulator.trajectory(p0, v0, tf, h);
 
         //retrieve positions of earth and titan
         Vector3d[] titanPos = probeSimulator.titanPos;
@@ -105,7 +107,6 @@ public class Simulator {
             System.out.println("titan at end: " + titanPos[titanPos.length-1]);
             System.out.println();
             System.out.println();
-
 
 
             if(DETAIL) {
