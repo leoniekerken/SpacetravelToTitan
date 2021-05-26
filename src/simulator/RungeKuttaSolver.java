@@ -107,15 +107,15 @@ public class RungeKuttaSolver implements ODESolverInterface {
 
         //updating positions for one step
         for(int i = 1; i < states.length; i++){
-            states[i] = (State) step(f, ts[i], states[i-1], (ts[i]-ts[i-1]));
-            if(i < 10 && states[i].getVel(11) != probeController.vL){
-                Vector3d newVelocity = probeController.accelerate((Vector3d) states[i].getVel(11), probeController.vL, h);
-                states[i].addVel(11, newVelocity);
-                if(DEBUG){
-                    System.out.println("SOLVER: velocity updated: " + newVelocity);
+            if(i == 1 && states[i-1].getVel(11) != probeController.vL) {
+                Vector3d newAcceleration = probeController.accelerate((Vector3d) states[i - 1].getVel(11), probeController.vL, h);
+                states[i - 1].addVel(11, newAcceleration.mul(h));
+                if (DEBUG) {
+                    System.out.println("SOLVER: velocity updated: " + states[i - 1].getVel(11));
                     System.out.println();
                 }
             }
+            states[i] = (State) step(f, ts[i], states[i-1], (ts[i]-ts[i-1]));
             if(!TESTING){
                 titanPos[i] = (Vector3d) states[i].getPos(8); //add current position of titan to static storage
                 earthPos[i] = (Vector3d) states[i].getPos(3); //add current position of earth to extra storage

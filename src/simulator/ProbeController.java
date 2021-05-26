@@ -34,6 +34,7 @@ public class ProbeController {
     public Vector3d g; // pF - pK
     public Vector3d updatedVelocity;
     public Vector3d diffVelocity;
+    public Vector3d acceleration;
 
     MultivariableNewton multivariableNewton = new MultivariableNewton();
 
@@ -70,32 +71,23 @@ public class ProbeController {
      * return acceleration
      *
      */
-    public Vector3d accelerate (Vector3d vK, Vector3d vF, double h){
+    public Vector3d accelerate(Vector3d vK, Vector3d vF, double h){
 
         diffVelocity = (Vector3d) vF.sub(vK);
+
+        acceleration = (Vector3d) diffVelocity.mul(1/h);
 
         //maximal acceleration a = F/m
         double maxAcceleration = F/m;
 
-        Vector3d newVelocity = new Vector3d(0,0,0);
+        if(acceleration.norm() <= maxAcceleration){
 
-        if(diffVelocity.x != 0) {
-            newVelocity.x = maxAcceleration * h;
-            if (newVelocity.x > diffVelocity.x) {
-                newVelocity.x = vF.x;
-            }
+            return acceleration;
+
         }
-        if(diffVelocity.y != 0) {
-            newVelocity.y = maxAcceleration * h;
-            if (newVelocity.y > diffVelocity.y) {
-                newVelocity.y = vF.y;
-            }
-        }
-        if(diffVelocity.z != 0) {
-            newVelocity.z = maxAcceleration * h;
-            if (newVelocity.z > diffVelocity.z) {
-                newVelocity.z = vF.z;
-            }
+
+        else{
+            System.out.println("EXIT ACC TOO HIGH");
         }
 
         if(DEBUG){
@@ -113,13 +105,12 @@ public class ProbeController {
             System.out.println("diffVelocity: " + diffVelocity);
             System.out.println();
             System.out.println();
-            System.out.println("newVelocity: " + newVelocity);
+            System.out.println("acceleration: " + acceleration);
             System.out.println();
             System.out.println();
         }
 
-        return newVelocity;
-
+        return null;
     }
 
     /**
