@@ -15,6 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class ProbeSimulatorTest {
 
     static final double ACCURACY = 5e11; // 1 meter (might need to tweak that)
+
     // since intervals of a day are used we need such large accuracy numbers.
     static PlanetStart2020 planets2020 = new PlanetStart2020();
     @Test
@@ -23,7 +24,6 @@ class ProbeSimulatorTest {
         Vector3dInterface[] trajectory = simulateOneDay();
         double x1 = -1.4218092965609787E11; // reference implementation
         assertEquals(x1, trajectory[trajectory.length-1].getX(), ACCURACY); // delta +-ACCURACY
-
     }
 
     @Test void testTrajectoryOneDayY() {
@@ -31,6 +31,7 @@ class ProbeSimulatorTest {
         Vector3dInterface[] trajectory = simulateOneDay();
         double y1 = -3.3475191084301098E10; // reference implementation
         assertEquals(y1, trajectory[trajectory.length-1].getY(), ACCURACY); // delta +-ACCURACY
+
 
     }
 
@@ -40,6 +41,7 @@ class ProbeSimulatorTest {
         double z1 = 8334994.892882561; // reference implementation
         assertEquals(z1, trajectory[trajectory.length-1].getZ(), ACCURACY); // delta +-ACCURACY
 
+
     }
 
     @Test void testTrajectoryOneYearX() {
@@ -47,6 +49,7 @@ class ProbeSimulatorTest {
         Vector3dInterface[] trajectory = simulateOneYear();
         double x366 = -2.4951517995514418E12; // reference implementation
         assertEquals(x366, trajectory[trajectory.length-1].getX(), ACCURACY); // delta +-ACCURACY
+
 
     }
 
@@ -56,6 +59,7 @@ class ProbeSimulatorTest {
         double y366 = -1.794349344879982E12; // reference implementation
         assertEquals(y366, trajectory[trajectory.length-1].getY(), ACCURACY); // delta +-ACCURACY
 
+
     }
 
     @Test void testTrajectoryOneYearZ() {
@@ -63,6 +67,7 @@ class ProbeSimulatorTest {
         Vector3dInterface[] trajectory = simulateOneYear();
         double z366 = 2.901591968932223E7; // reference implementation
         assertEquals(z366, trajectory[trajectory.length-1].getZ(), ACCURACY); // delta +-ACCURACY
+
 
     }
 
@@ -112,7 +117,7 @@ class ProbeSimulatorTest {
         double day = 24*60*60;
         double year = 366.25*day;
         ProbeSimulator simulator = new ProbeSimulator();
-        simulator.ODESolverChoice = 3;
+        simulator.ODESolverChoice = 2;
         Vector3dInterface[] trajectory = simulator.trajectory(probeTotal, probeVelocityTotal, year, day);
         return trajectory;
 
