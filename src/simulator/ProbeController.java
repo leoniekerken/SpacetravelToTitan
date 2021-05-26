@@ -17,11 +17,12 @@ import NewtonRaphson.MultivariableNewton;
 public class ProbeController {
 
     static boolean DEBUG = true;
-    public double massFuel; //mass of the fuel TODO: specify how much mass is required
-    public static final double DRY_MASS= 78000; //dry mass of spacerocket without fuel
+    public double massFuel  = 2e6; //mass of the fuel this gives us upto 200sec of thrust
+    public static final double DRY_MASS= 78000; //dry mass of space rocket without fuel
     public double vE = 20000; //exhaust velocity (in m/s)
     public double F = 3e7; //maximum thrust
     public double massFlowRate = -(F/vE);
+
 
     public static Vector3d pF = new Vector3d(8.994491235691361E11, -1.246880800663044E12, 5.261491970119961E9); //target position
 
@@ -74,11 +75,11 @@ public class ProbeController {
     public Vector3d accelerate(Vector3d vK, Vector3d vF, double h){
 
         diffVelocity = (Vector3d) vF.sub(vK);
-
+        massFuel -= 5000 * h;
         acceleration = (Vector3d) diffVelocity.mul(1/h);
 
         //maximal acceleration a = F/m
-        double maxAcceleration = F/getTotalMass();
+        double maxAcceleration = F/DRY_MASS;
 
         if(acceleration.norm() <= maxAcceleration){
 
@@ -148,19 +149,19 @@ public class ProbeController {
      * @param vK is the current velocity of the probe
      * @return the updated velocity of the probe (slowed down)
      */
-    public Vector3d slowDown(Vector3d vK) {
-        return new Vector3d(vK.getX() - vK.getX()/2, vK.getY() - vK.getY()/2, vK.getZ() - vK.getZ()/2);
-    }
-
-    /**
-     * CURRENTLY ADD A VALUE TO EVERY COORDINATE OF THE CURRENT VELOCITY
-     * MAKE IT MORE EFFICIENT BY GRADUALLY SLOWING IT DOWN BY CALLING THIS METHOD IN A LOOP (?)
-     * @param vK is the current velocity of the probe
-     * @return the updated velocity of the probe (faster)
-     */
-    public Vector3d goFaster(Vector3d vK) {
-        return new Vector3d(vK.getX() + vK.getX()/2, vK.getY() + vK.getY()/2, vK.getZ() + vK.getZ()/2);
-    }
+//    public Vector3d slowDown(Vector3d vK) {
+//        return new Vector3d(vK.getX() - vK.getX()/2, vK.getY() - vK.getY()/2, vK.getZ() - vK.getZ()/2);
+//    }
+//
+//    /**
+//     * CURRENTLY ADD A VALUE TO EVERY COORDINATE OF THE CURRENT VELOCITY
+//     * MAKE IT MORE EFFICIENT BY GRADUALLY SLOWING IT DOWN BY CALLING THIS METHOD IN A LOOP (?)
+//     * @param vK is the current velocity of the probe
+//     * @return the updated velocity of the probe (faster)
+//     */
+//    public Vector3d goFaster(Vector3d vK) {
+//        return new Vector3d(vK.getX() + vK.getX()/2, vK.getY() + vK.getY()/2, vK.getZ() + vK.getZ()/2);
+//    }
 
     /**
      * MAKE IT MORE EFFICIENT! (reduce if-statements if possible!)
@@ -173,7 +174,7 @@ public class ProbeController {
         if (p.getX() < 1e7 && p.getX() > 0) {
             check = true;
 
-            if (p.getY() < 1e7 && p.getX() > 0) {
+            if (p.getY() < 1e7 && p.getY() > 0) {
                 check = true;
 
                 if (p.getZ() < 1e7 && p.getZ() > 0) {
@@ -193,13 +194,14 @@ public class ProbeController {
         return check;
     }
 
-    //TODO: find the mass of the fuel. If we can't find it by the end of today or tomorrow, worst case scenario is to just come up with a random mass fuel
-    //      and work out the mass fuel rate, by multiplying the rate of mass by the time taken over a time step. 
-    public double getMassFuel(){
-        return SOMETHING...
-    }
 
     public double getTotalMass(){
         return massFuel+DRY_MASS;
+    }
+
+    public void setfuelMassLoss(double massFlowrate, double time, double h){
+        for( int i=0; i<time; i+=h){
+            System.out.println(massFlowrate*i);
+        }
     }
 }

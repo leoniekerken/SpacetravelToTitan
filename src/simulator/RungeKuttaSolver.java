@@ -3,6 +3,7 @@ package simulator;
 import titan.ODEFunctionInterface;
 import titan.ODESolverInterface;
 import titan.StateInterface;
+import titan.*;
 
 /**
  * 4th order Runge-Kutta solver (RK4) to solve equations of motion
@@ -12,7 +13,7 @@ import titan.StateInterface;
 
 public class RungeKuttaSolver implements ODESolverInterface {
 
-    static boolean DEBUG = true;
+    static boolean DEBUG = false;
     public static boolean TESTING = ProbeSimulator.TESTING;
     public  static boolean VISUALIZATION = ProbeSimulator.VISUALIZATION;
     static int visualizationTimeStamps = 50;
@@ -106,6 +107,11 @@ public class RungeKuttaSolver implements ODESolverInterface {
         }
 
         //updating positions for one step
+        Vector3d posProbe = (Vector3d) (states[0].getPos(3));
+        double kickOut = 31536000;
+        double kickEarth = kickOut * 2;
+        double distProbeTitan = posProbe.dist(states[0].getPos(8));
+        double distProbeEarth = 1e18;
         for(int i = 1; i < states.length; i++){
             if(i == 1 && states[i-1].getVel(11) != probeController.vL) {
                 Vector3d newAcceleration = probeController.accelerate((Vector3d) states[i - 1].getVel(11), probeController.vL, h);
@@ -115,7 +121,39 @@ public class RungeKuttaSolver implements ODESolverInterface {
                     System.out.println();
                 }
             }
+            //31536000
+            posProbe = (Vector3d) (states[i-1].getPos(11));
+            if ((i > 30000000/h  && i < kickOut && distProbeTitan > posProbe.dist(states[i-1].getPos(8))))
+            {
+                distProbeTitan = posProbe.dist(states[i - 1].getPos(8));
+            }
+            else if (i < kickOut)
+            {
+                // kick out initiated.
+                kickOut = i;
+                Vector3d returnVector = new Vector3d (-probeController.vL.getX(), -probeController.vL.getY(), -probeController.vL.getZ());
+                Vector3d backToEarth = probeController.accelerate((Vector3d)(states[i-1].getVel(11)), returnVector, h);
+                states[i-1].addVel(11, backToEarth.mul(h/2));
+                if (DEBUG) {
+                    //System.out.println("IMPORTANT_______________________________________________________________________________________________________________");
+                    System.out.println("SOLVER: velocity updated: " + states[i - 1].getVel(11));
+                    System.out.println();
+                }
+            }
+
+            if (i > kickOut && distProbeEarth > posProbe.dist(states[i-1].getPos(3)))
+            {
+                kickEarth = i;
+                distProbeEarth = posProbe.dist(states[i-1].getPos(3));
+            }
+            else if (kickEarth < i)
+            {
+                System.out.println("distance of Probe to Earth at the end = " + distProbeEarth + " meters");
+                System.exit(0);
+            }
+
             states[i] = (State) step(f, ts[i], states[i-1], (ts[i]-ts[i-1]));
+
             if(!TESTING){
                 titanPos[i] = (Vector3d) states[i].getPos(8); //add current position of titan to static storage
                 earthPos[i] = (Vector3d) states[i].getPos(3); //add current position of earth to extra storage
