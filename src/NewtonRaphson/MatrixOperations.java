@@ -1,7 +1,6 @@
 package NewtonRaphson;
 
 import simulator.Vector3d;
-import titan.Vector3dInterface;
 
 /**
  * CLASS TO PERFORM MATRIX OPERATIONS
@@ -98,13 +97,13 @@ public class MatrixOperations {
      * PRODUCT OF A MATRIX a AND A VECTOR3D b
      * @return the vector x resulting from the product Ab
      */
-    public static Vector3dInterface multiplyVectorMatrix(double[][] a, Vector3dInterface b) {
+    public static titan.Vector3dInterface multiplyVectorMatrix(double[][] a, titan.Vector3dInterface b) {
         // Multiplication requirements not met
         // Size of vector b must be 3
         if(a[0].length != 3)
             throw new RuntimeException("Illegal matrix dimensions.");
 
-        Vector3dInterface output = new Vector3d();
+        titan.Vector3dInterface output = new Vector3d();
 
         output.setX(a[0][0]*b.getX() + a[0][1]*b.getY() + a[0][2]* b.getZ());
         output.setY(a[1][0]*b.getX() + a[1][1]*b.getY() + a[1][2]* b.getZ());

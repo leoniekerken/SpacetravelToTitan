@@ -12,10 +12,12 @@ import titan.StateInterface;
 
 public class RungeKuttaSolver implements ODESolverInterface {
 
-    static boolean DEBUG = false;
+    static boolean DEBUG = true;
     public static boolean TESTING = ProbeSimulator.TESTING;
     public  static boolean VISUALIZATION = ProbeSimulator.VISUALIZATION;
     static int visualizationTimeStamps = 50;
+
+    public ProbeController probeController = new ProbeController();
 
     public State[] states;
     public Vector3d[] earthPos;
@@ -80,21 +82,12 @@ public class RungeKuttaSolver implements ODESolverInterface {
 
         //get array storing separate timestamps
         double[] ts = new double[(int) (Math.round((tf/h)+1))];
-        if(DEBUG){
-            System.out.println("ts array: " + ts.length);
-        }
+
         ts[0] = 0;
         for(int i = 1; i < ts.length; i++){
             ts[i] = ts[i-1] + h;
             if(i == ts.length-1){
                 ts[i] = tf;
-                if(DEBUG){
-                    System.out.println();
-                    System.out.println();
-                    System.out.println("ts[last] = " + ts[i] + " at " + i);
-                    System.out.println();
-                    System.out.println();
-                }
             }
         }
 
@@ -102,10 +95,6 @@ public class RungeKuttaSolver implements ODESolverInterface {
         states = new State[(int) (Math.round(tf/h)+1)];
         states[0] = (State) y0;
 
-        if(DEBUG){
-            System.out.println("simulator.ODESolver - states " + states.length);
-            System.out.println("simulator.ODESolver - state at 0\n" + y0.toString());
-        }
 
         if(!TESTING){
             //create array storing positions of titan
@@ -119,9 +108,13 @@ public class RungeKuttaSolver implements ODESolverInterface {
         //updating positions for one step
         for(int i = 1; i < states.length; i++){
             states[i] = (State) step(f, ts[i], states[i-1], (ts[i]-ts[i-1]));
-            if(DEBUG && (i == 1 || i == states.length - 1)){
-                System.out.println("SOLVER DEBUG - STEPSIZE: " + (ts[i]-ts[i-1]));
-                System.out.println("SOLVER DEBUG - TIME: " + ts[i] + " at " + i);
+            if(i < 10 && states[i].getVel(11) != probeController.vL){
+                Vector3d newVelocity = probeController.accelerate((Vector3d) states[i].getVel(11), probeController.vL, h);
+                states[i].addVel(11, newVelocity);
+                if(DEBUG){
+                    System.out.println("SOLVER: velocity updated: " + newVelocity);
+                    System.out.println();
+                }
             }
             if(!TESTING){
                 titanPos[i] = (Vector3d) states[i].getPos(8); //add current position of titan to static storage

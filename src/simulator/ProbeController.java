@@ -1,7 +1,6 @@
 package simulator;
 
 import NewtonRaphson.MultivariableNewton;
-import titan.Vector3dInterface;
 
 /**
  * CLASS TO CONTROL THE TRAJECTORY OF THE PROBE
@@ -17,19 +16,24 @@ import titan.Vector3dInterface;
  */
 public class ProbeController {
 
+    static boolean DEBUG = true;
+
     public double m = 78000; //mass
     public double vE = 20000; //exhaust velocity (in m/s)
     public double F = 3e7; //maximum thrust
+    public double massFlowRate = -(F/vE);
 
     public static Vector3d pF = new Vector3d(8.994491235691361E11, -1.246880800663044E12, 5.261491970119961E9); //target position
 
     public Vector3d p0; //initial position
     public Vector3d v0; //initial velocity
-    public  Vector3d pK; //current position
+    public Vector3d vL = new Vector3d(41583.09221214755, -56163.23800237314, -540.5163786866699); //launch velocity - velocity we want to approximate after launching
+    public Vector3d pK; //current position
     public Vector3d vK; //current velocity
 
     public Vector3d g; // pF - pK
     public Vector3d updatedVelocity;
+    public Vector3d diffVelocity;
 
     MultivariableNewton multivariableNewton = new MultivariableNewton();
 
@@ -37,7 +41,7 @@ public class ProbeController {
     /**
      * method to compute initial directed velocity
      **/
-    public Vector3d setInitialVelocity(Vector3d pK, Vector3d vK) {
+    public Vector3d setVelocity(Vector3d pK, Vector3d vK) {
 
         g = (Vector3d) pF.sub(pK);
         updatedVelocity = (Vector3d) multivariableNewton.doMultivariableNewton(g, vK);
@@ -45,6 +49,77 @@ public class ProbeController {
         //call method to compute fuel consumption
 
         return updatedVelocity;
+    }
+
+    /**
+     * method to set launch velocity based on initial conditions from GA
+     *
+     * approximate it in steps given properties of the rocket engine
+     *
+     */
+    public Vector3d setVelocityLaunch(){
+
+        //return a fraction of vL that is possible to achieve in one time step
+        return vL;
+
+    }
+
+    /**
+     * fire the rocket to accelerate in a certain direction
+     *
+     * return acceleration
+     *
+     */
+    public Vector3d accelerate (Vector3d vK, Vector3d vF, double h){
+
+        diffVelocity = (Vector3d) vF.sub(vK);
+
+        //maximal acceleration a = F/m
+        double maxAcceleration = F/m;
+
+        Vector3d newVelocity = new Vector3d(0,0,0);
+
+        if(diffVelocity.x != 0) {
+            newVelocity.x = maxAcceleration * h;
+            if (newVelocity.x > diffVelocity.x) {
+                newVelocity.x = vF.x;
+            }
+        }
+        if(diffVelocity.y != 0) {
+            newVelocity.y = maxAcceleration * h;
+            if (newVelocity.y > diffVelocity.y) {
+                newVelocity.y = vF.y;
+            }
+        }
+        if(diffVelocity.z != 0) {
+            newVelocity.z = maxAcceleration * h;
+            if (newVelocity.z > diffVelocity.z) {
+                newVelocity.z = vF.z;
+            }
+        }
+
+        if(DEBUG){
+            System.out.println();
+            System.out.println();
+            System.out.println("PROBECONTROLLER DEBUG");
+            System.out.println();
+            System.out.println();
+            System.out.println("oldVelocity: " + vK);
+            System.out.println();
+            System.out.println();
+            System.out.println("vF: " + vF);
+            System.out.println();
+            System.out.println();
+            System.out.println("diffVelocity: " + diffVelocity);
+            System.out.println();
+            System.out.println();
+            System.out.println("newVelocity: " + newVelocity);
+            System.out.println();
+            System.out.println();
+        }
+
+        return newVelocity;
+
     }
 
     /**
@@ -68,15 +143,62 @@ public class ProbeController {
      */
 
 
-    /**
-     * method to compute dm/dt = F/vE
-     *
-     *
-     */
+
 
     /**
      *
      * integrate all of that
      *
      */
+
+    /**
+     * CURRENTLY SUBTRACT A VALUE FROM EVERY COORDINATE OF THE CURRENT VELOCITY
+     * MAKE IT MORE EFFICIENT BY GRADUALLY SLOWING IT DOWN BY CALLING THIS METHOD IN A LOOP (?)
+     * @param vK is the current velocity of the probe
+     * @return the updated velocity of the probe (slowed down)
+     */
+    public Vector3d slowDown(Vector3d vK) {
+        return new Vector3d(vK.getX() - vK.getX()/2, vK.getY() - vK.getY()/2, vK.getZ() - vK.getZ()/2);
+    }
+
+    /**
+     * CURRENTLY ADD A VALUE TO EVERY COORDINATE OF THE CURRENT VELOCITY
+     * MAKE IT MORE EFFICIENT BY GRADUALLY SLOWING IT DOWN BY CALLING THIS METHOD IN A LOOP (?)
+     * @param vK is the current velocity of the probe
+     * @return the updated velocity of the probe (faster)
+     */
+    public Vector3d goFaster(Vector3d vK) {
+        return new Vector3d(vK.getX() + vK.getX()/2, vK.getY() + vK.getY()/2, vK.getZ() + vK.getZ()/2);
+    }
+
+    /**
+     * MAKE IT MORE EFFICIENT! (reduce if-statements if possible!)
+     * Currently checks whether every coordinate is closed enough to the desired destination
+     * @return true if we are close enough to titan
+     */
+    public boolean closeEnough(Vector3d p) {
+        boolean check = false;
+
+        if (p.getX() < 1e7 && p.getX() > 0) {
+            check = true;
+
+            if (p.getY() < 1e7 && p.getX() > 0) {
+                check = true;
+
+                if (p.getZ() < 1e7 && p.getZ() > 0) {
+                    check = true;
+
+                } else {
+                    check = false;
+                }
+
+            } else {
+                check = false;
+            }
+
+        } else {
+            check = false;
+        }
+        return check;
+    }
 }

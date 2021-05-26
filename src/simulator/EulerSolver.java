@@ -11,7 +11,7 @@ import titan.StateInterface;
  */
 public class EulerSolver implements ODESolverInterface {
 
-    static boolean DEBUG = false;
+    static boolean DEBUG = true;
     public static boolean TESTING = ProbeSimulator.TESTING;
     public  static boolean VISUALIZATION = ProbeSimulator.VISUALIZATION;
     static int visualizationTimeStamps = 50;
@@ -111,7 +111,10 @@ public class EulerSolver implements ODESolverInterface {
         for(int i = 1; i < states.length; i++){
             states[i] = (State) step(f, ts[i], states[i-1], (ts[i]-ts[i-1]));
             if(i == 1){
-                states[i].addVel(11, probeController.setInitialVelocity((Vector3d) states[i-1].getPos(11), (Vector3d) states[i-1].getVel(11)));
+                states[i].addVel(11, probeController.setVelocity((Vector3d) states[i-1].getPos(11), (Vector3d) states[i-1].getVel(11)));
+                if(DEBUG){
+                    System.out.println("VEL AFTER UPDATE: " + states[i].getVel(11));
+                }
             }
             if(!TESTING){
                 titanPos[i] = (Vector3d) states[i].getPos(8); //add current position of titan to static storage

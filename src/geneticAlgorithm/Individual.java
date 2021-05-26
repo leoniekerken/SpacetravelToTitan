@@ -31,9 +31,7 @@ public class Individual {
     static Vector3d posEarth = (Vector3d) Planet.planets[3].posVector;
     static double radiusEarth = Planet.planets[3].radius;
 
-    static Vector3d titanAtEnd = new Vector3d(8.789407152306692E11, -1.2040065147690242E12, -1.4354885833828156E10);
-    static Vector3d unitVectorStart = (Vector3d) titanAtEnd.sub(posEarth).mul(1/titanAtEnd.dist(posEarth));
-    static Vector3d takeOffPoint = (Vector3d) posEarth.addMul(radiusEarth, unitVectorStart);
+    static Vector3d takeOffPoint = new Vector3d(-1.471868229554755E11, -2.8606557057938354E10, 8287486.0632270835);
 
     Vector3d targetPos;
     Vector3d posVector;
@@ -64,7 +62,7 @@ public class Individual {
         this.unitVector = (Vector3d) targetPos.sub(posEarth).mul(1/targetPos.dist(posEarth));
 
         //keep starting position constant (not)
-        this.posVector = (Vector3d) posEarth.addMul(radiusEarth, unitVector);
+        this.posVector = takeOffPoint;
 
         //generate random initVel between 50000 and 60000
         //this.initVel = 50000 + (Math.random() * 10000);
@@ -94,7 +92,7 @@ public class Individual {
         this.unitVector = (Vector3d) targetPos.sub(posEarth).mul(1/targetPos.dist(posEarth));
 
         //calculate starting position
-        this.posVector = (Vector3d) posEarth.addMul(Planet.planets[3].radius, unitVector);
+        this.posVector = (Vector3d) posEarth.addMul(radiusEarth, unitVector);
 
         //generate random initVel between 50000 and 60000
         this.initVel = 50000 + (Math.random() * 10000);

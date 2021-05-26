@@ -1,7 +1,5 @@
 package simulator;
 
-import titan.Vector3dInterface;
-
 /**
  * class implementing a 3d Vector data structure
  *
@@ -120,7 +118,7 @@ public class Vector3d implements titan.Vector3dInterface {
      * @param other is the other vectors needed for the inner product
      * @return the inner product of the two vectors
      */
-    public double innerProduct(Vector3dInterface other) {
+    public double innerProduct(titan.Vector3dInterface other) {
         return this.x * other.getX() + this.y * other.getY() + this.z * other.getZ();
     }
 

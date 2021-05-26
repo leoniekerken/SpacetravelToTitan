@@ -2,7 +2,6 @@ package NewtonRaphson;
 
 import simulator.Simulator;
 import simulator.Vector3d;
-import titan.Vector3dInterface;
 
 /**
  * This class computes the MULTIVARIABLE NEWTON'S THEOREM
@@ -26,9 +25,9 @@ public class MultivariableNewton {
      *  @param vK = current velocity
      *  @return updated velocity V(k+1)
      */
-    public Vector3dInterface doMultivariableNewton(Vector3dInterface g, Vector3dInterface vK) {
+    public titan.Vector3dInterface doMultivariableNewton(titan.Vector3dInterface g, titan.Vector3dInterface vK) {
         fillMatrix(g, vK);
-        Vector3dInterface product = MatrixOperations.multiplyVectorMatrix(MatrixOperations.inverse(jacobianMatrix), g);
+        titan.Vector3dInterface product = MatrixOperations.multiplyVectorMatrix(MatrixOperations.inverse(jacobianMatrix), g);
         return vK.sub(product);
     }
 
@@ -36,7 +35,7 @@ public class MultivariableNewton {
      * Method to fill in the jacobianMatrix
      * g'(V(k)) = (gx(Vx + h) - gx(Vx - h))/2h
      */
-    public void fillMatrix(Vector3dInterface g, Vector3dInterface v) {
+    public void fillMatrix(titan.Vector3dInterface g, titan.Vector3dInterface v) {
         // First I compute all the vectors needed for the operations
         Vector3d xPlusH = new Vector3d(v.getX() + h, v.getY(), v.getZ());
         Vector3d xMinusH = new Vector3d(v.getX() - h, v.getY(), v.getZ());
@@ -44,9 +43,9 @@ public class MultivariableNewton {
         Vector3d yMinusH = new Vector3d(v.getX(), v.getY() - h, v.getZ());
         Vector3d zPlusH = new Vector3d(v.getX(), v.getY(), v.getZ() + h);
         Vector3d zMinusH = new Vector3d(v.getX(), v.getY(), v.getZ() - h);
-        Vector3dInterface gX = new Vector3d(g.getX(), g.getX(), g.getX());
-        Vector3dInterface gY = new Vector3d(g.getY(), g.getY(), g.getY());
-        Vector3dInterface gZ = new Vector3d(g.getZ(), g.getZ(), g.getZ());
+        titan.Vector3dInterface gX = new Vector3d(g.getX(), g.getX(), g.getX());
+        titan.Vector3dInterface gY = new Vector3d(g.getY(), g.getY(), g.getY());
+        titan.Vector3dInterface gZ = new Vector3d(g.getZ(), g.getZ(), g.getZ());
 
         this.jacobianMatrix[0][0] =  (xPlusH.innerProduct(gX) - xMinusH.innerProduct(gX)) / 2*h;
         this.jacobianMatrix[0][1] =  (yPlusH.innerProduct(gX) - yMinusH.innerProduct(gX)) / 2*h;

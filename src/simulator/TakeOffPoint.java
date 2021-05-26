@@ -19,6 +19,8 @@ public class TakeOffPoint {
     public Vector3d titanAtHalf;
 
     public Vector3d targetPos;
+    public Vector3d posEarth = (Vector3d) Planet.planets[3].posVector;
+    public double radiusEarth = Planet.planets[3].radius;
 
     /**
      * calculates ideal take off point of the probe
@@ -28,7 +30,7 @@ public class TakeOffPoint {
     public void calculateTakeOffPoint(double initVel, Vector3d targetPos){
 
         posTitan();
-        unitVector(targetPos);
+        unitVector(titanAtEnd);
         startPos();
         startVel(initVel);
     }
@@ -52,7 +54,7 @@ public class TakeOffPoint {
      * @return the unitVector from earth to titan
      */
     public Vector3d unitVector(Vector3d posVectorTitan){
-        unitVector = (Vector3d) posVectorTitan.sub(Planet.planets[3].posVector).mul(1/posVectorTitan.dist(Planet.planets[3].posVector));
+        unitVector = (Vector3d) posVectorTitan.sub(posEarth).mul(1/posVectorTitan.dist(posEarth));
         return unitVector;
     }
     /**
@@ -63,7 +65,7 @@ public class TakeOffPoint {
      * @return starting positionVector of the probe
      */
     public Vector3d startPos(){
-        startPos = (Vector3d) Planet.planets[3].posVector.addMul(Planet.planets[3].radius, unitVector);
+        startPos = (Vector3d) posEarth.addMul(radiusEarth, unitVector);
         return startPos;
     }
 
