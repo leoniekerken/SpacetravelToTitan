@@ -1,8 +1,7 @@
-package test;
+package testing;
 
 import org.junit.jupiter.api.Test;
 import simulator.*;
-import titan.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ODEFunctionTest {
@@ -104,5 +103,4 @@ class ODEFunctionTest {
         State eulersolverstep = (State) (eulersolver.step(odeF, T, y0, H));
         assertEquals(EXPECTEDY, eulersolverstep.state[8][0].getY(), ACCURACY);
     }
-
 }

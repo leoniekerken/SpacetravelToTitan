@@ -1,14 +1,15 @@
-package test;
+package testing;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import titan.*;
 import simulator.*;
 
 class Vector3dTest {
 
-    @Test void testGetX() {
+    @Test
+    void testGetX() {
         Vector3dInterface v = new Vector3d(-1.1, 0.1, 1.1);
         assertEquals(-1.1, v.getX());
     }
@@ -92,5 +93,4 @@ class Vector3dTest {
         String stringV = "(-1.1, 2.1, -3.1) ";
         assertEquals(stringV, v.toString());
     }
-
 }

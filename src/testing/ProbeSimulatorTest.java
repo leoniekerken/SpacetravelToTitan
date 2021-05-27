@@ -1,4 +1,4 @@
-package test;
+package testing;
 
 import org.junit.jupiter.api.Test;
 
@@ -13,6 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ProbeSimulatorTest {
+
     //This Class works with different step sizes
     static final double ACCURACY = 5e11; // 1 meter (might need to tweak that)
     // since intervals of a day are used we need such large accuracy numbers.
@@ -100,7 +101,6 @@ class ProbeSimulatorTest {
         simulator.ODESolverChoice = 2;
         Vector3dInterface[] trajectory = simulator.trajectory(probeTotal, probeVelocityTotal, day, day);
         return trajectory;
-
     }
 
     public static Vector3dInterface[] simulateOneYear() {
@@ -115,7 +115,5 @@ class ProbeSimulatorTest {
         simulator.ODESolverChoice = 2;
         Vector3dInterface[] trajectory = simulator.trajectory(probeTotal, probeVelocityTotal, year, day);
         return trajectory;
-
     }
-
 }
