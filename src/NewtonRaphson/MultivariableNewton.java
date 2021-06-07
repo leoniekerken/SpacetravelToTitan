@@ -5,6 +5,7 @@ import simulator.Vector3d;
 
 /**
  * This class computes the MULTIVARIABLE NEWTON'S THEOREM
+ * MULTIVARIABLE NEWTON'S THEOREM
  *
  * @author chiara
  */
@@ -33,7 +34,9 @@ public class MultivariableNewton {
 
     /**
      * Method to fill in the jacobianMatrix
+
      * g'(V(k)) = (gx(Vx + h) - gx(Vx - h))/2h
+
      * g'(V(k)) = (g(V + h) - gx(V - h))/2h
      */
     public void fillMatrix(titan.Vector3dInterface g, titan.Vector3dInterface v) {

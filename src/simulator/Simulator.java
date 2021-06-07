@@ -2,7 +2,6 @@ package simulator;
 
 import visualization.StartVisualization;
 
-
 public class Simulator {
 
     static boolean PRINT = true;
@@ -10,14 +9,14 @@ public class Simulator {
     static boolean VISUALIZATION = true;
     static boolean NEWTON = true;
 
-
     //initial parameters to start the mission - 20 seems to be the limit for h
     public static double tf = 31536000 * 2; //final time point of the mission ins seconds (31536000s = one year)
+
     public static double h = 86400 / 10;  //step size with which everything is updated (86400s = 1 day)
 
     static double initVel = 60000; //initial (undirected) velocity of the probe in m/s
 
-    public static void main(String args[]){
+    public static void main(String args[]) {
 
         //initialize positions of all objects in solarSystem
         PlanetStart2020 planetStart2020 = new PlanetStart2020();
@@ -33,7 +32,7 @@ public class Simulator {
 
         //take off point of the probe
         titan.Vector3dInterface p0 = new Vector3d(-1.471868229554755E11, -2.8606557057938354E10, 8287486.0632270835); //initial position here
-        titan.Vector3dInterface v0 = new Vector3d(0,0,0); //initial velocity here
+        titan.Vector3dInterface v0 = new Vector3d(0, 0, 0); //initial velocity here
 
         //set solver choice: 1 = EulerSolver; 2 = VerletSolver; 3 = RungeKuttaSolver
         probeSimulator.ODESolverChoice = 3;
@@ -45,12 +44,12 @@ public class Simulator {
         Vector3d[] titanPos = probeSimulator.titanPos;
 
         //find best position
-        double distance = trajectory[trajectory.length-1].dist(titanPos[titanPos.length-1]);
+        double distance = trajectory[trajectory.length - 1].dist(titanPos[titanPos.length - 1]);
         int position = trajectory.length - 1;
-        Vector3d distanceVector = (Vector3d) trajectory[trajectory.length-1].sub(titanPos[titanPos.length-1]);
-        Vector3d probeAtBest = (Vector3d) trajectory[trajectory.length-1];
-        Vector3d titanAtBest = titanPos[titanPos.length-1];
-        for (int i = trajectory.length-1; i >= 0; i--){
+        Vector3d distanceVector = (Vector3d) trajectory[trajectory.length - 1].sub(titanPos[titanPos.length - 1]);
+        Vector3d probeAtBest = (Vector3d) trajectory[trajectory.length - 1];
+        Vector3d titanAtBest = titanPos[titanPos.length - 1];
+        for (int i = trajectory.length - 1; i >= 0; i--) {
             if (trajectory[i].dist(titanPos[i]) < distance) {
                 distance = trajectory[i].dist(titanPos[i]);
                 position = i;
@@ -60,7 +59,7 @@ public class Simulator {
             }
         }
 
-        if(PRINT){
+        if (PRINT) {
 
             System.out.println();
             System.out.println();
@@ -68,13 +67,11 @@ public class Simulator {
             System.out.println();
             System.out.println();
             System.out.println("SOLVER USED:");
-            if(probeSimulator.ODESolverChoice == 1){
+            if (probeSimulator.ODESolverChoice == 1) {
                 System.out.println("EULER SOLVER");
-            }
-            else if(probeSimulator.ODESolverChoice == 2) {
+            } else if (probeSimulator.ODESolverChoice == 2) {
                 System.out.println("VERLET SOLVER");
-            }
-            else if(probeSimulator.ODESolverChoice == 3){
+            } else if (probeSimulator.ODESolverChoice == 3) {
                 System.out.println("RUNGE-KUTTA SOLVER");
             }
             System.out.println();
@@ -105,13 +102,14 @@ public class Simulator {
             System.out.println("at position: " + position);
             System.out.println();
             System.out.println();
-            System.out.println("probe at end: " + trajectory[trajectory.length-1].toString());
-            System.out.println("titan at end: " + titanPos[titanPos.length-1]);
+            System.out.println("probe at end: " + trajectory[trajectory.length - 1].toString());
+            System.out.println("titan at end: " + titanPos[titanPos.length - 1]);
             System.out.println();
             System.out.println();
-            System.out.println("distance of Probe to Earth at the end = " + ProbeController.distProbeEarth + " meters");
+            //System.out.println("distance of Probe to Earth at the end = " + ProbeController.distProbeEarth + " meters");
 
-            if(DETAIL) {
+
+            if (DETAIL) {
                 System.out.println("DETAILED TRAJECTORY");
                 System.out.println();
                 System.out.println();
@@ -127,7 +125,7 @@ public class Simulator {
             }
         }
 
-        if(VISUALIZATION){
+        if (VISUALIZATION) {
             StartVisualization.start();
         }
     }

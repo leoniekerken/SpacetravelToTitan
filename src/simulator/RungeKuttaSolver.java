@@ -106,7 +106,6 @@ public class RungeKuttaSolver implements ODESolverInterface {
             earthPos[0] = (Vector3d) states[0].getPos(3);
         }
 
-
         //updating positions for one step
         Vector3d posProbe = (Vector3d) (states[0].getPos(3));
         double kickOut = 31536000;
@@ -124,51 +123,18 @@ public class RungeKuttaSolver implements ODESolverInterface {
                 }
             }
 
-            //31536000
-            posProbe = (Vector3d) (states[i-1].getPos(11));
-            if ((i > 30000000/h  && i < kickOut && distProbeTitan > posProbe.dist(states[i-1].getPos(8))))
-            {
-                distProbeTitan = posProbe.dist(states[i - 1].getPos(8));
-            }
-            else if (i < kickOut)
-            {
-                // kick out initiated.
-                kickOut = i;
-                Vector3d returnVector = new Vector3d (-probeController.vL.getX(), -probeController.vL.getY(), -probeController.vL.getZ());
-                Vector3d backToEarth = probeController.accelerate((Vector3d)(states[i-1].getVel(11)), returnVector, h);
-                states[i-1].addVel(11, backToEarth.mul(h/2));
-                if (DEBUG) {
-                    //System.out.println("IMPORTANT_______________________________________________________________________________________________________________");
-                    System.out.println("SOLVER: velocity updated: " + states[i - 1].getVel(11));
-                    System.out.println();
-                }
-            }
-
-            if (i > kickOut && distProbeEarth > posProbe.dist(states[i-1].getPos(3)))
-            {
-                kickEarth = i;
-                distProbeEarth = posProbe.dist(states[i-1].getPos(3));
-            }
-            else if (kickEarth < i)
-            {
-                System.out.println("distance of Probe to Earth at the end = " + distProbeEarth + " meters");
-                System.exit(0);
-            }
-
-
             states[i] = (State) step(f, ts[i], states[i-1], (ts[i]-ts[i-1]));
-            /**
-            if (probeController.closeEnough(i, states[i].getPos(11), states[i].getPos(8), states[i].getPos(3))) {
-                 probeController.reverseThrust(i);
-            }
 
-            if (probeController.closeToEarth(i, states[i].getPos(11), states[i].getPos(3))) {
-                State[] stateMaster = states.clone();
-                states = new State[i+1];
-                System.arraycopy(stateMaster, 0, states, 0, i+1);
-                break;
-            }
-             */
+
+//            if (probeController.closeEnough(i, states[i].getPos(11), states[i].getPos(8), states[i].getPos(3))) {
+//                 states[i].addVel(11,probeController.reverseThrust(i, states[i], h));
+//            }
+//
+//            if (probeController.closeToEarth(i, states[i].getPos(11), states[i].getPos(3))) {
+//                System.exit(0);
+//
+//            }
+
             if(!TESTING){
                 titanPos[i] = (Vector3d) states[i].getPos(8); //add current position of titan to static storage
                 earthPos[i] = (Vector3d) states[i].getPos(3); //add current position of earth to extra storage

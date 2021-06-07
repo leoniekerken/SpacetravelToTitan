@@ -4,7 +4,6 @@ import NewtonRaphson.MultivariableNewton;
 
 import titan.Vector3dInterface;
 
-
 /**
  * CLASS TO CONTROL THE TRAJECTORY OF THE PROBE
  * (change direction, velocity)
@@ -24,12 +23,12 @@ public class ProbeController {
     public static final double DRY_MASS= 78000; //dry mass of space rocket without fuel
     public double vE = 20000; //exhaust velocity (in m/s)
     public double F = 3e7; //maximum thrust
-    public double massFlowRate = -(F/vE);
 
-    public double kickOut = 31536000;
-    public double kickEarth = kickOut * 2;
-    public static double distProbeEarth = 1e18;
-    public double distProbeTitan;
+    public double massFlowRate = -(F/vE); // decay amount
+    public double kickOut = 31536000; // when to end if possible
+    public double kickEarth = kickOut * 2; // when to end in worst case
+    public double distProbeEarth = 1e18;// max return jorney -> decreases to the acual value of 8e8
+    public double distProbeTitan; // dinstance of the probe to titan in eucledian distance form
 
     public static Vector3d pF = new Vector3d(8.994491235691361E11, -1.246880800663044E12, 5.261491970119961E9); //target position
 
@@ -85,7 +84,6 @@ public class ProbeController {
         massFuel -= 5000 * h;
         acceleration = (Vector3d) diffVelocity.mul(1/h);
 
-
         //maximal acceleration a = F/m
 
         double maxAcceleration = F/DRY_MASS;
@@ -93,7 +91,6 @@ public class ProbeController {
         if(acceleration.norm() <= maxAcceleration){
 
             return acceleration;
-
         }
 
         else{
@@ -123,91 +120,13 @@ public class ProbeController {
         return null;
     }
 
-    /**
-     * method to compute adjustments (late phase)
-     * dv = s/d * v
-     *
-     * s still needs to be determined!
-     */
-    public Vector3d setAdjustments(Vector3d pK, Vector3d vK){
 
-        //updatedVelocity = s/d * vK
-
-        return updatedVelocity;
-    }
 
     /**
-     * method to compute acceleration
-     *
-     * a = F/m - both F and m are given
-     *
-     */
-
-
-  
-    /**
-     *
-     * integrate all of that
-     *
-     */
-
-    /**
-     * CURRENTLY SUBTRACT A VALUE FROM EVERY COORDINATE OF THE CURRENT VELOCITY
-     * MAKE IT MORE EFFICIENT BY GRADUALLY SLOWING IT DOWN BY CALLING THIS METHOD IN A LOOP (?)
-     * @param vK is the current velocity of the probe
-     * @return the updated velocity of the probe (slowed down)
-     */
-//    public Vector3d slowDown(Vector3d vK) {
-//        return new Vector3d(vK.getX() - vK.getX()/2, vK.getY() - vK.getY()/2, vK.getZ() - vK.getZ()/2);
-//    }
-//
-//    /**
-//     * CURRENTLY ADD A VALUE TO EVERY COORDINATE OF THE CURRENT VELOCITY
-//     * MAKE IT MORE EFFICIENT BY GRADUALLY SLOWING IT DOWN BY CALLING THIS METHOD IN A LOOP (?)
-//     * @param vK is the current velocity of the probe
-//     * @return the updated velocity of the probe (faster)
-//     */
-//    public Vector3d goFaster(Vector3d vK) {
-//        return new Vector3d(vK.getX() + vK.getX()/2, vK.getY() + vK.getY()/2, vK.getZ() + vK.getZ()/2);
-//    }
-
-    /**
-
-     * MAKE IT MORE EFFICIENT! (reduce if-statements if possible!)
      * Currently checks whether every coordinate is closed enough to the desired destination
-     * @return true if we are close enough to titan
-     */
-    /*public boolean closeEnough(Vector3d p) {
-        boolean check = false;
-
-        if (p.getX() < 1e7 && p.getX() > 0) {
-            check = true;
-
-            if (p.getY() < 1e7 && p.getY() > 0) {
-                check = true;
-
-                if (p.getZ() < 1e7 && p.getZ() > 0) {
-                    check = true;
-
-                } else {
-                    check = false;
-                }
-
-            } else {
-                check = false;
-            }
-
-        } else {
-            check = false;
-        }
-        return check;
-    }
-
-    */
-
-     * Currently checks whether every coordinate is closed enough to the desired destination
-     * @param pProbe = last position to be checked
-     *
+     * @param pProbe = current position of the probe
+     * @param pTitan = current position of the titan
+     * @param pEarth = current position of the earth
      * @return true if we are the closest to titan
      */
     public boolean closeEnough(int i, Vector3dInterface pProbe, Vector3dInterface pTitan, Vector3dInterface pEarth) {
@@ -224,6 +143,10 @@ public class ProbeController {
     }
 
     /**
+
+     * @param i = current state
+     * @param pProbe = current position of the probe
+     * @param pEarth = current position of the earth
      * Checks whether the distance between earth and the probe is decreasing
      */
     public boolean closeToEarth(int i, Vector3dInterface pProbe, Vector3dInterface pEarth) {
@@ -233,32 +156,39 @@ public class ProbeController {
             distProbeEarth = pProbe.dist(pEarth);
             return false;
         }
+
+        System.out.println(distProbeEarth);
         return true;
     }
 
-
-    public void reverseThrust(int i) {
-    /*
-       if (i < kickOut)
-
-            // kick out initiated.
-            kickOut = i;
-            Vector3d returnVector = new Vector3d (-vL.getX(), -vL.getY(), -vL.getZ());
-            Vector3d backToEarth = accelerate((Vector3d)(states[i-1].getVel(11)), returnVector, h);
-            states[i-1].addVel(11, backToEarth.mul(h/2));
-            if (DEBUG) {
-                //System.out.println("IMPORTANT_______________________________________________________________________________________________________________");
-                System.out.println("SOLVER: velocity updated: " + states[i - 1].getVel(11));
-                System.out.println();
-            }
+    /**
+     * reverse the acceleration that we use previously to get back towards earth and Reverts the direction of the spaceprobe
+     * @param i
+     * @param state current state
+     * @param h = step size
+    */
+    public Vector3dInterface reverseThrust(int i ,State state, double h) {
+        // Using this we stop at 8e8 from earth.
+        // kick out initiated.
+        kickOut = i;
+        Vector3d returnVector = new Vector3d (-vL.getX(), -vL.getY(), -vL.getZ());
+        Vector3d backToEarth = accelerate((Vector3d)(state.getVel(11)), returnVector, h);
+        // states[i-1].addVel(11, backToEarth.mul(h/2));
+        if (DEBUG) {
+            //System.out.println("IMPORTANT_______________________________________________________________________________________________________________");
+            System.out.println("SOLVER: velocity updated: " + state.getVel(11));
+            System.out.println();
         }
-        */
-    }
+        return backToEarth;
+     }
 
-    public double getTotalMass(){
-        return massFuel+DRY_MASS;
-    }
 
+    /** fuel decay function
+     * @param massFlowrate
+     * @param time interval
+     * @param h stepsize
+     * @return rate of loss of mass of fuel
+     */
     public void setfuelMassLoss(double massFlowrate, double time, double h){
         for( int i=0; i<time; i+=h){
             System.out.println(massFlowrate*i);

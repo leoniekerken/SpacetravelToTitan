@@ -68,7 +68,6 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
             verletSolver = new VerletSolver();
             states = (State[]) verletSolver.solve(f, y0, ts);
             //extract information
-
             solverName = "Verlet";
             earthPos = verletSolver.earthPos;
             earthPosAfterOneYear = verletSolver.earthPosAfterOneYear;
@@ -141,7 +140,6 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
         }
         else if(ODESolverChoice == 2){
             //start solver
-
             verletSolver = new VerletSolver();
             states = (State[]) verletSolver.solve(f, y0, tf, h);
             //extract information
@@ -167,7 +165,8 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
         trajectory = new Vector3d[(int) Math.round((tf/h) + 1)];
 
         for(int i = 0; i < trajectory.length; i++){
-            trajectory[i] = (Vector3d) states[i].getPos(11);
+            if (states[i] != null)
+                trajectory[i] = (Vector3d) states[i].getPos(11);
         }
 
         //make sure to set ODESolver and State to null to allow garbage collection and clear memory

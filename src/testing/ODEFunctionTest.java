@@ -3,17 +3,13 @@ package testing;
 import org.junit.jupiter.api.Test;
 import simulator.*;
 
-import titan.*;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
+// similar setup to the one that were givven
 class ODEFunctionTest {
     static final double ACCURACY = 1; // titan
-
-    static final double EXPECTEDX = 6.332873363075275E+11;
-    static final double EXPECTEDY = -1.357175507991633E+12;
-    static final double EXPECTEDZ = -2.134644659949720E+09;
-
+    static final double EXPECTEDX = 6.332873363075275E+11; //after one time step
+    static final double EXPECTEDY = -1.357175507991633E+12; //after one time step
+    static final double EXPECTEDZ = -2.134644659949720E+09; //after one time step
     static PlanetStart2020 planet2020 = new PlanetStart2020();
     static final int T = 0; // time point
     static final int H = 8; // Step size
@@ -110,4 +106,3 @@ class ODEFunctionTest {
         assertEquals(EXPECTEDY, eulersolverstep.state[8][0].getY(), ACCURACY);
     }
 }
-
