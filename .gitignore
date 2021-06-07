@@ -42,6 +42,7 @@ hs_err_pid*
 titan_mission.iml
 
 out/
+.idea/
 SpacetravelToTitan.iml
 .DS_Store
 trajectory.csv
