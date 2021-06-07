@@ -1,15 +1,14 @@
 package simulator;
 
-import visualization.StartVisualization;
+//import visualization.StartVisualization;
 
 
 public class Simulator {
 
     static boolean PRINT = true;
     static boolean DETAIL = false;
-    static boolean VISUALIZATION = true;
+    static boolean VISUALIZATION = false;
     static boolean NEWTON = true;
-
 
     //initial parameters to start the mission - 20 seems to be the limit for h
     public static double tf = 31536000 * 2; //final time point of the mission ins seconds (31536000s = one year)
@@ -109,7 +108,7 @@ public class Simulator {
             System.out.println("titan at end: " + titanPos[titanPos.length-1]);
             System.out.println();
             System.out.println();
-            System.out.println("distance of Probe to Earth at the end = " + ProbeController.distProbeEarth + " meters");
+
 
             if(DETAIL) {
                 System.out.println("DETAILED TRAJECTORY");
@@ -127,8 +126,8 @@ public class Simulator {
             }
         }
 
-        if(VISUALIZATION){
-            StartVisualization.start();
-        }
+//        if(VISUALIZATION){
+//            StartVisualization.start();
+//        }
     }
 }

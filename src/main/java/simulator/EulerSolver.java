@@ -3,28 +3,31 @@ package simulator;
 import titan.ODEFunctionInterface;
 import titan.ODESolverInterface;
 import titan.StateInterface;
-import titan.*;
 
 /**
- * 4th order Runge-Kutta solver (RK4) to solve equations of motion
+ * class implementing Euler's method to calculate motion of objects in the solar system
  *
- * @author Aditi, Sebas, Leo
+ * @author Leo
  */
+public class EulerSolver implements ODESolverInterface {
 
-public class RungeKuttaSolver implements ODESolverInterface {
-
-    static boolean DEBUG = false;
+    static boolean DEBUG = true;
     public static boolean TESTING = ProbeSimulator.TESTING;
     public  static boolean VISUALIZATION = ProbeSimulator.VISUALIZATION;
     static int visualizationTimeStamps = 50;
 
-    public ProbeController probeController = new ProbeController();
-
     public State[] states;
+
     public Vector3d[] earthPos;
     public Vector3d earthPosAfterOneYear;
     public Vector3d[] titanPos;
     public Vector3d titanPosAfterOneYear;
+
+    public ProbeController probeController = new ProbeController();
+
+    public Vector3d pf = new Vector3d(8.994491235691361E11, -1.246880800663044E12, 5.261491970119961E9);
+
+    public Vector3d g;
 
     /**
      * solve ODE
@@ -83,7 +86,6 @@ public class RungeKuttaSolver implements ODESolverInterface {
 
         //get array storing separate timestamps
         double[] ts = new double[(int) (Math.round((tf/h)+1))];
-
         ts[0] = 0;
         for(int i = 1; i < ts.length; i++){
             ts[i] = ts[i-1] + h;
@@ -96,7 +98,6 @@ public class RungeKuttaSolver implements ODESolverInterface {
         states = new State[(int) (Math.round(tf/h)+1)];
         states[0] = (State) y0;
 
-
         if(!TESTING){
             //create array storing positions of titan
             titanPos = new Vector3d[ts.length];
@@ -106,69 +107,15 @@ public class RungeKuttaSolver implements ODESolverInterface {
             earthPos[0] = (Vector3d) states[0].getPos(3);
         }
 
-
         //updating positions for one step
-        Vector3d posProbe = (Vector3d) (states[0].getPos(3));
-        double kickOut = 31536000;
-        double kickEarth = kickOut * 2;
-        double distProbeTitan = posProbe.dist(states[0].getPos(8));
-        double distProbeEarth = 1e18;
-
         for(int i = 1; i < states.length; i++){
-            if(i == 1 && states[i-1].getVel(11) != probeController.vL) {
-                Vector3d newAcceleration = probeController.accelerate((Vector3d) states[i - 1].getVel(11), probeController.vL, h);
-                states[i - 1].addVel(11, newAcceleration.mul(h));
-                if (DEBUG) {
-                    System.out.println("SOLVER: velocity updated: " + states[i - 1].getVel(11));
-                    System.out.println();
-                }
-            }
-
-            //31536000
-            posProbe = (Vector3d) (states[i-1].getPos(11));
-            if ((i > 30000000/h  && i < kickOut && distProbeTitan > posProbe.dist(states[i-1].getPos(8))))
-            {
-                distProbeTitan = posProbe.dist(states[i - 1].getPos(8));
-            }
-            else if (i < kickOut)
-            {
-                // kick out initiated.
-                kickOut = i;
-                Vector3d returnVector = new Vector3d (-probeController.vL.getX(), -probeController.vL.getY(), -probeController.vL.getZ());
-                Vector3d backToEarth = probeController.accelerate((Vector3d)(states[i-1].getVel(11)), returnVector, h);
-                states[i-1].addVel(11, backToEarth.mul(h/2));
-                if (DEBUG) {
-                    //System.out.println("IMPORTANT_______________________________________________________________________________________________________________");
-                    System.out.println("SOLVER: velocity updated: " + states[i - 1].getVel(11));
-                    System.out.println();
-                }
-            }
-
-            if (i > kickOut && distProbeEarth > posProbe.dist(states[i-1].getPos(3)))
-            {
-                kickEarth = i;
-                distProbeEarth = posProbe.dist(states[i-1].getPos(3));
-            }
-            else if (kickEarth < i)
-            {
-                System.out.println("distance of Probe to Earth at the end = " + distProbeEarth + " meters");
-                System.exit(0);
-            }
-
-
             states[i] = (State) step(f, ts[i], states[i-1], (ts[i]-ts[i-1]));
-            /**
-            if (probeController.closeEnough(i, states[i].getPos(11), states[i].getPos(8), states[i].getPos(3))) {
-                 probeController.reverseThrust(i);
+            if(i == 1){
+                states[i].addVel(11, probeController.setVelocity((Vector3d) states[i-1].getPos(11), (Vector3d) states[i-1].getVel(11)));
+                if(DEBUG){
+                    System.out.println("VEL AFTER UPDATE: " + states[i].getVel(11));
+                }
             }
-
-            if (probeController.closeToEarth(i, states[i].getPos(11), states[i].getPos(3))) {
-                State[] stateMaster = states.clone();
-                states = new State[i+1];
-                System.arraycopy(stateMaster, 0, states, 0, i+1);
-                break;
-            }
-             */
             if(!TESTING){
                 titanPos[i] = (Vector3d) states[i].getPos(8); //add current position of titan to static storage
                 earthPos[i] = (Vector3d) states[i].getPos(3); //add current position of earth to extra storage
@@ -185,25 +132,19 @@ public class RungeKuttaSolver implements ODESolverInterface {
         return states;
     }
 
+    /**
+     * calculating one step
+     *
+     * @param f simulator.ODEFunction implementing Newton's law
+     * @param t time
+     * @param y state
+     * @param h step size
+     * @return new state of the system after one update step
+     */
     @Override
     public StateInterface step(ODEFunctionInterface f, double t, StateInterface y, double h) {
 
-        Rate k1, k2, k3, k4;
-
-        //k1 = h * f(t, y)
-        k1 = ((Rate) f.call(t, y)).mul(h);
-        //k2 = h + f(t+0.5*h, y+0.5*k1)
-        k2 = ((Rate) f.call(t + 0.5 * h, y.addMul(0.5, k1))).mul(h);
-        //k3 = h + f(t+0.5*h, y+0.5*k2)
-        k3 = ((Rate) f.call(t + 0.5 * h, y.addMul(0.5, k2))).mul(h);
-        //k4 = h + f(t*h, y+k3)
-        k4 = ((Rate) f.call(t * h, y.addMul(1, k3))).mul(h);
-
-        //newRate = k1 + 2 * k2 + 2 * k3 + k4
-        Rate newRate = k1.add(k2.mul(2)).add(k3.mul(2)).add(k4);
-
-        //newState = y + 1/6 * newRate
-        StateInterface newState = y.addMul(1.0/6.0, newRate);
+        State newState = (State) y.addMul(h, f.call(t, y));
 
         return newState;
     }

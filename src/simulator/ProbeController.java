@@ -1,7 +1,9 @@
 package simulator;
 
 import NewtonRaphson.MultivariableNewton;
+
 import titan.Vector3dInterface;
+
 
 /**
  * CLASS TO CONTROL THE TRAJECTORY OF THE PROBE
@@ -23,6 +25,7 @@ public class ProbeController {
     public double vE = 20000; //exhaust velocity (in m/s)
     public double F = 3e7; //maximum thrust
     public double massFlowRate = -(F/vE);
+
     public double kickOut = 31536000;
     public double kickEarth = kickOut * 2;
     public static double distProbeEarth = 1e18;
@@ -82,7 +85,9 @@ public class ProbeController {
         massFuel -= 5000 * h;
         acceleration = (Vector3d) diffVelocity.mul(1/h);
 
+
         //maximal acceleration a = F/m
+
         double maxAcceleration = F/DRY_MASS;
 
         if(acceleration.norm() <= maxAcceleration){
@@ -139,6 +144,7 @@ public class ProbeController {
      */
 
 
+  
     /**
      *
      * integrate all of that
@@ -166,6 +172,39 @@ public class ProbeController {
 //    }
 
     /**
+
+     * MAKE IT MORE EFFICIENT! (reduce if-statements if possible!)
+     * Currently checks whether every coordinate is closed enough to the desired destination
+     * @return true if we are close enough to titan
+     */
+    /*public boolean closeEnough(Vector3d p) {
+        boolean check = false;
+
+        if (p.getX() < 1e7 && p.getX() > 0) {
+            check = true;
+
+            if (p.getY() < 1e7 && p.getY() > 0) {
+                check = true;
+
+                if (p.getZ() < 1e7 && p.getZ() > 0) {
+                    check = true;
+
+                } else {
+                    check = false;
+                }
+
+            } else {
+                check = false;
+            }
+
+        } else {
+            check = false;
+        }
+        return check;
+    }
+
+    */
+
      * Currently checks whether every coordinate is closed enough to the desired destination
      * @param pProbe = last position to be checked
      *

@@ -13,6 +13,7 @@ import titan.StateInterface;
 public class VerletSolver implements ODESolverInterface {
 
     static boolean DEBUG = false;
+
     public static boolean TESTING = ProbeSimulator.TESTING;
     public  static boolean VISUALIZATION = ProbeSimulator.VISUALIZATION;
     static int visualizationTimeStamps = 50;
@@ -38,6 +39,7 @@ public class VerletSolver implements ODESolverInterface {
         states = new State[ts.length];
         states[0] = (State) y0;
 
+
         if(!TESTING){
             //create array storing positions of titan
             titanPos = new Vector3d[ts.length];
@@ -50,6 +52,7 @@ public class VerletSolver implements ODESolverInterface {
         //updating positions for one step
         for(int i = 1; i < states.length; i++){
             states[i] = (State) step(f, ts[i], states[i-1], (ts[i]-ts[i-1]));
+
             if(!TESTING){
                 titanPos[i] = (Vector3d) states[i].getPos(8); //add current position of titan to static storage
                 earthPos[i] = (Vector3d) states[i].getPos(3); //add current position of earth to extra storage
@@ -142,19 +145,57 @@ public class VerletSolver implements ODESolverInterface {
     @Override
     public StateInterface step(ODEFunctionInterface f, double t, StateInterface y, double h) {
 
+        if(DEBUG){
+            System.out.println();
+            System.out.println();
+            System.out.println("VERLET SOLVER DEBUG");
+            System.out.println();
+            System.out.println();
+            System.out.println("y: " + y);
+            System.out.println();
+            System.out.println();
+        }
+
         //half-step velocity: v(t+h) = v(t) + 1/2 a(t) * h
         State halfStepVel = ((State) y).updateVelocity((0.5*h), f.call(t, y));
+
+        if(DEBUG){
+            System.out.println("a: " + f.call(t, y));
+            System.out.println();
+            System.out.println();
+            System.out.println("halfStepVel: " + halfStepVel);
+            System.out.println();
+            System.out.println();
+        }
 
         //update position: x(t+h) = x(t) + halfStepVel
         State updatePos = ((State) y).updatePosition(h, f.call(t + 0.5 * h, halfStepVel));
 
+        if(DEBUG){
+            System.out.println("updatePos: " + updatePos);
+            System.out.println();
+            System.out.println();
+        }
+
         //update halfStepVel: v(t+h) = halfStepVel + 1/2 a(t+h) * h
         State updateVel = halfStepVel.updateVelocity((0.5*h), f.call(t + h, updatePos));
+
+        if(DEBUG){
+            System.out.println("updateVel: " + updateVel);
+            System.out.println();
+            System.out.println();
+        }
 
         //putting it together: newState with updatePos and updateVel
         State newState = new State();
         newState.addAllPos(updatePos);
         newState.addAllVel(updateVel);
+
+        if(DEBUG){
+            System.out.println("newState: " + newState);
+            System.out.println();
+            System.out.println();
+        }
 
         return newState;
     }

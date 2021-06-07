@@ -106,14 +106,12 @@ public class RungeKuttaSolver implements ODESolverInterface {
             earthPos[0] = (Vector3d) states[0].getPos(3);
         }
 
-
         //updating positions for one step
         Vector3d posProbe = (Vector3d) (states[0].getPos(3));
         double kickOut = 31536000;
         double kickEarth = kickOut * 2;
         double distProbeTitan = posProbe.dist(states[0].getPos(8));
         double distProbeEarth = 1e18;
-
         for(int i = 1; i < states.length; i++){
             if(i == 1 && states[i-1].getVel(11) != probeController.vL) {
                 Vector3d newAcceleration = probeController.accelerate((Vector3d) states[i - 1].getVel(11), probeController.vL, h);
@@ -123,7 +121,6 @@ public class RungeKuttaSolver implements ODESolverInterface {
                     System.out.println();
                 }
             }
-
             //31536000
             posProbe = (Vector3d) (states[i-1].getPos(11));
             if ((i > 30000000/h  && i < kickOut && distProbeTitan > posProbe.dist(states[i-1].getPos(8))))
@@ -155,20 +152,8 @@ public class RungeKuttaSolver implements ODESolverInterface {
                 System.exit(0);
             }
 
-
             states[i] = (State) step(f, ts[i], states[i-1], (ts[i]-ts[i-1]));
-            /**
-            if (probeController.closeEnough(i, states[i].getPos(11), states[i].getPos(8), states[i].getPos(3))) {
-                 probeController.reverseThrust(i);
-            }
 
-            if (probeController.closeToEarth(i, states[i].getPos(11), states[i].getPos(3))) {
-                State[] stateMaster = states.clone();
-                states = new State[i+1];
-                System.arraycopy(stateMaster, 0, states, 0, i+1);
-                break;
-            }
-             */
             if(!TESTING){
                 titanPos[i] = (Vector3d) states[i].getPos(8); //add current position of titan to static storage
                 earthPos[i] = (Vector3d) states[i].getPos(3); //add current position of earth to extra storage
@@ -203,7 +188,7 @@ public class RungeKuttaSolver implements ODESolverInterface {
         Rate newRate = k1.add(k2.mul(2)).add(k3.mul(2)).add(k4);
 
         //newState = y + 1/6 * newRate
-        StateInterface newState = y.addMul(1.0/6.0, newRate);
+        State newState = (State) y.addMul(1.0/6.0, newRate);
 
         return newState;
     }

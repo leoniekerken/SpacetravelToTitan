@@ -1,9 +1,6 @@
 package simulator;
 
-import titan.ODEFunctionInterface;
-import titan.ODESolverInterface;
-import titan.StateInterface;
-
+import titan.*;
 /**
  * class implementing Euler's method to calculate motion of objects in the solar system
  *
@@ -62,9 +59,9 @@ public class EulerSolver implements ODESolverInterface {
             }
             //add current position of object to short version of orbit (for visualization)
             if(VISUALIZATION && i % visualizationTimeStamps == 0)
-            for(int j = 0; j < Planet.planets.length; j++){
-                Planet.planets[j].addOrbit(states[i].getPos(j));
-            }
+                for(int j = 0; j < Planet.planets.length; j++){
+                    Planet.planets[j].addOrbit(states[i].getPos(j));
+                }
         }
         earthPosAfterOneYear = (Vector3d) states[states.length - 1].getPos(3);
         titanPosAfterOneYear = (Vector3d) states[states.length - 1].getPos(8);
