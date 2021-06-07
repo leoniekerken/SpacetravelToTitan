@@ -13,17 +13,15 @@ import javafx.util.Duration;
  */
 public class MovingPlanets {
 
-    final double duration = 10; //this essentially determines speed at which movement is shown
+    final double duration = 100; //this essentially determines speed at which movement is shown
 
     Planet[] planets = Planet.planets;
     ZoomablePane zoomablePane;
     Circle[] circles;
 
     public MovingPlanets(ZoomablePane zoomablePane) {
-
         this.zoomablePane = zoomablePane;
         this.circles = zoomablePane.circles;
-
     }
 
     /**

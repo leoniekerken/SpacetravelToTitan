@@ -34,6 +34,7 @@ public class MultivariableNewton {
     /**
      * Method to fill in the jacobianMatrix
      * g'(V(k)) = (gx(Vx + h) - gx(Vx - h))/2h
+     * g'(V(k)) = (g(V + h) - gx(V - h))/2h
      */
     public void fillMatrix(titan.Vector3dInterface g, titan.Vector3dInterface v) {
         // First I compute all the vectors needed for the operations

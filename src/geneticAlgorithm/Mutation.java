@@ -15,13 +15,12 @@ public class Mutation {
     static boolean DEBUG = false;
 
     public static void Mutation(){
-
     }
 
     /**
      * generate random position vector
-     * @param subtleMutation - true if we want the mutation only to occur either in x,y,z direction, false if we want
-     *                       it to occur in all directions simultaneously
+     * subtleMutation - true if we want the mutation only to occur either in x,y,z direction
+     *                - false if we want it to occur in all directions simultaneously
      * @return mutation vector
      */
     public static Vector3d mutate(){
@@ -83,7 +82,6 @@ public class Mutation {
                 randomZ = Math.random() * mutationFactor / 10;
             }
         }
-
         mutation.setX(randomX);
         mutation.setY(randomY);
         mutation.setZ(randomZ);

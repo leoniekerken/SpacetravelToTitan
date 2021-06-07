@@ -40,7 +40,9 @@ hs_err_pid*
 
 #own files
 titan_mission.iml
+
+out/
 SpacetravelToTitan.iml
+.DS_Store
 trajectory.csv
 .gradle/
-

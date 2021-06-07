@@ -2,7 +2,6 @@ package simulator;
 
 import titan.RateInterface;
 import titan.StateInterface;
-import titan.Vector3dInterface;
 
 /**
  * data structure to store the state of the solar system
@@ -98,7 +97,7 @@ public class State implements StateInterface{
         return newState;
     }
 
-    public void addPos(int i, Vector3dInterface pos){
+    public void addPos(int i, titan.Vector3dInterface pos){
         state[i][0] = pos;
     }
 

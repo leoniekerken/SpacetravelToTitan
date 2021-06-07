@@ -120,7 +120,7 @@ class ZoomablePane extends Pane {
         double xSun = xCenter + x;
         double ySun = yCenter + y;
         Circle sun = new Circle(xSun, ySun, 10);
-        Image imageSun = new Image(getClass().getResourceAsStream("/resources/Sun.png"));
+        Image imageSun = new Image(getClass().getResourceAsStream("/visualization/resources/Sun.png"));
         ImagePattern imagePatternSun = new ImagePattern(imageSun);
         sun.setFill(imagePatternSun);
 
@@ -139,7 +139,7 @@ class ZoomablePane extends Pane {
         double xMercury = xCenter + unitSize * x;
         double yMercury = yCenter + unitSize * y;
         Circle mercury = new Circle(xMercury, yMercury, 2);
-        Image imageMercury = new Image(getClass().getResourceAsStream("/resources/Mercury.png"));
+        Image imageMercury = new Image(getClass().getResourceAsStream("/visualization/resources/Mercury.png"));
         ImagePattern imagePatternMercury = new ImagePattern(imageMercury);
         mercury.setFill(imagePatternMercury);
 
@@ -158,7 +158,7 @@ class ZoomablePane extends Pane {
         double xVenus = xCenter + unitSize * x;
         double yVenus = yCenter + unitSize * y;
         Circle venus = new Circle(xVenus, yVenus, 4);
-        Image imageVenus = new Image(getClass().getResourceAsStream("/resources/Venus.png"));
+        Image imageVenus = new Image(getClass().getResourceAsStream("/visualization/resources/Venus.png"));
         ImagePattern imagePatternVenus = new ImagePattern(imageVenus);
         venus.setFill(imagePatternVenus);
 
@@ -176,7 +176,7 @@ class ZoomablePane extends Pane {
             System.out.println();
         }
         Circle earth = new Circle(xEarth, yEarth, 2);
-        Image imageEarth = new Image(getClass().getResourceAsStream("/resources/Earth.png"));
+        Image imageEarth = new Image(getClass().getResourceAsStream("/visualization/resources/Earth.png"));
         ImagePattern imagePatternEarth = new ImagePattern(imageEarth);
         earth.setFill(imagePatternEarth);
         solarSystem.getChildren().add(earth);
@@ -193,7 +193,7 @@ class ZoomablePane extends Pane {
             System.out.println();
         }
         Circle moon = new Circle(xMoon, yMoon, 1);
-        Image imageMoon = new Image(getClass().getResourceAsStream("/resources/Moon.png"));
+        Image imageMoon = new Image(getClass().getResourceAsStream("/visualization/resources/Moon.png"));
         ImagePattern imagePatternMoon = new ImagePattern(imageMoon);
         moon.setFill(imagePatternMoon);
 
@@ -205,7 +205,7 @@ class ZoomablePane extends Pane {
         double xMars = xCenter + unitSize * x;
         double yMars = yCenter + unitSize * y;
         Circle mars = new Circle(xMars, yMars, 2);
-        Image imageMars = new Image(getClass().getResourceAsStream("/resources/Mars.png"));
+        Image imageMars = new Image(getClass().getResourceAsStream("/visualization/resources/Mars.png"));
         ImagePattern imagePatternMars = new ImagePattern(imageMars);
         mars.setFill(imagePatternMars);
 
@@ -217,7 +217,7 @@ class ZoomablePane extends Pane {
         double xJupiter = xCenter + unitSize * x;
         double yJupiter = yCenter + unitSize * y;
         Circle jupiter = new Circle(xJupiter, yJupiter, 7);
-        Image imageJupiter = new Image(getClass().getResourceAsStream("/resources/Jupiter.png"));
+        Image imageJupiter = new Image(getClass().getResourceAsStream("/visualization/resources/Jupiter.png"));
         ImagePattern imagePatternJupiter = new ImagePattern(imageJupiter);
         jupiter.setFill(imagePatternJupiter);
 
@@ -229,7 +229,7 @@ class ZoomablePane extends Pane {
         double xSaturn = xCenter + unitSize * x;
         double ySaturn = yCenter + unitSize * y;
         Circle saturn = new Circle(xSaturn, ySaturn, 5);
-        Image imageSaturn = new Image(getClass().getResourceAsStream("/resources/Saturn.png"));
+        Image imageSaturn = new Image(getClass().getResourceAsStream("/visualization/resources/Saturn.png"));
         ImagePattern imagePatternSaturn = new ImagePattern(imageSaturn);
         saturn.setFill(imagePatternSaturn);
         solarSystem.getChildren().add(saturn);
@@ -240,7 +240,7 @@ class ZoomablePane extends Pane {
         double xTitan = xCenter + unitSize * x;
         double yTitan = yCenter + unitSize * y;
         Circle titan = new Circle(xTitan, yTitan, 1);
-        Image imageTitan = new Image(getClass().getResourceAsStream("/resources/Titan.png"));
+        Image imageTitan = new Image(getClass().getResourceAsStream("/visualization/resources/Titan.png"));
         ImagePattern imagePatternTitan = new ImagePattern(imageTitan);
         titan.setFill(imagePatternTitan);
         solarSystem.getChildren().add(titan);
@@ -257,7 +257,7 @@ class ZoomablePane extends Pane {
             System.out.println();
         }
         spacecraft = new Rectangle(xSpacecraft, ySpacecraft, 3.0, 5.0);
-        Image imageSpacecraft = new Image(getClass().getResourceAsStream("/resources/Spacecraft.png"));
+        Image imageSpacecraft = new Image(getClass().getResourceAsStream("/visualization/resources/Spacecraft.png"));
         ImagePattern imagePatternSpacecraft = new ImagePattern(imageSpacecraft);
         spacecraft.setFill(imagePatternSpacecraft);
         solarSystem.getChildren().add(spacecraft);

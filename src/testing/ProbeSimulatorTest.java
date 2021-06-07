@@ -8,6 +8,8 @@ import simulator.Planet;
 import simulator.Vector3d;
 import simulator.ProbeSimulator;
 import titan.Vector3dInterface;
+import simulator.ProbeSimulator;
+import titan.*;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.System;
@@ -16,6 +18,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ProbeSimulatorTest {
+
+
+
     //This Class works with different step sizes
     static final double ACCURACY = 5e11; // 1 meter (might need to tweak that)
     // since intervals of a day are used we need such large accuracy numbers.
@@ -48,7 +53,10 @@ class ProbeSimulatorTest {
     @Test void testTrajectoryOneYearX() {
 
         Vector3dInterface[] trajectory = simulateOneYear();
-        double x366 = -1.1951517995514418E13; // reference implementation
+
+        // double x366 = -1.1951517995514418E13; // reference implementation
+        double x366 = -1.1651517995514418E13; // reference implementation
+
         assertEquals(x366, trajectory[trajectory.length-1].getX(), ACCURACY); // delta +-ACCURACY
 
     }
@@ -120,5 +128,5 @@ class ProbeSimulatorTest {
         return trajectory;
 
     }
-
 }
+

@@ -2,6 +2,9 @@ package simulator;
 
 import NewtonRaphson.MultivariableNewton;
 
+import titan.Vector3dInterface;
+
+
 /**
  * CLASS TO CONTROL THE TRAJECTORY OF THE PROBE
  * (change direction, velocity)
@@ -23,6 +26,10 @@ public class ProbeController {
     public double F = 3e7; //maximum thrust
     public double massFlowRate = -(F/vE);
 
+    public double kickOut = 31536000;
+    public double kickEarth = kickOut * 2;
+    public static double distProbeEarth = 1e18;
+    public double distProbeTitan;
 
     public static Vector3d pF = new Vector3d(8.994491235691361E11, -1.246880800663044E12, 5.261491970119961E9); //target position
 
@@ -77,6 +84,9 @@ public class ProbeController {
         diffVelocity = (Vector3d) vF.sub(vK);
         massFuel -= 5000 * h;
         acceleration = (Vector3d) diffVelocity.mul(1/h);
+
+
+        //maximal acceleration a = F/m
 
         double maxAcceleration = F/DRY_MASS;
 
@@ -134,8 +144,7 @@ public class ProbeController {
      */
 
 
-
-
+  
     /**
      *
      * integrate all of that
@@ -163,11 +172,12 @@ public class ProbeController {
 //    }
 
     /**
+
      * MAKE IT MORE EFFICIENT! (reduce if-statements if possible!)
      * Currently checks whether every coordinate is closed enough to the desired destination
      * @return true if we are close enough to titan
      */
-    public boolean closeEnough(Vector3d p) {
+    /*public boolean closeEnough(Vector3d p) {
         boolean check = false;
 
         if (p.getX() < 1e7 && p.getX() > 0) {
@@ -193,6 +203,57 @@ public class ProbeController {
         return check;
     }
 
+    */
+
+     * Currently checks whether every coordinate is closed enough to the desired destination
+     * @param pProbe = last position to be checked
+     *
+     * @return true if we are the closest to titan
+     */
+    public boolean closeEnough(int i, Vector3dInterface pProbe, Vector3dInterface pTitan, Vector3dInterface pEarth) {
+
+        // 31536000
+        // If the probe is close enough
+        if (i < kickOut && distProbeTitan > pProbe.dist(pTitan))
+        {
+            distProbeTitan = pProbe.dist(pTitan);
+            return false;
+        }
+        kickOut = i;
+        return true;
+    }
+
+    /**
+     * Checks whether the distance between earth and the probe is decreasing
+     */
+    public boolean closeToEarth(int i, Vector3dInterface pProbe, Vector3dInterface pEarth) {
+        if (i > kickOut && distProbeEarth > pProbe.dist(pEarth))
+        {
+            kickEarth = i;
+            distProbeEarth = pProbe.dist(pEarth);
+            return false;
+        }
+        return true;
+    }
+
+
+    public void reverseThrust(int i) {
+    /*
+       if (i < kickOut)
+
+            // kick out initiated.
+            kickOut = i;
+            Vector3d returnVector = new Vector3d (-vL.getX(), -vL.getY(), -vL.getZ());
+            Vector3d backToEarth = accelerate((Vector3d)(states[i-1].getVel(11)), returnVector, h);
+            states[i-1].addVel(11, backToEarth.mul(h/2));
+            if (DEBUG) {
+                //System.out.println("IMPORTANT_______________________________________________________________________________________________________________");
+                System.out.println("SOLVER: velocity updated: " + states[i - 1].getVel(11));
+                System.out.println();
+            }
+        }
+        */
+    }
 
     public double getTotalMass(){
         return massFuel+DRY_MASS;
