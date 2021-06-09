@@ -28,7 +28,7 @@ public class ProbeController {
     public double kickOut = 31536000; // when to end if possible
     public double kickEarth = kickOut * 2; // when to end in worst case
     public double distProbeEarth = 1e18;// max return jorney -> decreases to the acual value of 8e8
-    public double distProbeTitan; // dinstance of the probe to titan in eucledian distance form
+    public double distProbeTitan = 1e18; // dinstance of the probe to titan in eucledian distance form
 
     public static Vector3d pF = new Vector3d(8.994491235691361E11, -1.246880800663044E12, 5.261491970119961E9); //target position
 
@@ -125,11 +125,10 @@ public class ProbeController {
     /**
      * Currently checks whether every coordinate is closed enough to the desired destination
      * @param pProbe = current position of the probe
-     * @param pTitan = current position of the titan
-     * @param pEarth = current position of the earth
+     * @param pTitan = current position of the t
      * @return true if we are the closest to titan
      */
-    public boolean closeEnough(int i, Vector3dInterface pProbe, Vector3dInterface pTitan, Vector3dInterface pEarth) {
+    public boolean closeEnough(double i, Vector3dInterface pProbe, Vector3dInterface pTitan) {
 
         // 31536000
         // If the probe is close enough
@@ -149,7 +148,7 @@ public class ProbeController {
      * @param pEarth = current position of the earth
      * Checks whether the distance between earth and the probe is decreasing
      */
-    public boolean closeToEarth(int i, Vector3dInterface pProbe, Vector3dInterface pEarth) {
+    public boolean closeToEarth(double i, Vector3dInterface pProbe, Vector3dInterface pEarth) {
         if (i > kickOut && distProbeEarth > pProbe.dist(pEarth))
         {
             kickEarth = i;
@@ -167,7 +166,7 @@ public class ProbeController {
      * @param state current state
      * @param h = step size
     */
-    public Vector3dInterface reverseThrust(int i ,State state, double h) {
+    public Vector3dInterface reverseThrust(double i,State state, double h) {
         // Using this we stop at 8e8 from earth.
         // kick out initiated.
         kickOut = i;
