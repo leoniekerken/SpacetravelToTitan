@@ -60,6 +60,7 @@ public class TakeOffPoint {
         return unitVector;
     }
 
+
     /**
      * positioning the take off point somewhere on earth's surface and configuring take off point
      * so that it is directed towards titan by

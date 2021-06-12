@@ -173,7 +173,7 @@ public class PlanetStart2020 {
         //spacecraft
         Planet spaceCraft = new Planet ("SpaceProbe");
         // Adding the Earths radius somewhere = 6371e+3;
-        spaceCraft.mass = 15000;
+        spaceCraft.mass = 78000;
         spaceCraft.radius = 10;
         spaceCraft.gravity = 1e-10;
         spaceCraft.positionX = 0;

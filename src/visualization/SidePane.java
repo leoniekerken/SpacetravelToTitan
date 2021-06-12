@@ -7,6 +7,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.control.Label;
+import simulator.Planet;
 
 /**
  * side pane where informative data is shown
@@ -63,7 +64,7 @@ public class SidePane {
         addLabel("End Date: ", 40, 200, Color.BLUE);
         addLabel("01-04-2021", 40, 225, Color.BLACK);
         addLabel("Mass of the Probe: ", 40, 300, Color.BLUE);
-        addLabel("15000 kg", 40, 325, Color.BLACK);
+        addLabel(Planet.planets[11].mass + " kg", 40, 325, Color.BLACK);
         addLabel("Coordinates of Titan: ", 40, 400, Color.BLUE);
         addLabel("X: ", 35, 425, Color.BLUE);
         addLabel("6.333e+11 km", 60, 425, Color.BLACK);

@@ -21,7 +21,7 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
     public static boolean DEBUG = false;
     public static boolean TESTING;
     public static boolean VISUALIZATION;
-    static int visualizationTimeStamps = 50; // time step size for the visualization every 50th timestep we add to vis
+    static int visualizationTimeStamps = 100; // time step size for the visualization every 50th timestep we add to vis
     public boolean reachTitan = false; // marking if we reached the clossest poition yet
     public boolean reachEarth = false; // did we get back towards earth
 
@@ -31,8 +31,8 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
     public Vector3d earthPosAfterOneYear;
     public Vector3d[] titanPos;
     public Vector3d titanPosAfterOneYear;
-    //public LinkedList<State> states;
-    public State[] states;
+    public LinkedList<State> states;
+//    public State[] states;
 
     public int ODESolverChoice;
     public EulerSolver eulerSolver;
@@ -99,8 +99,8 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
         trajectory = new Vector3d[ts.length];
 
         for (int i = 0; i < trajectory.length; i++) {
-//            trajectory[i] = (Vector3d) states.get(i).getPos(11);
-            trajectory[i] = (Vector3d) states[i].getPos(11);
+            trajectory[i] = (Vector3d) states.get(i).getPos(11);
+//            trajectory[i] = (Vector3d) states[i].getPos(11);
         }
 
         //make sure to set ODESolver and State to null to allow garbage collection and clear memory
@@ -133,12 +133,12 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
         //initial state of the system
         y0 = new State();
         y0.initializeState();
-        states = new State[(int) Math.floor(tf/h) + 1];
-//        states = new LinkedList<>();
-//        states.add(y0);
-        states[0] = y0;
+//        states = new State[(int) Math.floor(tf/h) + 1];
+//        states[0] = y0;
+        states = new LinkedList<>();
+        states.add(y0);
 
-        /*if(ODESolverChoice == 1){
+         /*if(ODESolverChoice == 1){
             //start solver
             eulerSolver = new EulerSolver();
             states = (State[]) eulerSolver.solve(f, y0, tf, h);
@@ -164,7 +164,12 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
             titanPos = verletSolver.titanPos;
             titanPosAfterOneYear = verletSolver.titanPosAfterOneYear;
         }
-        else */
+        else
+
+
+
+
+
         if(ODESolverChoice == 3){
             //start solver
             rungeKuttaSolver = new RungeKuttaSolver();
@@ -176,16 +181,22 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
             earthPosAfterOneYear = rungeKuttaSolver.earthPosAfterOneYear;
             titanPos = rungeKuttaSolver.titanPos;
             titanPosAfterOneYear = rungeKuttaSolver.titanPosAfterOneYear;
-        }
+        }*/
 
-        /*
+
         rungeKuttaSolver = new RungeKuttaSolver();
 
         //while (!reachTitan && !reachEarth && itterator < tf) {
+
         for (int itterator = 0; itterator < tf; itterator += h) {
-            if(itterator <= h && states.getLast().getVel(11) != probeController.vL) {
-                Vector3d newAcceleration = probeController.accelerate((Vector3d) states.getLast().getVel(11), probeController.vL, h);
-                states.getLast().addVel(11, newAcceleration.mul(h));
+            if( itterator <= 1 && states.getLast().getVel(11) != probeController.vL) {
+                Vector3d newAcceleration = probeController.accelerate((Vector3d) (states.getLast().getVel(11)), probeController.vL, h);
+//                System.out.println("Accelerate first: " + newAcceleration.mul(h).toString());
+//                System.out.println("Accelerate Earth: " + states.getLast().getVel(3).toString());
+                State stateLast = states.getLast();
+                stateLast.addVel(11, newAcceleration.mul(h));
+                states.removeLast();
+                states.add(stateLast);
                 if (DEBUG) {
                     System.out.println("SOLVER: velocity updated: " + states.getLast().getVel(11));
                     System.out.println();
@@ -212,14 +223,14 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
                 rungeKuttaSolver = null;
                 states = null;
                 System.gc();
-                System.out.println("itterator HERE:   " + itterator + "   ___-----------------------------------");
+//                System.out.println("itterator HERE:   " + itterator + "   ___-----------------------------------");
                 return trajectory;
 
             }
 
             //itterator += h;
         }
-        */
+
         // safty if we hit the time limit.
         finalizeTrajectory(states);
 
@@ -237,18 +248,16 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
 
     private State step (LinkedList<State> states, double itterator, double h, ODEFunction f)
     {
-//        if (itterator > (3*h))
-//        {
-//            AdamMoulton adamMoulton = new AdamMoulton();
-//            State stateRK = (State) rungeKuttaSolver.step(f, itterator, states.getLast(),h);
-//            return adamMoulton.corrector(f, states, itterator, h, stateRK);
-//
-//        }
-//        else
-//        {
+        if (itterator > (3*h))
+        {
+            AdamMoulton adamMoulton = new AdamMoulton();
+            State stateRK = (State) rungeKuttaSolver.step(f, itterator, states.getLast(),h);
+            return adamMoulton.corrector(f, states, itterator, h, stateRK);
+        }
+        else
+        {
             return (State) rungeKuttaSolver.step(f, itterator, states.getLast(),h);
-//        }
-
+        }
     }
 
     private void finalizeTrajectory (LinkedList<State> states)

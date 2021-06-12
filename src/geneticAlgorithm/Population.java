@@ -9,6 +9,7 @@ public class Population {
 
     Individual[] individuals;
     int populationSize;
+    Individual fittestEnd;
 
     static final boolean DEBUG = false;
     static final boolean sexySon = false;
@@ -76,9 +77,17 @@ public class Population {
 
     public Individual getFittest(){
         Individual fittest = individuals[0];
+        if (fittestEnd == null)
+        {
+            fittestEnd = individuals[0];
+        }
         for(int i = 0; i < populationSize; i++){
             if(individuals[i].getFitness() < fittest.getFitness()){
                 fittest = individuals[i];
+                if (fittest.getFitness() < fittestEnd.getFitness())
+                {
+                    fittestEnd = fittest;
+                }
             }
         }
         return fittest;
@@ -89,9 +98,19 @@ public class Population {
     }
 
     public void print(){
-        for(int i = 0; i < populationSize; i++){
-            System.out.println("INDIVIDUAL: " + individuals[i].velVector + ", initVel: " + individuals[i].initVel + ", fitness " + individuals[i].fitness + ", distance: " + individuals[i].distanceVector + ", position: " + individuals[i].position);
+        if (fittestEnd == null)
+        {
+            fittestEnd = individuals[0];
         }
+        System.out.println("============");
+        //System.out.println("Fittest Up until now All INDIVIDUAL: " + fittestEnd.velVector + ", initVel: " + fittestEnd.initVel + ", fitness " + fittestEnd.fitness + ", distance: " + fittestEnd.distanceVector + ", position: " + fittestEnd.position);
+        System.out.println("Fittest until now INDIVIDUAL " + fittestEnd.getFitness() + ", Velocity: " + fittestEnd.velVector + "; position: " + fittestEnd.posVector + "; initVel: " + fittestEnd.initVel + ", distance: " + fittestEnd.distanceVector + ", position: " + fittestEnd.position);
+
+        System.out.println("============");
+
+//        for(int i = 0; i < populationSize; i++){
+//            System.out.println("INDIVIDUAL: " + individuals[i].velVector + ", initVel: " + individuals[i].initVel + ", fitness " + individuals[i].fitness + ", distance: " + individuals[i].distanceVector + ", position: " + individuals[i].position);
+//        }
     }
 
 }

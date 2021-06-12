@@ -10,7 +10,7 @@ public class Simulator {
     static boolean NEWTON = true;
 
     //initial parameters to start the mission - 20 seems to be the limit for h
-    public static double tf = 31536000 * 2; //final time point of the mission ins seconds (31536000s = one year)
+    public static double tf = 31536000; //final time point of the mission ins seconds (31536000s = one year)
 
     public static double h = 86400 / 10;  //step size with which everything is updated (86400s = 1 day)
 

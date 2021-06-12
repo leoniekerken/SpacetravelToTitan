@@ -9,17 +9,17 @@ public class Individual {
     /**
      * create a new individual
      * an individual consists of
-     * @param targetPos a random target position
-     * @param posVector position at start
-     * @param unitVector
-     * @param initVel initial velocity of the probe in m/s
-     * @param velVector directed 3d velocity vector
+     * //@param targetPos a random target position
+     * //@param posVector position at start
+     * //@param unitVector
+     * //@param initVel initial velocity of the probe in m/s
+     * //@param velVector directed 3d velocity vector
      *
-     * @param fitness euclidean distance probe to titan at its best position
-     * @param position best position during flight
-     * @param distance distance vector probe to titan at best position
+     * //@param fitness euclidean distance probe to titan at its best position
+     * //@param position best position during flight
+     * //@param distance distance vector probe to titan at best position
      *
-     * @author Leo
+     * //@author Leo
      */
 
     static boolean DEBUG = false;

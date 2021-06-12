@@ -18,7 +18,7 @@ import titan.Vector3dInterface;
  */
 public class ProbeController {
 
-    static boolean DEBUG = true;
+    static boolean DEBUG = false;
     public double massFuel  = 2e6; //mass of the fuel this gives us upto 200sec of thrust
     public static final double DRY_MASS= 78000; //dry mass of space rocket without fuel
     public double vE = 20000; //exhaust velocity (in m/s)
@@ -34,7 +34,8 @@ public class ProbeController {
 
     public Vector3d p0; //initial position
     public Vector3d v0; //initial velocity
-    public Vector3d vL = new Vector3d(23362.444117658797, -55262.85583123383, -461.48697222676947); //launch velocity - velocity we want to approximate after launching
+    public Vector3d vL = new Vector3d(61100.018378306515, -36287.12219310739, -602.5464522362721); //launch velocity - velocity we want to approximate after launching
+//    (61100.018378306515, -36287.12219310739, -602.5464522362721) // old one (-62503.59520115846, 30503.316321875955, -621.7444409637209)
     public Vector3d pK; //current position
     public Vector3d vK; //current velocity
 
@@ -79,7 +80,7 @@ public class ProbeController {
      *
      */
     public Vector3d accelerate(Vector3d vK, Vector3d vF, double h){
-
+        // System.out.println("hello Accelerate1");
         diffVelocity = (Vector3d) vF.sub(vK);
         massFuel -= 5000 * h;
         acceleration = (Vector3d) diffVelocity.mul(1/h);
@@ -156,7 +157,7 @@ public class ProbeController {
             return false;
         }
 
-        System.out.println(distProbeEarth);
+        // System.out.println(distProbeEarth);
         return true;
     }
 

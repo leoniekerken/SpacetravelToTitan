@@ -29,7 +29,7 @@ public class Evolution {
      *                   is most important!
      */
 
-    static final int populationSize = 90;
+    static final int populationSize = 180;
     static final int tournamentSize = 3;
     static final int evolutionCycles = 1000;
     static final double mutationRate = 0.3;
@@ -117,11 +117,12 @@ public class Evolution {
                 }
                 simulator.run(population);
                 if (PRINT) {
+                    Individual genFittest = population.getFittest();
                     System.out.println("POPULATION: " + i);
                     System.out.println();
                     population.print();
                     System.out.println();
-                    System.out.println("FITTEST PARENT POPULATION " + population.getFittest().velVector + "; position: " + population.getFittest().posVector + "; initVel: " + population.getFittest().initVel + ", fitness: " + population.getFittest().getFitness() + ", distance: " + population.getFittest().distanceVector + ", position: " + population.getFittest().position);
+                    System.out.println("FITTEST PARENT POPULATION " + genFittest.velVector + "; position: " + genFittest.posVector + "; initVel: " + genFittest.initVel + ", fitness: " + genFittest.getFitness() + ", distance: " + genFittest.distanceVector + ", position: " + genFittest.position);
                 }
                 for (int j = 0; j < nextGeneration.populationSize; j++) {
 

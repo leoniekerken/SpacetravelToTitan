@@ -173,7 +173,7 @@ public class PlanetStart2019 {
 
         //spacecraft
         Planet spaceCraft = new Planet ("SpaceProbe");
-        spaceCraft.mass = 15000;
+        spaceCraft.mass = 78000;
         spaceCraft.radius = 10;
         spaceCraft.gravity = 1e-10;
         spaceCraft.positionX = 0;
