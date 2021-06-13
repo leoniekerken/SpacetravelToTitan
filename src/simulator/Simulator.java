@@ -35,7 +35,10 @@ public class Simulator {
         titan.Vector3dInterface p0 = new Vector3d(-1.471868229554755E11, -2.8606557057938354E10, 8287486.0632270835); //initial position here
         titan.Vector3dInterface v0 = new Vector3d(0, 0, 0); //initial velocity here
 
-        //set solver choice: 1 = EulerSolver; 2 = VerletSolver; 3 = RungeKuttaSolver
+        //set solver choice: 
+        //  1 = EulerSolver 
+        //  2 = VerletSolver
+        //  3 = RungeKuttaSolver
         probeSimulator.ODESolverChoice = 3;
 
         //calculate trajectory of the probe
