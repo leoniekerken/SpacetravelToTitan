@@ -35,7 +35,9 @@ public class ProbeController {
     public Vector3d p0; //initial position
     public Vector3d v0; //initial velocity
     public Vector3d vL = new Vector3d(61100.018378306515, -36287.12219310739, -602.5464522362721); //launch velocity - velocity we want to approximate after launching
-//    (61100.018378306515, -36287.12219310739, -602.5464522362721) // old one (-62503.59520115846, 30503.316321875955, -621.7444409637209)
+    // Adam Multon(61100.018378306515, -36287.12219310739, -602.5464522362721)
+    //
+    // RungeKutta P2 (-62503.59520115846, 30503.316321875955, -621.7444409637209)
     public Vector3d pK; //current position
     public Vector3d vK; //current velocity
 
