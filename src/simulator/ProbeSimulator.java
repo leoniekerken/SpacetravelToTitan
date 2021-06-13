@@ -305,7 +305,7 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
         trajectory = new Vector3d[states.size()];
         titanPos = new Vector3d[states.size()];
         earthPos = new Vector3d[states.size()];
-
+        System.out.println("States length: " + states.size());
         for(int i = 0; i < trajectory.length; i++) {
             if (states.get(i) != null) {
                 trajectory[i] = (Vector3d) states.get(i).getPos(11);
