@@ -137,6 +137,17 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
 //        states[0] = y0;
         states = new LinkedList<>();
         states.add(y0);
+        
+        if(ODESolverChoice == 1) {
+            eulerSolver = new EulerSolver();
+        }
+        else if(ODESolverChoice == 2) {
+            verletSolver= new VerletSolver();
+        }
+        else  {
+            rungeKuttaSolver = new RungeKuttaSolver();
+        }
+
 
          /*if(ODESolverChoice == 1){
             //start solver
@@ -250,13 +261,32 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
     {
         if (itterator > (3*h))
         {
+            State stateThis;
+            if(ODESolverChoice == 1) {
+                stateThis = (State) eulerSolver.step(f, itterator, states.getLast(),h);
+            }
+            else if(ODESolverChoice == 2) {
+                stateThis = (State) verletSolver.step(f, itterator, states.getLast(),h);
+            }
+            else  {
+                stateThis = (State) rungeKuttaSolver.step(f, itterator, states.getLast(),h);
+            }
+
             AdamMoulton adamMoulton = new AdamMoulton();
-            State stateRK = (State) rungeKuttaSolver.step(f, itterator, states.getLast(),h);
-            return adamMoulton.corrector(f, states, itterator, h, stateRK);
+            return adamMoulton.corrector(f, states, itterator, h, stateThis);
         }
         else
         {
-            return (State) rungeKuttaSolver.step(f, itterator, states.getLast(),h);
+            if(ODESolverChoice == 1) {
+                return (State) eulerSolver.step(f, itterator, states.getLast(),h);
+            }
+            else if(ODESolverChoice == 2) {
+                return (State) verletSolver.step(f, itterator, states.getLast(),h);
+            }
+            else {
+                return (State) rungeKuttaSolver.step(f, itterator, states.getLast(),h);
+            }
+
         }
     }
 
