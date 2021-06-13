@@ -16,7 +16,7 @@ public class Simulator {
     public static double h = 86400 / 10;  //step size with which everything is updated (86400s = 1 day)
 
     static double initVel = 60000; //initial (undirected) velocity of the probe in m/s
-
+    //fittest individual from runge kutta with AM ( from running Evolution)  ======> ODE Choice 3= 68634.6294883869
     public static void main(String args[]) {
 
         //initialize positions of all objects in solarSystem
