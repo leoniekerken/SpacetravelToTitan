@@ -7,6 +7,7 @@ public class Simulator {
     static boolean PRINT = true;
     static boolean DETAIL = false;
     static boolean VISUALIZATION = true;
+    static boolean CORRECTOR = true;
     static boolean NEWTON = true;
 
     //initial parameters to start the mission - 20 seems to be the limit for h
@@ -22,7 +23,7 @@ public class Simulator {
         PlanetStart2020 planetStart2020 = new PlanetStart2020();
 
         ProbeSimulator.VISUALIZATION = VISUALIZATION;
-
+        ProbeSimulator.CORRECTOR = CORRECTOR;
         //new probeSimulator
         ProbeSimulator probeSimulator = new ProbeSimulator();
 

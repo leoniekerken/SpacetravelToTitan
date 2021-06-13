@@ -21,6 +21,7 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
     public static boolean DEBUG = false;
     public static boolean TESTING;
     public static boolean VISUALIZATION;
+    public static boolean CORRECTOR;
     static int visualizationTimeStamps = 100; // time step size for the visualization every 50th timestep we add to vis
     public boolean reachTitan = false; // marking if we reached the clossest poition yet
     public boolean reachEarth = false; // did we get back towards earth
@@ -137,7 +138,7 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
 //        states[0] = y0;
         states = new LinkedList<>();
         states.add(y0);
-        
+
         if(ODESolverChoice == 1) {
             eulerSolver = new EulerSolver();
         }
@@ -259,34 +260,43 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
 
     private State step (LinkedList<State> states, double itterator, double h, ODEFunction f)
     {
-        if (itterator > (3*h))
+        if (CORRECTOR)
         {
-            State stateThis;
-            if(ODESolverChoice == 1) {
-                stateThis = (State) eulerSolver.step(f, itterator, states.getLast(),h);
-            }
-            else if(ODESolverChoice == 2) {
-                stateThis = (State) verletSolver.step(f, itterator, states.getLast(),h);
-            }
-            else  {
-                stateThis = (State) rungeKuttaSolver.step(f, itterator, states.getLast(),h);
-            }
+            if (itterator > (3*h))
+            {
+                State stateThis;
+                if(ODESolverChoice == 1) {
+                    stateThis = (State) eulerSolver.step(f, itterator, states.getLast(),h);
+                }
+                else if(ODESolverChoice == 2) {
+                    stateThis = (State) verletSolver.step(f, itterator, states.getLast(),h);
+                }
+                else  {
+                    stateThis = (State) rungeKuttaSolver.step(f, itterator, states.getLast(),h);
+                }
 
-            AdamMoulton adamMoulton = new AdamMoulton();
-            return adamMoulton.corrector(f, states, itterator, h, stateThis);
-        }
-        else
-        {
-            if(ODESolverChoice == 1) {
-                return (State) eulerSolver.step(f, itterator, states.getLast(),h);
-            }
-            else if(ODESolverChoice == 2) {
-                return (State) verletSolver.step(f, itterator, states.getLast(),h);
+                AdamMoulton adamMoulton = new AdamMoulton();
+                return adamMoulton.corrector(f, states, itterator, h, stateThis);
             }
             else {
-                return (State) rungeKuttaSolver.step(f, itterator, states.getLast(),h);
+                if (ODESolverChoice == 1) {
+                    return (State) eulerSolver.step(f, itterator, states.getLast(), h);
+                } else if (ODESolverChoice == 2) {
+                    return (State) verletSolver.step(f, itterator, states.getLast(), h);
+                } else {
+                    return (State) rungeKuttaSolver.step(f, itterator, states.getLast(), h);
+                }
             }
 
+        }
+        else {
+            if (ODESolverChoice == 1) {
+                return (State) eulerSolver.step(f, itterator, states.getLast(), h);
+            } else if (ODESolverChoice == 2) {
+                return (State) verletSolver.step(f, itterator, states.getLast(), h);
+            } else {
+                return (State) rungeKuttaSolver.step(f, itterator, states.getLast(), h);
+            }
         }
     }
 
