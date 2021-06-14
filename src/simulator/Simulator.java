@@ -7,7 +7,7 @@ public class Simulator {
     static boolean PRINT = true;
     static boolean DETAIL = false;
     static boolean VISUALIZATION = true;
-    static boolean CORRECTOR = true;
+    static boolean CORRECTOR = false;
     static boolean NEWTON = true;
 
     //initial parameters to start the mission - 20 seems to be the limit for h
