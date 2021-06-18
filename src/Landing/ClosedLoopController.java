@@ -58,10 +58,9 @@ public class ClosedLoopController {
         // rotational velocity and time needed for it.
         // v = ((thetaDesired - theta)/ (timescale^2)) - theta'/timscale
 
-
     }
 
-    
+
 
 
 
