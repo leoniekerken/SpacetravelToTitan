@@ -4,6 +4,7 @@ import java.util.LinkedList;
 
 public class Lander {
     public static boolean INITIAL_MOVING = false;
+    public static boolean DEBUG = true;
     // Gravity of Titan 1.352 m s^-2
     public static final double GRAVITY = 1.352;
 
@@ -16,7 +17,7 @@ public class Lander {
     public double time; // time taken in total
     public double step; // the next step size
     public LinkedList<Double> timeSteps; // used to have alwasy the current timestep in mind.
-    final double stepDefault = 86400.00/1000; // to have this saved
+    final double stepDefault = 1; // to have this saved  84600.00/1000
 
     public LinkedList<Double> posX;
     public LinkedList<Double> posY;
@@ -34,19 +35,21 @@ public class Lander {
 
     public final double MASS = 6000; // KG
 
-    // the End position of Landing module
+    // the End position of Landing module Best case
     public final double X_END = 0;
     public final double Y_END = 0;
     public final double ANGLE_END = 0;
 
     public Lander ()
     {
+        if (DEBUG) System.out.println("Lander Instance Start");
         posX = new LinkedList<>();
         posY = new LinkedList<>();
         posDeg = new LinkedList<>();
         timeSteps = new LinkedList<>();
         // starting position adn velocity
         start();
+        if (DEBUG) System.out.println("Lander Instance End: " + this.toString());
     }
 
     private void start()
@@ -94,6 +97,7 @@ public class Lander {
 //        }
 
         this.angle = angle;
+        //System.out.println("Add Angle");
         posDeg.add(angle);
     }
 
@@ -136,12 +140,12 @@ public class Lander {
     }
     public double getA ()
     {
-        int posTime = this.timeSteps.size() - 1;
-        double vel12 = getV(posTime);
-        double vel23 = getV(posTime - 1);
+        // int posTime = this.timeSteps.size() - 1;
+        double vel12 = getV();
+        double vel23 = getV(posX.size() -1);
         // one of them is correct but I am not fully sure.
         // return ((Math.sqrt(Math.pow(vel12,2)) + Math.pow(vel23,2)) / (timeSteps.get(posTime) - timeSteps.get(posTime - 1)));
-        return (vel12 - vel23) / ((posX.get(posTime) - posX.get(posTime - 2)) * (timeSteps.get(posTime) - timeSteps.get(posTime - 2)));
+        return (vel12 - vel23) / ((posX.getLast() - posX.get(posX.size() - 2)) * getStep());
         // return (vel12 - vel23) / ((posX.get(posTime) - posX.get(posTime - 2)) * Math.pow((timeSteps.get(posTime) - timeSteps.get(posTime - 1)), 2)); // one of these it should be.
         // return (vel12 - vel23) / (posX.get(posTime) - posX.get(posTime - 2)) / ((timeSteps.get(posTime) - timeSteps.get(posTime - 1))/2); // highly doubt its this one
     }
@@ -158,21 +162,21 @@ public class Lander {
             return getVY(posTime);
         }
         //return //((Math.sqrt(Math.pow((posY.get(posTime) - posY.get(posTime - 1)),2)) + Math.pow((posX.get(posTime) - posX.get(posTime - 1)),2)) / (timeSteps.get(posTime) - timeSteps.get(posTime - 1)));
-        return (posY.get(posTime) - posY.get(posTime - 1)) / ((posX.get(posTime) - posX.get(posTime - 1)) * step);
+        return (posY.get(posTime) - posY.get(posTime - 1)) / ((posX.get(posTime) - posX.get(posTime - 1)) * getStep(posTime));
     }
 
     public double getV ()
     {
-        int posTime = this.timeSteps.size() - 1;
-        if ((posX.get(posTime) - posX.get(posTime - 1)) == 0)
+        //int posTime = this.timeSteps.size() - 1;
+        if ((posX.getLast() - posX.get(posX.size() - 1)) == 0)
         {
             return getVY();
         }
-        else if ((posY.get(posTime) - posY.get(posTime - 1)) == 0)
+        else if ((posY.getLast() - posY.get(posY.size() - 1)) == 0)
         {
             return getVX();
         }
-        return (posY.get(posTime) - posY.get(posTime - 1)) / ((posX.get(posTime) - posX.get(posTime - 1)) * step);
+        return (posY.getLast() - posY.get(posY.size() - 1)) / ((posX.getLast() - posX.get(posX.size() - 1)) * getStep());
     }
 
     public double getVX (int posTime)
@@ -182,7 +186,7 @@ public class Lander {
 
     public double getVX ()
     {
-        return (posX.get(timeSteps.size() - 1) - posX.get( timeSteps.size() - 2)) / getStep();
+        return (posX.get(posX.size() - 1) - posX.get( posX.size() - 2)) / getStep();
     }
 
     public double getVY (int posTime)
@@ -192,7 +196,17 @@ public class Lander {
 
     public double getVY ()
     {
-        return (posY.get(timeSteps.size() - 1) - posY.get(timeSteps.size() - 2)) / getStep();
+        return (posY.get(posY.size() - 1) - posY.get(posY.size() - 2)) / getStep();
+    }
+
+    public double getVA (int posTime)
+    {
+        return (posDeg.get(posTime) - posY.get(posTime - 1)) / getStep(posTime);
+    }
+
+    public double getVA ()
+    {
+        return (posDeg.get(posDeg.size() - 1) - posDeg.get(posDeg.size() - 2)) / getStep();
     }
 
     public double getAX (int posTime)
@@ -207,12 +221,12 @@ public class Lander {
 
     public double getAX ()
     {
-        return Math.cos(angle) * getA(timeSteps.size() - 1);
+        return Math.cos(angle) * getA();
     }
 
     public double getAY ()
     {
-        return Math.sin(angle) * getA((timeSteps.size() - 1));
+        return Math.sin(angle) * getA();
     }
 
     private double timeAdd()
@@ -286,7 +300,7 @@ public class Lander {
      * @return true if the derivative of theta is allowed for its tolerance and false if not
      */
     public boolean testAngleVel() {
-        return Math.abs(posDeg.getLast()) == ACCURACY_ANGLE1;
+        return Math.abs((posDeg.getLast() - posDeg.get(posDeg.size() - 2))/ getStep()) == ACCURACY_ANGLE1;
     }
 
     public boolean accuracy ()
@@ -294,4 +308,14 @@ public class Lander {
         return testX() && testTheta() && testXVel() && testYVel() && testAngleVel();
     }
 
+    public String toString()
+    {
+        return "X: " + posX.getLast() + ", Y: " + posY.getLast() + ", Theta: " + posDeg.getLast();
+    }
+
+    public String toFullString()
+    {
+        return "X: " + posX.getLast() + ", Y: " + posY.getLast() + ", Theta: " + posDeg.getLast() + ", X vel: "
+                + getVX() + ", Y vel: " + getVY() + ", Angle Vel: " + getVA();
+    }
 }
