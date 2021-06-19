@@ -47,7 +47,6 @@ SpacetravelToTitan.iml
 .DS_Store
 trajectory.csv
 .gradle/
-titanVis.iml
-*.iml
+
 25-CodeSecondPhase.zip
 
