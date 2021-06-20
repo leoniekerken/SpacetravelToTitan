@@ -1,6 +1,7 @@
 package landing;
 
 public class ClosedLoopController {
+<<<<<<< HEAD
     public final double GRAVITY = 1.352; // Gravity of Titan
 
     public final double ACCURACY_ANGLE_VEL = 0.01; // derivative of Angle - angular velocity
@@ -102,3 +103,7 @@ public class ClosedLoopController {
 
     }
 */
+=======
+
+}
+>>>>>>> 8290e5f (Add files via upload)

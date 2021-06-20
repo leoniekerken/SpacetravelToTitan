@@ -213,6 +213,10 @@ public class ClosedController {
     private void externalForce ()
     {
         double windA = wind.evaluateVelocity(lander.posY.getLast()/1000.00);
+        if (windA != 0 && DEBUG)
+        {
+            System.out.println("Wind= " + windA);
+        }
         if(lander.getVX() > 0 ){
             external = -Math.pow((lander.getVX() - windA),2) * lander.DRAG_C;
         } else {

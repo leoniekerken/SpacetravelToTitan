@@ -23,6 +23,7 @@ public class WindModel {
      * @return the velocity at that altitude
      */
     public double evaluateVelocity(double altitude) {
+<<<<<<< HEAD
         if (altitude <= MAX_ALTITUDE && altitude > MIN_ALTITUDE)
         {
 
@@ -32,6 +33,9 @@ public class WindModel {
         {
             return 0;
         }
+=======
+        return A + B*altitude;
+>>>>>>> 8290e5f (Add files via upload)
     }
 
     /**
@@ -52,6 +56,9 @@ public class WindModel {
      */
     public double relativeError(double estimate, double correct) {
         return (Math.abs(estimate-correct)/Math.abs(correct)) * 100;
+<<<<<<< HEAD
 
+=======
+>>>>>>> 8290e5f (Add files via upload)
     }
 }
