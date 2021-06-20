@@ -7,7 +7,7 @@ public class ClosedController {
     double dragCoefficient = 1.00/300;
     double  torque = 50;
     double desiredAngle;
-    double force = 1;
+    double force = 1e-20;
     double external;
     boolean flag = false;
     public boolean reachedEnd = false;
@@ -31,6 +31,10 @@ public class ClosedController {
             {
                 System.out.println("Loop " + (count++) + ": " + lander.toString());
                 //count = printLoop(count);
+//                if (lander.posX.getLast().isNaN() && lander.posY.getLast().isNaN() && lander.posDeg.getLast().isNaN());
+//                {
+//                    reachedEnd = true;
+//                }
             }
         }
         if (DEBUG) System.out.println("final " + "Loop " + count + ": " + lander.toFullString());
@@ -223,10 +227,10 @@ public class ClosedController {
     private void externalForce ()
     {
         double windA = wind.evalVel(lander.posY.getLast()) / force;
-        if (windA != 0 && DEBUG)
-        {
-            System.out.println("Wind= " + windA);
-        }
+//        if (windA != 0 && DEBUG)
+//        {
+//            System.out.println("Wind= " + windA);
+//        }
         if(lander.getVX() > 0 ){
             external = -Math.pow((lander.getVX() - windA),2) * lander.DRAG_C;
         } else {
@@ -236,13 +240,30 @@ public class ClosedController {
 
     private void backup()
     {
-       // if (lander.posX.getLast() <= lander.ACCURACY_X)
-       // {
-     //       vertical();
-      //  }
+        /*if (lander.posX.getLast() <= lander.ACCURACY_X)
+        {
+            vertical();
+        }*/
+
+        // if Xposition is positive and V is positive
+        //get v and make it negative
+        // same the other way round
+
+        if (lander.posX.getLast() > 0 && lander.getVX() > 0)
+        {
+            lander.addX(lander.posX.getLast() - (lander.getVX() * lander.getStep()));
+        }
+
+        if (lander.posY.getLast() > 0 && lander.getVY() > 0)
+        {
+            lander.addY(lander.posY.getLast() - (lander.getVY() * lander.getStep()));
+        }
+
+
         if (lander.posY.getLast() < 150)
         {
-            force = -(g * (1 - Math.pow(Math.E, (lander.posY.getLast()/g))));
+            double grav = g *10;
+            force = -(grav * (1 - Math.pow(Math.E, (lander.posY.getLast()/grav))));
         }
         if (lander.posY.getLast() <= lander.ACCURACY_Y1)
         {

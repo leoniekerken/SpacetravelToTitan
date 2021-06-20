@@ -31,6 +31,7 @@ public class WindModel {
     {
         // the system takes in values in km not m.
         double altitude = altitudeM/1000.00;
+        //return evaluateVelocity(altitude);
 
         if (altitude <= (MAX_ALTITUDE + 10) && altitude > MIN_ALTITUDE)
         {
@@ -49,6 +50,7 @@ public class WindModel {
         {
             return 0;
         }
+
     }
 
     /**
