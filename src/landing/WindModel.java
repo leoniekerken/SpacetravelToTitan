@@ -23,19 +23,32 @@ public class WindModel {
      * @return the velocity at that altitude
      */
     public double evaluateVelocity(double altitude) {
-<<<<<<< HEAD
-        if (altitude <= MAX_ALTITUDE && altitude > MIN_ALTITUDE)
+
+        return A + B*altitude;
+    }
+
+    public double evalVel(double altitudeM)
+    {
+        // the system takes in values in km not m.
+        double altitude = altitudeM/1000.00;
+
+        if (altitude <= (MAX_ALTITUDE + 10) && altitude > MIN_ALTITUDE)
         {
 
-            return A + (Math.random() * B) * altitude;
+            return A + B * altitude ;
+        }
+        else if (altitude <= MIN_ALTITUDE && altitude > 0.7)
+        {
+            return Math.random() * altitude/1000.00 ;
+        }
+        else if (altitude <= 0.7)
+        {
+            return 0.04;
         }
         else
         {
             return 0;
         }
-=======
-        return A + B*altitude;
->>>>>>> 8290e5f (Add files via upload)
     }
 
     /**
@@ -56,9 +69,5 @@ public class WindModel {
      */
     public double relativeError(double estimate, double correct) {
         return (Math.abs(estimate-correct)/Math.abs(correct)) * 100;
-<<<<<<< HEAD
-
-=======
->>>>>>> 8290e5f (Add files via upload)
     }
 }

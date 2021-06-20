@@ -7,6 +7,7 @@ public class ClosedController {
     double dragCoefficient = 1.00/300;
     double  torque = 50;
     double desiredAngle;
+    double force = 1;
     double external;
     boolean flag = false;
     public boolean reachedEnd = false;
@@ -25,7 +26,7 @@ public class ClosedController {
         while (!reachedEnd)
         {
 
-            ifLoop();
+            experimental();
             if(DEBUG)
             {
                 System.out.println("Loop " + (count++) + ": " + lander.toString());
@@ -86,7 +87,7 @@ public class ClosedController {
            // if (DEBUG) System.out.println("ACCURACY X");
             if ((lander.posDeg.getLast() - desiredAngle) != 0)
             {
-                rotation();
+              //  rotation();
             }
 //            else
 //            {
@@ -100,7 +101,7 @@ public class ClosedController {
                 lander.addX(0);
                 lander.addX(0);
                 lander.addY(lander.posY.getLast() + (lander.getVY() * lander.getStep()));
-                lander.setStep();
+                lander.setStep(lander.step);
                 printTest();
                 return;
 
@@ -122,7 +123,7 @@ public class ClosedController {
                 //find difference in angle to angle we want
                 //adjust angle
                 desiredAngle = 0;
-                rotation();
+                //rotation();
 
             }
         }
@@ -137,12 +138,13 @@ public class ClosedController {
         }
     }
 
-    private void rotation (){
-       if (DEBUG) System.out.println("ROTATION");
-        double timeStep = angularAccelerate(desiredAngle);
-        lander.setStep(timeStep);
-        horizontal();
-        printTest();
+    private double rotation (){
+       //if (DEBUG) System.out.println("ROTATION");
+
+        return  angularAccelerate(desiredAngle);
+        //lander.setStep(timeStep);
+       // horizontal();
+        //printTest();
     }
 
     private double angularAccelerate(double desAngle){
@@ -161,7 +163,12 @@ public class ClosedController {
         double acceleration;
         if(lander.getVY() <= -50) {
             acceleration = (Math.pow(lander.getVY(), 2) / (2 * lander.posY.getLast()));
-        } else {
+        }
+        else if (Math.signum(lander.getVY()) > 0)
+        {
+            acceleration = Math.pow(g,2) * (-1);
+        }
+        else {
             acceleration = -g;
         }
         double velY = lander.getVY() + (acceleration * (lander.timeSteps.getLast() - lander.timeSteps.get(lander.timeSteps.size() - 2)));
@@ -175,7 +182,7 @@ public class ClosedController {
         // add WIND to posX
         //double positionX = lander.posX.getLast() + wind.wind(positionY);
         //return positionY
-        lander.setStep();
+        lander.setStep(lander.step);
         printTest();
     }
 
@@ -188,18 +195,21 @@ public class ClosedController {
         lander.addX(velX * lander.getStep() + lander.posX.getLast());
 
         lander.addY(lander.posY.getLast() + (lander.getVY() * lander.getStep()));
-        lander.setStep();
+        lander.setStep(lander.step);
         printTest();
     }
 
     private double[] distanceToZero(){
         double angle = Math.abs(lander.posDeg.getLast());
         double time = Math.sqrt(angle / torque);
-        double a = (Math.pow(lander.getVX() - wind.evaluateVelocity(lander.posY.getLast()/1000.00), 2))/300;
+        double windApplied = wind.evalVel(lander.posY.getLast()) / force;
+        if (DEBUG) System.out.println("WIND=" + windApplied);
+        double a = (Math.pow(lander.getVX() - windApplied, 2)) * lander.DRAG_C;
         double vt1 = a * time + lander.getVX();
         double average = Math.abs(lander.getVX() - vt1 / 2);
         double distance1 = average * time;
-        double a2 = Math.pow((vt1 - wind.evaluateVelocity(lander.posY.getLast()/1000.00)) / 2, 2) / 300;
+        double a2 = (Math.pow((vt1 - windApplied) / 2, 2)) * lander.DRAG_C;
+        // double a2 = Math.pow((vt1 - wind.evaluateVelocity(lander.posY.getLast())) / 2, 2) * lander.DRAG_C;
         double time2 = Math.abs(-vt1 / a2);
         double[] results = new double[2];
         results[0] = (lander.getVX() * time2 / 2 ) + distance1; // distance
@@ -212,7 +222,7 @@ public class ClosedController {
      */
     private void externalForce ()
     {
-        double windA = wind.evaluateVelocity(lander.posY.getLast()/1000.00);
+        double windA = wind.evalVel(lander.posY.getLast()) / force;
         if (windA != 0 && DEBUG)
         {
             System.out.println("Wind= " + windA);
@@ -226,15 +236,45 @@ public class ClosedController {
 
     private void backup()
     {
-        if (lander.posX.getLast() <= lander.ACCURACY_X)
+       // if (lander.posX.getLast() <= lander.ACCURACY_X)
+       // {
+     //       vertical();
+      //  }
+        if (lander.posY.getLast() < 150)
         {
-            vertical();
+            force = -(g * (1 - Math.pow(Math.E, (lander.posY.getLast()/g))));
         }
-        if (lander.posY.getLast() <= lander.Y_END)
+        if (lander.posY.getLast() <= lander.ACCURACY_Y1)
         {
-            //lander.addY(0);
+            lander.addY(0.1);
+            lander.addY(0);
             lander.addAngle(desiredAngle);
             reachedEnd = true;
+        }
+
+        //stepSize reduction
+        if (lander.posY.getLast() > 100 && lander.step != lander.stepDefault)
+        {
+            lander.resetStep();
+            if (DEBUG) System.out.println("Step" + lander.getStep());
+        }
+        else if (lander.posY.getLast() <= 50)
+        {
+            lander.step = 0.125;
+            lander.setStep(lander.step);
+            if (DEBUG) System.out.println("Step" + lander.getStep());
+        }
+        else if (lander.posY.getLast() <= 100)
+        {
+            lander.step = 0.25;
+            lander.setStep(lander.step);
+            if (DEBUG) System.out.println("Step" + lander.getStep());
+        }
+        else if (lander.posY.getLast() <= 200)
+        {
+            lander.step = 0.5;
+            lander.setStep(lander.step);
+            if (DEBUG) System.out.println("Step" + lander.getStep());
         }
     }
 
@@ -284,6 +324,79 @@ public class ClosedController {
             System.out.println("step" + lander.getStep());
             System.out.println("VX:" +lander.getVX());
         }
+    }
+
+    public void experimental(){
+        backup();
+        double thrust = 1;
+        double sign = Math.signum(lander.posX.getLast()) * - 1;
+
+        if (DEBUG && reachedEnd) System.out.println("END: " +lander.toString());
+        externalForce();
+        if(lander.posY.getLast() == 0 && lander.accuracy())
+        {
+            lander.addAngle(desiredAngle);
+            reachedEnd = true;
+            return;
+        }
+        else if (lander.posY.getLast() == 0)
+        {
+            reachedEnd = true;
+            if (DEBUG) System.out.println("reached the ground but not the Landing Site");
+            return;
+        }
+
+        if(Math.abs(lander.posX.getLast()) > 4000 ){
+            desiredAngle = 80 * sign;
+        } else if (Math.abs(lander.posX.getLast()) > 5 && Math.abs(lander.posX.getLast()) <= 4000){
+            desiredAngle = sign * (Math.abs(lander.posX.getLast()) / 100) + 5;
+        } else {
+            desiredAngle = Math.abs(lander.posX.getLast()) * sign;
+        }
+
+        if(lander.posY.getLast() > 7000 && lander.getVY() > -50){
+            thrust = g/Math.cos(lander.posDeg.getLast()) / 2;
+        } else if(lander.posY.getLast() < 7000 || lander.getVY() <= -50){
+            thrust = g/Math.cos(lander.posDeg.getLast());
+        }
+
+        if(Math.abs(lander.posX.getLast()) <= lander.ACCURACY_X){
+            desiredAngle = 0;
+            if(lander.getVY() <= -50) {
+                thrust = (Math.pow(lander.getVY(), 2) / (2 * lander.posY.getLast())) + g;
+            } else {
+                thrust = 0;
+            }
+        }
+        externalForce();
+
+        timestep(thrust);
+
+
+    }
+
+    public void timestep(double thrust){
+       double timestep = lander.getStep();
+       double rot = rotation();
+        if(rot > timestep){
+            timestep = rot;
+        }
+
+        System.out.println("thrust : " + thrust);
+        //update x
+        double accX = Math.sin(lander.posDeg.getLast()) * thrust + external;
+        double velX = accX * timestep + lander.getVX();
+        lander.addX(velX * timestep + lander.posX.getLast());
+        if(DEBUG)
+        {
+            System.out.println("acc : " + accX);
+            System.out.println("vel : " + velX);
+        }
+
+        //update y
+        double accY = Math.cos(lander.posDeg.getLast()) * thrust - g;
+        double velY = lander.getVY() + (accY * timestep);
+        lander.addY(lander.posY.getLast() + velY * lander.getStep());
     }
 }
 
