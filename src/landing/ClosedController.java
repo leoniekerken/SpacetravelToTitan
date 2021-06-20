@@ -11,7 +11,7 @@ public class ClosedController {
     double external;
     boolean flag = false;
     public boolean reachedEnd = false;
-    public static boolean DEBUG = true;
+    public static boolean DEBUG = false;
 
     public ClosedController()
     {
@@ -37,7 +37,7 @@ public class ClosedController {
 //                }
             }
         }
-        if (DEBUG) System.out.println("final " + "Loop " + count + ": " + lander.toFullString());
+        System.out.println("final call: " + lander.toFullString());
     }
 
 
@@ -267,8 +267,7 @@ public class ClosedController {
         }
         if (lander.posY.getLast() <= lander.ACCURACY_Y1)
         {
-            lander.addY(0.1);
-            lander.addY(0);
+
             lander.addAngle(desiredAngle);
             reachedEnd = true;
         }
@@ -297,40 +296,13 @@ public class ClosedController {
             lander.setStep(lander.step);
             if (DEBUG) System.out.println("Step" + lander.getStep());
         }
+
+        casE();
     }
 
     // This is to check whilst running the print that everything works as wanted.
     private int printLoop(int count)
     {
-        // in the end there is a possibility that it goes mad and changes the vals because it just wants to.
-        if (lander.posY.getLast() < 0 || lander.posY.getLast().isNaN() || lander.posY.getLast().isInfinite())
-        {
-            int i = lander.posY.size() -1;
-            while (lander.posY.get(i).isNaN() || lander.posY.get(i).isInfinite()) {
-                lander.addY(lander.posY.get(i));
-                lander.addY(lander.posY.get(i));
-            }
-        }
-
-        if (lander.posDeg.getLast().isNaN() || lander.posDeg.getLast().isInfinite())
-        {
-            int i = lander.posDeg.size() -1;
-            while (lander.posDeg.get(i).isNaN() || lander.posDeg.get(i).isInfinite()) {
-                lander.addAngle(lander.posDeg.get(i - 1));
-                lander.addAngle(lander.posDeg.get(i));
-            }
-        }
-
-        if (lander.posX.getLast().isNaN() || lander.posX.getLast().isInfinite())
-        {
-            //lander.addX(0);
-            //lander.addX(0);
-            int i = lander.posX.size() -1;
-            while (lander.posX.get(i).isNaN() || lander.posX.get(i).isInfinite()) {
-                lander.addX(0);
-                lander.addX(0);
-            }
-        }
 
         if (DEBUG) System.out.println("Loop " + (count++) + ": " + lander.toString());
 
@@ -393,7 +365,42 @@ public class ClosedController {
 
         timestep(thrust);
 
+    }
 
+    private void casE()
+    {
+        // in the end there is a possibility that it goes mad and changes the vals because it just wants to.
+        if (lander.posY.getLast() < 0 || lander.posY.getLast().isNaN() || lander.posY.getLast().isInfinite())
+        {
+            int i = lander.posY.size() -1;
+            while (lander.posY.get(i).isNaN() || lander.posY.get(i).isInfinite()) {
+                i --;
+            }
+            lander.addY(lander.posY.get(i));
+            lander.addY(lander.posY.get(i));
+        }
+
+        if (lander.posDeg.getLast().isNaN() || lander.posDeg.getLast().isInfinite())
+        {
+            int i = lander.posDeg.size() -1;
+            while (lander.posDeg.get(i).isNaN() || lander.posDeg.get(i).isInfinite()) {
+                i--;
+            }
+            lander.addAngle(lander.posDeg.get(i - 1));
+            lander.addAngle(lander.posDeg.get(i));
+        }
+
+        if (lander.posX.getLast().isNaN() || lander.posX.getLast().isInfinite() || lander.posX.getLast()> 1e8)
+        {
+            //lander.addX(0);
+            //lander.addX(0);
+            int i = lander.posX.size() -1;
+            while (lander.posX.get(i).isNaN() || lander.posX.get(i).isInfinite()) {
+                i--;
+            }
+            lander.addX(0);
+            lander.addX(0);
+        }
     }
 
     public void timestep(double thrust){
@@ -403,7 +410,7 @@ public class ClosedController {
             timestep = rot;
         }
 
-        System.out.println("thrust : " + thrust);
+        if (DEBUG) System.out.println("thrust : " + thrust);
         //update x
         double accX = Math.sin(lander.posDeg.getLast()) * thrust + external;
         double velX = accX * timestep + lander.getVX();

@@ -4,7 +4,7 @@ import java.util.LinkedList;
 
 public class Lander {
     public static boolean INITIAL_MOVING = false;
-    public static boolean DEBUG = true;
+    public static boolean DEBUG = false;
     // Gravity of Titan 1.352 m s^-2
     public static final double GRAVITY = 1.352;
 
@@ -229,6 +229,11 @@ public class Lander {
         return Math.sin(angle) * getA();
     }
 
+    public double getVelY ()
+    {
+        return (posY.get(posY.size() - 1) - posY.get(posY.size() - 2));
+    }
+
     private double timeAdd()
     {
         time = timeSteps.getLast() + step;
@@ -316,6 +321,6 @@ public class Lander {
     public String toFullString()
     {
         return "X: " + posX.getLast() + ", Y: " + posY.getLast() + ", Theta: " + posDeg.getLast() + ", X vel: "
-                + getVX() + ", Y vel: " + getVY() + ", Angle Vel: " + getVA();
+                + getVX() + ", Y vel: " + getVelY() + ", Angle Vel: " + getVA();
     }
 }
