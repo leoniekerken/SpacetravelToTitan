@@ -39,6 +39,7 @@ public class Simulator {
             ProbeSimulator probeSimulator = new ProbeSimulator();
             probeSimulator.ODESolverChoice = this.ODESolverChoice;
             trajectory = probeSimulator.trajectory(individuals[i].posVector, individuals[i].velVector, tf, h);
+            Evolution.titanPos = probeSimulator.titanPos;
             getBestPos(trajectory, individuals[i]);
             probeSimulator = null;
             System.gc();
@@ -56,6 +57,8 @@ public class Simulator {
         double distance = trajectory[trajectory.length-1].dist(Evolution.titanPos[Evolution.titanPos.length-1]);
         int position = trajectory.length - 1;
         Vector3d distanceVector = (Vector3d) trajectory[trajectory.length-1].sub(Evolution.titanPos[Evolution.titanPos.length-1]);
+//        System.out.println("Trajectory: " + trajectory.length);
+//        System.out.println("titanPos: " + Evolution.titanPos.length);
         for (int i = trajectory.length-1; i >= 0; i--){
             if (trajectory[i].dist(Evolution.titanPos[i]) < distance) {
                 distance = trajectory[i].dist(Evolution.titanPos[i]);

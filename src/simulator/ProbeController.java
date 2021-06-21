@@ -36,6 +36,13 @@ public class ProbeController {
     public Vector3d p0; //initial position
     public Vector3d v0; //initial velocity
     public Vector3d vL = new Vector3d(41583.09221214755, -56163.23800237314, -540.5163786866699); //launch velocity - velocity we want to approximate after launching
+    // -61100.018378306515, 36287.12219310739, -602.5464522362721
+    // RK AM (-16037.977444162985, 66733.68748866812, -345.0429648370347)
+    // Runge Kutta only (Phase 3) = -61100.018378306515, 36287.12219310739, -602.5464522362721
+    // Updated fittest RK with AM (Evolution run)(ODEChoice 3)(Phase 3)= -16037.897774241963, 66733.64358992719, -344.98290346415814
+    // RungeKutta final (Phase 2) (-62503.59520115846, 30503.316321875955, -621.7444409637209)
+    // run help WRONG!!!! = -12410.350434521955, 69422.63395550058, -129.09186571104925
+    // 20073.983327802518, -67203.18495930346, -862.2410790517768
     public Vector3d pK; //current position
     public Vector3d vK; //current velocity
 
@@ -144,7 +151,7 @@ public class ProbeController {
      */
 
 
-  
+
     /**
      *
      * integrate all of that
@@ -203,7 +210,7 @@ public class ProbeController {
         return check;
     }
 
-    */
+
 
      * Currently checks whether every coordinate is closed enough to the desired destination
      * @param pProbe = last position to be checked

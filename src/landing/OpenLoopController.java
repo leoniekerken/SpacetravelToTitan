@@ -75,7 +75,7 @@ public class OpenLoopController {
      * @return true if the derivative of theta is allowed for its tolerance and false if not
      */
     public boolean testForThetaDerivative(double thetaDerivative) {
-        if(Math.abs(thetaDerivative) == ToleranceThetaDeriv) {
+        if (Math.abs(thetaDerivative) == ToleranceThetaDeriv) {
             return true;
         }
         return false;

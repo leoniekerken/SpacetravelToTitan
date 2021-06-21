@@ -1,13 +1,29 @@
 package landing;
 
 /**
- * Main class to test the wind model
  *
- * @author Chiara
+ *
  */
 public class Main {
-
+    // Run for testing purposes Landing module
     public static void main( String[] args){
+        // wind();
+        closed();
+
+    }
+    // This method gets called if we want to test the Closed Loop Controller
+    public static void closed ()
+    {
+        // change this to false if you want to test with out any initial velocity.
+        ClosedController.INITIAL_MOVING = true;
+        Lander lander = new Lander();
+        System.out.println("Closed Landing Start: " + lander.closedController.toFullString());
+        lander.reachTitan();
+        System.out.println("Closed Landing End: " + lander.closedController.toFullString());
+    }
+
+    public static void wind()
+    {
         WindModel wind = new WindModel();
         double altitude;
         double velocity;

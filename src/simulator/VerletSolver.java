@@ -13,7 +13,6 @@ import titan.StateInterface;
 public class VerletSolver implements ODESolverInterface {
 
     static boolean DEBUG = false;
-
     public static boolean TESTING = ProbeSimulator.TESTING;
     public  static boolean VISUALIZATION = ProbeSimulator.VISUALIZATION;
     static int visualizationTimeStamps = 50;
@@ -39,7 +38,6 @@ public class VerletSolver implements ODESolverInterface {
         states = new State[ts.length];
         states[0] = (State) y0;
 
-
         if(!TESTING){
             //create array storing positions of titan
             titanPos = new Vector3d[ts.length];
@@ -52,7 +50,6 @@ public class VerletSolver implements ODESolverInterface {
         //updating positions for one step
         for(int i = 1; i < states.length; i++){
             states[i] = (State) step(f, ts[i], states[i-1], (ts[i]-ts[i-1]));
-
             if(!TESTING){
                 titanPos[i] = (Vector3d) states[i].getPos(8); //add current position of titan to static storage
                 earthPos[i] = (Vector3d) states[i].getPos(3); //add current position of earth to extra storage

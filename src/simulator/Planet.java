@@ -90,6 +90,7 @@ public class Planet
      * add position to orbit
      */
     public void addOrbit(titan.Vector3dInterface position){
+
         this.orbit.add(position);
     }
 
@@ -124,8 +125,8 @@ public class Planet
      * @return initial x-position of object
      */
     public double getInitX(){
-
-        return fromMToAU(orbit.get(1).getX());
+//        System.out.println(orbit.size());
+        return fromMToAU(orbit.get(0).getX());
     }
 
     /**
@@ -134,7 +135,7 @@ public class Planet
      */
     public double getInitY(){
 
-        return fromMToAU(orbit.get(1).getY());
+        return fromMToAU(orbit.get(0).getY());
     }
 
 
